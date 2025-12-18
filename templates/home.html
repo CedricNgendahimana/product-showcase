@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Computer Aid MW - Quality Computer Products{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content text-center">
+            <h1 class="hero-title animate-fade-in">Welcome to <span class="text-accent">Computer Aid MW</span></h1>
+            <p class="hero-subtitle animate-fade-in-delay">Your trusted source for premium computer products and accessories</p>
+            <a href="#products" class="btn btn-primary btn-lg hero-btn animate-fade-in-delay-2">
+                <i class="fas fa-shopping-bag me-2"></i>Browse Products
+            </a>
+        </div>
+    </div>
+    <div class="hero-wave">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,60 1440,60 L1440,120 L0,120 Z" fill="#f8f9fa"/>
+        </svg>
+    </div>
+</section>
+
+<section id="products" class="products-section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Our Products</h2>
+            <p class="section-subtitle">Discover our range of quality computer products</p>
+        </div>
+        
+        {% if products %}
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
+                             alt="{{ product.name }}" class="product-image"
+                             onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
+                        <div class="product-overlay">
+                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-light btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-name">{{ product.name }}</h5>
+                        <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                        <div class="product-footer">
+                            <span class="product-price">${{ "%.2f"|format(product.price) }}</span>
+                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-outline-primary btn-sm">
+                                Details <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h4>No products available yet</h4>
+            <p class="text-muted">Check back soon for new products!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="cta-card text-center">
+            <h3><i class="fab fa-whatsapp me-2"></i>Need Help Choosing?</h3>
+            <p>Contact us on WhatsApp for personalized recommendations and support</p>
+            <a href="https://wa.me/+265999123456" target="_blank" class="btn btn-success btn-lg">
+                <i class="fab fa-whatsapp me-2"></i>Chat with Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
