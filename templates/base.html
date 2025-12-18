@@ -4,36 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Computer Aid MW{% endblock %}</title>
+
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
+
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Aid MW" height="45" class="me-2">
+                <img src="{{ url_for('static', filename='images/logo.png') }}"
+                     alt="Computer Aid MW"
+                     height="45"
+                     class="me-2">
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- Home -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home me-1"></i> Home</a>
+                        <a class="nav-link" href="{{ url_for('home') }}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
                     </li>
+
+                    <!-- ADMIN LINKS (ONLY WHEN LOGGED IN) -->
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_login') }}"><i class="fas fa-lock me-1"></i> Admin</a>
+                        <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
@@ -41,6 +54,7 @@
         </div>
     </nav>
 
+    <!-- FLASH MESSAGES -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     <div class="container mt-3">
@@ -54,35 +68,52 @@
     {% endif %}
     {% endwith %}
 
+    <!-- MAIN CONTENT -->
     <main>
         {% block content %}{% endblock %}
     </main>
 
+    <!-- FOOTER -->
     <footer class="footer mt-auto">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><i class="fas fa-plug me-2"></i>Computer Aid MW</h5>
-                    <p class="text-muted">Your trusted partner for quality computer products and accessories.</p>
+                    <h5>
+                        <i class="fas fa-plug me-2"></i>Computer Aid MW
+                    </h5>
+                    <p class="text-muted">
+                        Your trusted partner for quality computer products and accessories.
+                    </p>
                 </div>
+
                 <div class="col-md-3">
                     <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li><a href="{{ url_for('home') }}">Products</a></li>
-                        <li><a href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                        <li>
+                            <a href="{{ url_for('home') }}">Products</a>
+                        </li>
                     </ul>
                 </div>
+
                 <div class="col-md-3">
                     <h6>Contact Us</h6>
                     <ul class="list-unstyled">
-                        <li><i class="fab fa-whatsapp me-2"></i>+265 888 302 771</li>
-                        <li><i class="fas fa-envelope me-2"></i>info@computeraidmw.com</li>
+                        <li>
+                            <i class="fab fa-whatsapp me-2"></i>+265 888 302 771
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope me-2"></i>info@computeraidmw.com
+                        </li>
                     </ul>
                 </div>
             </div>
+
             <hr>
+
             <div class="text-center">
-                <p class="mb-0">&copy; 2024 Computer Aid MW. All rights reserved.</p>
+                <p class="mb-0">
+                    &copy; 2024 Computer Aid MW. All rights reserved.
+                </p>
             </div>
         </div>
     </footer>
