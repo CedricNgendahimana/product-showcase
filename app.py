@@ -12,6 +12,8 @@ from werkzeug.utils import secure_filename
 from urllib.parse import quote
 
 app = Flask(__name__)
+# Ensure instance folder exists (required for SQLite on Render)
+os.makedirs(app.instance_path, exist_ok=True)
 
 # =========================
 # CONFIGURATION (SECURE)
