@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category_info.name }} - Computer Aid MW{% endblock %}
+
+{% block content %}
+<section class="category-hero-section">
+    <div class="container">
+        <div class="category-hero-content">
+            <i class="{{ category_info.icon }} fa-3x mb-3"></i>
+            <h1 class="hero-title">{{ category_info.name }}</h1>
+            <p class="hero-subtitle">Explore our collection of quality {{ category_info.name|lower }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="products-section py-5">
+    <div class="container">
+        <div class="category-nav mb-4">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="fas fa-home me-1"></i>Home
+            </a>
+            {% for key, cat in categories.items() %}
+                {% if key == category %}
+                    <span class="btn btn-primary btn-sm me-2 disabled">{{ cat.name }}</span>
+                {% else %}
+                    <a href="{{ url_for('category_page', category=key) }}" class="btn btn-outline-secondary btn-sm me-2">{{ cat.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if products %}
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="product-card fade-in-up">
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
+                             alt="{{ product.name }}" class="product-image"
+                             onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
+                        <div class="product-overlay">
+                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-light btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-name">{{ product.name }}</h5>
+                        <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                        <div class="product-footer">
+                            <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
+                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-outline-primary btn-sm">
+                                Details <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h4>No products in this category yet</h4>
+            <p class="text-muted">Check back soon!</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

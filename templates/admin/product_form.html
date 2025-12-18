@@ -30,10 +30,24 @@
                                    value="{{ product.name if product else '' }}" required 
                                    placeholder="Enter product name">
                         </div>
+
+                        <div class="mb-4">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-list me-2"></i>Category
+                            </label>
+                            <select class="form-control form-control-lg" id="category" name="category" required>
+                                <option value="">Select a category</option>
+                                {% for key, cat in categories.items() %}
+                                <option value="{{ key }}" {% if product and product.category == key %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         
                         <div class="mb-4">
                             <label for="price" class="form-label">
-                                <i class="fas fa-dollar-sign me-2"></i>Price (USD)
+                                <i class="fas fa-kwacha-sign me-2"></i>Price (MWK)
                             </label>
                             <input type="number" class="form-control form-control-lg" id="price" name="price" 
                                    step="0.01" min="0" value="{{ product.price if product else '' }}" required
