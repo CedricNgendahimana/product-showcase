@@ -25,6 +25,10 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
 UPLOAD_DIR = os.path.join(BASE_DIR, "static", "images", "products")
 
+# Railway persistent volume
+DATA_DIR = os.environ.get("DATA_DIR", "/data")
+os.makedirs(DATA_DIR, exist_ok=True)
+
 os.makedirs(INSTANCE_DIR, exist_ok=True)
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -34,10 +38,14 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 app = Flask(__name__)
 os.makedirs(app.instance_path, exist_ok=True)
 
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f"sqlite:///{os.path.join(INSTANCE_DIR, 'products.db')}"
+# DATABASE PATH (Railway-safe)
+DB_PATH = os.environ.get(
+    "DATABASE_PATH",
+    os.path.join(INSTANCE_DIR, "products.db")
 )
+
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
@@ -137,11 +145,9 @@ def category_page(category):
         flash("Category not found", "danger")
         return redirect(url_for("home"))
 
-    products = (
-        Product.query.filter_by(category=category)
-        .order_by(Product.created_at.desc())
-        .all()
-    )
+    products = Product.query.filter_by(category=category).order_by(
+        Product.created_at.desc()
+    ).all()
 
     return render_template(
         "category.html",
@@ -236,7 +242,12 @@ def admin_add_product():
         flash("Product added successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
+    return render_template(
+        "admin/product_form.html",
+        product=None,
+        action="Add",
+        categories=CATEGORIES,
+    )
 
 
 @app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
@@ -265,7 +276,12 @@ def admin_edit_product(id):
         flash("Product updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
+    return render_template(
+        "admin/product_form.html",
+        product=product,
+        action="Edit",
+        categories=CATEGORIES,
+    )
 
 
 @app.route("/admin/product/delete/<int:id>", methods=["POST"])
