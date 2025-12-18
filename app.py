@@ -35,7 +35,9 @@ app = Flask(__name__)
 os.makedirs(app.instance_path, exist_ok=True)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(INSTANCE_DIR, 'products.db')}"
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"sqlite:///{os.path.join(INSTANCE_DIR, 'products.db')}"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
@@ -93,14 +95,6 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # =========================
-# DATABASE INIT
-# =========================
-@app.before_first_request
-def initialize_database():
-    db.create_all()
-    seed_database()
-
-# =========================
 # HELPERS
 # =========================
 @login_manager.user_loader
@@ -113,15 +107,20 @@ def allowed_file(filename):
 
 
 def seed_database():
-    """
-    Create admin user from environment variables (only once)
-    """
+    """Create admin user once using env vars"""
     if Admin.query.count() == 0 and ADMIN_USERNAME and ADMIN_PASSWORD:
         admin = Admin(username=ADMIN_USERNAME)
         admin.set_password(ADMIN_PASSWORD)
         db.session.add(admin)
         db.session.commit()
         print("✅ Admin user created")
+
+# =========================
+# DATABASE INITIALIZATION
+# =========================
+with app.app_context():
+    db.create_all()
+    seed_database()
 
 # =========================
 # ROUTES
@@ -181,11 +180,11 @@ def admin_login():
         return redirect(url_for("admin_dashboard"))
 
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        admin = Admin.query.filter_by(
+            username=request.form.get("username")
+        ).first()
 
-        admin = Admin.query.filter_by(username=username).first()
-        if admin and admin.check_password(password):
+        if admin and admin.check_password(request.form.get("password")):
             login_user(admin)
             flash("Welcome back!", "success")
             return redirect(url_for("admin_dashboard"))
@@ -216,13 +215,8 @@ def admin_dashboard():
 @login_required
 def admin_add_product():
     if request.method == "POST":
-        name = request.form.get("name")
-        price = float(request.form.get("price"))
-        description = request.form.get("description")
-        category = request.form.get("category", "accessories")
-
-        image_filename = "default.jpg"
         file = request.files.get("image")
+        image_filename = "default.jpg"
 
         if file and file.filename and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -230,10 +224,10 @@ def admin_add_product():
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], image_filename))
 
         product = Product(
-            name=name,
-            price=price,
-            description=description,
-            category=category,
+            name=request.form.get("name"),
+            price=float(request.form.get("price")),
+            description=request.form.get("description"),
+            category=request.form.get("category", "accessories"),
             image=image_filename,
         )
 
@@ -242,12 +236,7 @@ def admin_add_product():
         flash("Product added successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=None,
-        action="Add",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
 
 
 @app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
@@ -264,9 +253,9 @@ def admin_edit_product(id):
         file = request.files.get("image")
         if file and file.filename and allowed_file(file.filename):
             if product.image != "default.jpg":
-                old_path = os.path.join(app.config["UPLOAD_FOLDER"], product.image)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
+                old = os.path.join(app.config["UPLOAD_FOLDER"], product.image)
+                if os.path.exists(old):
+                    os.remove(old)
 
             filename = secure_filename(file.filename)
             product.image = f"{os.urandom(8).hex()}_{filename}"
@@ -276,12 +265,7 @@ def admin_edit_product(id):
         flash("Product updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=product,
-        action="Edit",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
 
 
 @app.route("/admin/product/delete/<int:id>", methods=["POST"])
@@ -300,7 +284,7 @@ def admin_delete_product(id):
     return redirect(url_for("admin_dashboard"))
 
 # =========================
-# NO-CACHE HEADERS
+# NO CACHE
 # =========================
 @app.after_request
 def add_header(response):
