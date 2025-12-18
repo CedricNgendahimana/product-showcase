@@ -314,6 +314,31 @@ body {
     transition: var(--transition);
 }
 
+.product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(233, 76, 43, 0.4) 0%, rgba(26, 26, 46, 0.5) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.product-card-link:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-overlay-text {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+}
+
 .product-category-badge {
     position: absolute;
     top: 10px;
