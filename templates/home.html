@@ -30,15 +30,14 @@
         <div class="row g-4">
             {% for key, category in categories.items() %}
             <div class="col-sm-6 col-lg-3">
-                <div class="category-card fade-in-up">
-                    <div class="category-icon">
-                        <i class="{{ category.icon }}"></i>
+                <a href="{{ url_for('category_page', category=key) }}" class="category-card-link">
+                    <div class="category-card fade-in-up">
+                        <div class="category-icon">
+                            <i class="{{ category.icon }}"></i>
+                        </div>
+                        <h5 class="category-name">{{ category.name }}</h5>
                     </div>
-                    <h5 class="category-name">{{ category.name }}</h5>
-                    <a href="{{ url_for('category_page', category=key) }}" class="btn btn-outline-primary btn-sm">
-                        View All <i class="fas fa-arrow-right ms-1"></i>
-                    </a>
-                </div>
+                </a>
             </div>
             {% endfor %}
         </div>
