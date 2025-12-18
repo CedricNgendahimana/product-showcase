@@ -32,28 +32,22 @@
         <div class="row g-4">
             {% for product in products %}
             <div class="col-sm-6 col-lg-4 col-xl-3">
-                <div class="product-card fade-in-up">
-                    <div class="product-image-wrapper">
-                        <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
-                             alt="{{ product.name }}" class="product-image"
-                             onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
-                        <div class="product-overlay">
-                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-light btn-sm">
-                                <i class="fas fa-eye me-1"></i>View Details
-                            </a>
+                <a href="{{ url_for('product_detail', id=product.id) }}" class="product-card-link">
+                    <div class="product-card fade-in-up">
+                        <div class="product-image-wrapper">
+                            <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
+                                 alt="{{ product.name }}" class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
+                        </div>
+                        <div class="product-info">
+                            <h5 class="product-name">{{ product.name }}</h5>
+                            <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                            <div class="product-footer">
+                                <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="product-info">
-                        <h5 class="product-name">{{ product.name }}</h5>
-                        <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
-                        <div class="product-footer">
-                            <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
-                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-outline-primary btn-sm">
-                                Details <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                </a>
             </div>
             {% endfor %}
         </div>
