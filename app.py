@@ -19,34 +19,33 @@ from werkzeug.utils import secure_filename
 from urllib.parse import quote
 
 # =========================
-# PATHS & DIRECTORIES
-# =========================
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
-UPLOAD_DIR = os.path.join(BASE_DIR, "static", "images", "products")
-
-# Railway persistent volume
-DATA_DIR = os.environ.get("DATA_DIR", "/data")
-os.makedirs(DATA_DIR, exist_ok=True)
-
-os.makedirs(INSTANCE_DIR, exist_ok=True)
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-# =========================
 # APP CONFIG
 # =========================
 app = Flask(__name__)
-os.makedirs(app.instance_path, exist_ok=True)
-
-# DATABASE PATH (Railway-safe)
-DB_PATH = os.environ.get(
-    "DATABASE_PATH",
-    os.path.join(INSTANCE_DIR, "products.db")
-)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
+
+# =========================
+# DATABASE (RENDER POSTGRESQL)
+# =========================
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
+
+# Render uses postgres:// but SQLAlchemy expects postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# =========================
+# FILE UPLOADS
+# =========================
+UPLOAD_DIR = os.path.join(app.root_path, "static", "images", "products")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
 
@@ -124,7 +123,7 @@ def seed_database():
         print("✅ Admin user created")
 
 # =========================
-# DATABASE INITIALIZATION
+# DATABASE INIT (SAFE)
 # =========================
 with app.app_context():
     db.create_all()
@@ -242,12 +241,7 @@ def admin_add_product():
         flash("Product added successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=None,
-        action="Add",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
 
 
 @app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
@@ -276,12 +270,7 @@ def admin_edit_product(id):
         flash("Product updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=product,
-        action="Edit",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
 
 
 @app.route("/admin/product/delete/<int:id>", methods=["POST"])
