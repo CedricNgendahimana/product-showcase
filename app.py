@@ -108,10 +108,11 @@ def home():
 
 @app.route('/product/<int:id>')
 def product_detail(id):
+    from urllib.parse import quote
     product = Product.query.get_or_404(id)
-    whatsapp_number = '+265999123456'
+    whatsapp_number = '265999123456'
     message = f"Hi! I'm interested in {product.name} priced at ${product.price:.2f}. Is it available?"
-    whatsapp_link = f"https://wa.me/{whatsapp_number}?text={message.replace(' ', '%20')}"
+    whatsapp_link = f"https://wa.me/{whatsapp_number}?text={quote(message)}"
     return render_template('product_detail.html', product=product, whatsapp_link=whatsapp_link)
 
 @app.route('/admin/login', methods=['GET', 'POST'])
