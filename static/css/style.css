@@ -1,7 +1,7 @@
 :root {
     --primary-color: #e94c2b;
     --primary-dark: #c73e22;
-    --secondary-color: #1a1a2e;
+    --secondary-color: #16213e;
     --accent-color: #ff6b4a;
     --success-color: #25d366;
     --text-dark: #2d3436;
@@ -1156,7 +1156,7 @@ body {
 .feature-item i,
 .product-overlay i,
 .hero-title span {
-    color: var(--primary-dark) !important;
+    color: var(--primary-color) !important;
 }
 
 /* === PRODUCT HOVER / ACTIVE COLOR === */
