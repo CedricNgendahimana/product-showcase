@@ -1,9 +1,12 @@
 """
 Computer Aid MW - E-Commerce Product Showcase
-A Flask-based product catalog with admin management and WhatsApp integration.
+Flask + PostgreSQL (Render) + Cloudinary
+SAFE ON REDEPLOY – IMAGES NEVER LOST
 """
 
 import os
+import cloudinary
+import cloudinary.uploader
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
@@ -15,25 +18,21 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from urllib.parse import quote
 
 # =========================
 # APP CONFIG
 # =========================
 app = Flask(__name__)
-
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 # =========================
-# DATABASE (RENDER POSTGRESQL)
+# DATABASE (RENDER POSTGRES)
 # =========================
 DATABASE_URL = os.environ.get("DATABASE_URL")
-
 if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL is not set")
+    raise RuntimeError("❌ DATABASE_URL is not set")
 
-# Render uses postgres:// but SQLAlchemy expects postgresql://
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
@@ -41,18 +40,24 @@ app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # =========================
-# FILE UPLOADS
+# CLOUDINARY CONFIG
 # =========================
-UPLOAD_DIR = os.path.join(app.root_path, "static", "images", "products")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME")
+API_KEY = os.environ.get("CLOUDINARY_API_KEY")
+API_SECRET = os.environ.get("CLOUDINARY_API_SECRET")
 
-app.config["UPLOAD_FOLDER"] = UPLOAD_DIR
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
+if not all([CLOUD_NAME, API_KEY, API_SECRET]):
+    raise RuntimeError("❌ Cloudinary environment variables missing")
 
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+cloudinary.config(
+    cloud_name=CLOUD_NAME,
+    api_key=API_KEY,
+    api_secret=API_SECRET,
+    secure=True,
+)
 
 # =========================
-# ENVIRONMENT VARIABLES
+# ENV VARIABLES
 # =========================
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
@@ -68,6 +73,8 @@ CATEGORIES = {
     "accessories": {"name": "Accessories", "icon": "fas fa-keyboard"},
 }
 
+PLACEHOLDER_IMAGE = "https://via.placeholder.com/600x400?text=No+Image"
+
 # =========================
 # EXTENSIONS
 # =========================
@@ -81,6 +88,8 @@ login_manager.login_message_category = "info"
 # MODELS
 # =========================
 class Admin(UserMixin, db.Model):
+    __tablename__ = "admin"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
@@ -93,12 +102,14 @@ class Admin(UserMixin, db.Model):
 
 
 class Product(db.Model):
+    __tablename__ = "product"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False, default="accessories")
-    image = db.Column(db.String(200), default="default.jpg")
+    image_url = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # =========================
@@ -106,16 +117,16 @@ class Product(db.Model):
 # =========================
 @login_manager.user_loader
 def load_user(user_id):
-    return Admin.query.get(int(user_id))
-
-
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return db.session.get(Admin, int(user_id))
 
 
 def seed_database():
-    """Create admin user once using env vars"""
-    if Admin.query.count() == 0 and ADMIN_USERNAME and ADMIN_PASSWORD:
+    """Create admin user ONCE (safe on redeploy)"""
+    if not ADMIN_USERNAME or not ADMIN_PASSWORD:
+        return
+
+    admin = Admin.query.filter_by(username=ADMIN_USERNAME).first()
+    if not admin:
         admin = Admin(username=ADMIN_USERNAME)
         admin.set_password(ADMIN_PASSWORD)
         db.session.add(admin)
@@ -123,7 +134,7 @@ def seed_database():
         print("✅ Admin user created")
 
 # =========================
-# DATABASE INIT (SAFE)
+# DB INIT
 # =========================
 with app.app_context():
     db.create_all()
@@ -161,17 +172,20 @@ def category_page(category):
 def product_detail(id):
     product = Product.query.get_or_404(id)
 
+    image = product.image_url or PLACEHOLDER_IMAGE
+
     whatsapp_link = None
     if WHATSAPP_NUMBER:
         message = (
-            f"Hi! I'm interested in {product.name} priced at "
-            f"MWK {product.price:,.0f}. Is it available?"
+            f"Hello! I'm interested in {product.name} "
+            f"(MWK {product.price:,.0f}). Is it available?"
         )
         whatsapp_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={quote(message)}"
 
     return render_template(
         "product_detail.html",
         product=product,
+        image=image,
         whatsapp_link=whatsapp_link,
         categories=CATEGORIES,
     )
@@ -221,19 +235,27 @@ def admin_dashboard():
 def admin_add_product():
     if request.method == "POST":
         file = request.files.get("image")
-        image_filename = "default.jpg"
 
-        if file and file.filename and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            image_filename = f"{os.urandom(8).hex()}_{filename}"
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], image_filename))
+        if not file:
+            flash("Image is required", "danger")
+            return redirect(request.url)
+
+        try:
+            upload = cloudinary.uploader.upload(
+                file,
+                folder="computer_aid_products",
+                transformation={"quality": "auto", "fetch_format": "auto"},
+            )
+        except Exception:
+            flash("Image upload failed", "danger")
+            return redirect(request.url)
 
         product = Product(
             name=request.form.get("name"),
             price=float(request.form.get("price")),
             description=request.form.get("description"),
             category=request.form.get("category", "accessories"),
-            image=image_filename,
+            image_url=upload["secure_url"],
         )
 
         db.session.add(product)
@@ -241,7 +263,12 @@ def admin_add_product():
         flash("Product added successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
+    return render_template(
+        "admin/product_form.html",
+        product=None,
+        action="Add",
+        categories=CATEGORIES,
+    )
 
 
 @app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
@@ -256,33 +283,30 @@ def admin_edit_product(id):
         product.category = request.form.get("category", "accessories")
 
         file = request.files.get("image")
-        if file and file.filename and allowed_file(file.filename):
-            if product.image != "default.jpg":
-                old = os.path.join(app.config["UPLOAD_FOLDER"], product.image)
-                if os.path.exists(old):
-                    os.remove(old)
-
-            filename = secure_filename(file.filename)
-            product.image = f"{os.urandom(8).hex()}_{filename}"
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], product.image))
+        if file:
+            upload = cloudinary.uploader.upload(
+                file,
+                folder="computer_aid_products",
+                transformation={"quality": "auto", "fetch_format": "auto"},
+            )
+            product.image_url = upload["secure_url"]
 
         db.session.commit()
         flash("Product updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
+    return render_template(
+        "admin/product_form.html",
+        product=product,
+        action="Edit",
+        categories=CATEGORIES,
+    )
 
 
 @app.route("/admin/product/delete/<int:id>", methods=["POST"])
 @login_required
 def admin_delete_product(id):
     product = Product.query.get_or_404(id)
-
-    if product.image != "default.jpg":
-        path = os.path.join(app.config["UPLOAD_FOLDER"], product.image)
-        if os.path.exists(path):
-            os.remove(path)
-
     db.session.delete(product)
     db.session.commit()
     flash("Product deleted successfully!", "success")

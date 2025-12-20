@@ -6,8 +6,12 @@
 <section class="hero-section">
     <div class="container">
         <div class="hero-content text-center">
-            <h1 class="hero-title animate-fade-in">Welcome to <span class="text-accent">Computer Aid MW</span></h1>
-            <p class="hero-subtitle animate-fade-in-delay">Your trusted source for premium computer products and accessories</p>
+            <h1 class="hero-title animate-fade-in">
+                Welcome to <span class="text-accent">Computer Aid MW</span>
+            </h1>
+            <p class="hero-subtitle animate-fade-in-delay">
+                Your trusted source for premium computer products and accessories
+            </p>
             <a href="#categories" class="btn btn-primary btn-lg hero-btn animate-fade-in-delay-2">
                 <i class="fas fa-shopping-bag me-2"></i>Browse Categories
             </a>
@@ -26,7 +30,7 @@
             <h2 class="section-title">Shop by Category</h2>
             <p class="section-subtitle">Browse our carefully curated collections</p>
         </div>
-        
+
         <div class="row g-4">
             {% for key, category in categories.items() %}
             <div class="col-sm-6 col-lg-3">
@@ -50,32 +54,49 @@
             <h2 class="section-title">Latest Products</h2>
             <p class="section-subtitle">Check out our newest arrivals</p>
         </div>
-        
+
         {% if products %}
         <div class="row g-4">
             {% for product in products[:8] %}
             <div class="col-sm-6 col-lg-4 col-xl-3">
-                <a href="{{ url_for('product_detail', id=product.id) }}" class="product-card-link">
-                    <div class="product-card fade-in-up">
+                <a href="{{ url_for('product_detail', id=product.id) }}"
+                   class="product-card-link text-decoration-none">
+
+                    <div class="product-card fade-in-up h-100">
                         <div class="product-image-wrapper">
-                            <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
-                                 alt="{{ product.name }}" class="product-image"
+                            <!-- ✅ CLOUDINARY IMAGE -->
+                            <img src="{{ product.image_url }}"
+                                 alt="{{ product.name }}"
+                                 class="product-image"
+                                 loading="lazy"
                                  onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
+
                             <div class="product-overlay">
                                 <div class="product-overlay-text">
-                                    <i class="fas fa-arrow-right mb-2"></i><br>View Product
+                                    <i class="fas fa-arrow-right mb-2"></i><br>
+                                    View Product
                                 </div>
                             </div>
-                            <span class="product-category-badge">{{ categories[product.category].name }}</span>
+
+                            <span class="product-category-badge">
+                                {{ categories[product.category].name }}
+                            </span>
                         </div>
+
                         <div class="product-info">
                             <h5 class="product-name">{{ product.name }}</h5>
-                            <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                            <p class="product-description">
+                                {{ product.description[:80] }}
+                                {% if product.description|length > 80 %}...{% endif %}
+                            </p>
                             <div class="product-footer">
-                                <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
+                                <span class="product-price">
+                                    MWK {{ "{:,.0f}".format(product.price) }}
+                                </span>
                             </div>
                         </div>
                     </div>
+
                 </a>
             </div>
             {% endfor %}
@@ -93,7 +114,9 @@
 <section class="cta-section py-5">
     <div class="container">
         <div class="cta-card text-center">
-            <h3><i class="fab fa-whatsapp me-2"></i>Need Help Choosing?</h3>
+            <h3>
+                <i class="fab fa-whatsapp me-2"></i>Need Help Choosing?
+            </h3>
             <p>Contact us on WhatsApp for personalized recommendations and support</p>
             <a href="https://wa.me/265888302771" target="_blank" class="btn btn-success btn-lg">
                 <i class="fab fa-whatsapp me-2"></i>Chat with Us

@@ -726,3 +726,180 @@ body {
         justify-content: center;
     }
 }
+
+/* ============================
+   ANIMATIONS
+============================ */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.6s ease forwards;
+}
+
+.animate-fade-down {
+    animation: fadeDown 0.6s ease forwards;
+}
+
+.animate-slide-left {
+    animation: slideLeft 0.7s ease forwards;
+}
+
+.animate-slide-right {
+    animation: slideRight 0.7s ease forwards;
+}
+
+/* Delays */
+.animate-fade-in-delay {
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.15s;
+}
+
+.animate-fade-in-delay-2 {
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.animate-fade-in-delay-3 {
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.45s;
+}
+
+.animate-fade-in-delay-4 {
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.animate-fade-in-delay-5 {
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.75s;
+}
+
+/* ============================
+   ADMIN DASHBOARD STYLES
+============================ */
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 22px;
+}
+
+.stat-info h3 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.table-product-img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.table-product-img:hover {
+    transform: scale(1.15);
+}
+
+.products-table-card {
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px;
+}
+
+/* ============================
+   ADMIN FORM STYLES
+============================ */
+
+.form-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.form-header h3 {
+    font-weight: 700;
+}
+
+.form-control,
+.form-select {
+    border-radius: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+}
