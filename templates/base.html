@@ -1,162 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Computer Aid MW{% endblock %}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Computer Aid MW{% endblock %}</title>
 
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <style>
-        /* ===== DESKTOP SEARCH ===== */
-        .search-wrapper {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
+<style>
+/* ===== DESKTOP SEARCH (UNCHANGED) ===== */
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
 
-        .search-input {
-            width: 0;
-            opacity: 0;
-            margin-left: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
+.search-input {
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-left: 0;
+    transition: all .3s ease;
+}
 
-        .search-wrapper.active .search-input {
-            width: 200px;
-            opacity: 1;
-            margin-left: 8px;
-        }
+.search-wrapper.active .search-input {
+    width: 200px;
+    opacity: 1;
+    margin-left: 8px;
+}
 
-        /* ===== MOBILE ONLY ===== */
-        @media (max-width: 991px) {
+/* ===== MOBILE ONLY FIX ===== */
+@media (max-width: 991px) {
 
-            /* Stack nav items cleanly */
-            .navbar-collapse {
-                padding-top: 12px;
-            }
+    .navbar-collapse {
+        padding-top: 12px;
+    }
 
-            .nav-mobile {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
+    /* Right-aligned vertical stack */
+    .mobile-stack {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
 
-            /* Mobile search layout */
-            .search-wrapper {
-                width: 100%;
-                flex-direction: column;
-                align-items: stretch;
-            }
+    /* Full-width buttons */
+    .mobile-btn {
+        width: 100%;
+        text-align: left;
+    }
 
-            .search-input {
-                width: 100%;
-                max-height: 0;
-                opacity: 0;
-                margin-left: 0;
-                margin-top: 0;
-                transition: max-height 0.3s ease, opacity 0.3s ease;
-            }
+    /* Search vertical slide */
+    .search-wrapper {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-            .search-wrapper.active .search-input {
-                max-height: 60px;
-                opacity: 1;
-                margin-top: 6px;
-            }
+    .search-input {
+        width: 100%;
+        max-height: 0;
+        opacity: 0;
+        margin-left: 0;
+        margin-top: 0;
+        transition: max-height .3s ease, opacity .3s ease;
+    }
 
-            /* Buttons full width */
-            .mobile-btn {
-                width: 100%;
-                text-align: left;
-            }
-
-            .cart-link {
-                padding-left: 0.5rem;
-            }
-        }
-    </style>
+    .search-wrapper.active .search-input {
+        max-height: 60px;
+        opacity: 1;
+        margin-top: 6px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <div class="container">
+<div class="container">
 
-        <!-- LOGO -->
-        <a class="navbar-brand" href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" height="45">
-        </a>
+    <!-- LOGO -->
+    <a class="navbar-brand" href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" height="45">
+    </a>
 
-        <!-- TOGGLER -->
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <!-- TOGGLER -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- NAV -->
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- LEFT -->
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('home') }}">
-                        <i class="fas fa-home me-1"></i> Home
-                    </a>
-                </li>
-            </ul>
-
-            <!-- RIGHT / MOBILE STACK -->
-            <div class="nav-mobile ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-lg-2">
-
-                <!-- SEARCH -->
-                <div class="search-wrapper" id="searchWrapper">
-                    <button class="btn btn-sm btn-outline-light mobile-btn"
-                            type="button"
-                            id="searchToggle">
-                        <i class="fas fa-search me-2"></i> Search
-                    </button>
-
-                    <form method="GET"
-                          action="{{ url_for('search') }}"
-                          class="search-input">
-                        <input type="search"
-                               name="q"
-                               class="form-control form-control-sm"
-                               placeholder="Search products...">
-                    </form>
-                </div>
-
-                <!-- CART -->
-                <a href="{{ url_for('view_cart') }}"
-                   class="nav-link text-white mobile-btn position-relative cart-link">
-                    <i class="fas fa-shopping-cart me-2"></i> Cart
-
-                    {% if cart_count and cart_count > 0 %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ cart_count }}
-                    </span>
-                    {% endif %}
+        <!-- LEFT -->
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">
+                    <i class="fas fa-home me-1"></i> Home
                 </a>
+            </li>
+        </ul>
 
+        <!-- RIGHT STACK -->
+        <div class="mobile-stack ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-lg-2">
+
+            <!-- SEARCH -->
+            <div class="search-wrapper" id="searchWrapper">
+                <button class="btn btn-sm btn-outline-light mobile-btn"
+                        type="button"
+                        id="searchToggle">
+                    <i class="fas fa-search me-2"></i> Search
+                </button>
+
+                <form method="GET"
+                      action="{{ url_for('search') }}"
+                      class="search-input">
+                    <input type="search"
+                           name="q"
+                           class="form-control form-control-sm"
+                           placeholder="Search products...">
+                </form>
             </div>
+
+            <!-- CART -->
+            <a href="{{ url_for('view_cart') }}"
+               class="nav-link text-white mobile-btn position-relative">
+                <i class="fas fa-shopping-cart me-2"></i> Cart
+
+                {% if cart_count and cart_count > 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ cart_count }}
+                </span>
+                {% endif %}
+            </a>
+
         </div>
     </div>
+</div>
 </nav>
 
-<main id="page-transition">
-    {% block content %}{% endblock %}
+<main>
+{% block content %}{% endblock %}
 </main>
-
-<footer class="footer mt-5">
-    <div class="container text-center">
-        <p class="mb-0">&copy; 2024 Computer Aid MW</p>
-    </div>
-</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -164,20 +156,17 @@
 const toggle = document.getElementById("searchToggle");
 const wrapper = document.getElementById("searchWrapper");
 
-if (toggle && wrapper) {
-    toggle.addEventListener("click", e => {
-        e.stopPropagation();
-        wrapper.classList.toggle("active");
-        const input = wrapper.querySelector("input");
-        if (input) input.focus();
-    });
+toggle.addEventListener("click", e => {
+    e.stopPropagation();
+    wrapper.classList.toggle("active");
+    wrapper.querySelector("input")?.focus();
+});
 
-    document.addEventListener("click", e => {
-        if (!wrapper.contains(e.target)) {
-            wrapper.classList.remove("active");
-        }
-    });
-}
+document.addEventListener("click", e => {
+    if (!wrapper.contains(e.target)) {
+        wrapper.classList.remove("active");
+    }
+});
 </script>
 
 </body>
