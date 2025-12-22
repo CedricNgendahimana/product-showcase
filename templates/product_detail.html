@@ -79,6 +79,7 @@
 
                     <!-- ACTION BUTTONS -->
                     <div class="product-actions mt-4 d-grid gap-3 animate-fade-in-delay-4">
+
                         {% if whatsapp_link %}
                         <a href="{{ whatsapp_link }}"
                            target="_blank"
@@ -87,6 +88,16 @@
                             Contact Seller on WhatsApp
                         </a>
                         {% endif %}
+
+                        <!-- 🛒 ADD TO CART (WORKS WITH YOUR app.py) -->
+                        <form method="POST"
+                              action="{{ url_for('add_to_cart', product_id=product.id) }}">
+                            <button type="submit"
+                                    class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>
+                                Add to Cart
+                            </button>
+                        </form>
 
                         <a href="{{ url_for('category_page', category=product.category) }}"
                            class="btn btn-outline-secondary">

@@ -7,7 +7,15 @@ SAFE ON REDEPLOY – IMAGES NEVER LOST
 import os
 import cloudinary
 import cloudinary.uploader
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+)
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
     LoginManager,
@@ -42,17 +50,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # =========================
 # CLOUDINARY CONFIG
 # =========================
-CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME")
-API_KEY = os.environ.get("CLOUDINARY_API_KEY")
-API_SECRET = os.environ.get("CLOUDINARY_API_SECRET")
-
-if not all([CLOUD_NAME, API_KEY, API_SECRET]):
-    raise RuntimeError("❌ Cloudinary environment variables missing")
-
 cloudinary.config(
-    cloud_name=CLOUD_NAME,
-    api_key=API_KEY,
-    api_secret=API_SECRET,
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
     secure=True,
 )
 
@@ -131,7 +132,21 @@ def seed_database():
         admin.set_password(ADMIN_PASSWORD)
         db.session.add(admin)
         db.session.commit()
-        print("✅ Admin user created")
+
+
+def get_cart():
+    return session.get("cart", {})
+
+
+def save_cart(cart):
+    session["cart"] = cart
+    session.modified = True
+
+
+@app.context_processor
+def inject_cart_count():
+    cart = session.get("cart", {})
+    return {"cart_count": len(cart)}
 
 # =========================
 # DB INIT
@@ -141,7 +156,7 @@ with app.app_context():
     seed_database()
 
 # =========================
-# ROUTES
+# PUBLIC ROUTES
 # =========================
 @app.route("/")
 def home():
@@ -167,31 +182,29 @@ def category_page(category):
         categories=CATEGORIES,
     )
 
+
 @app.route("/search")
 def search():
     query = request.args.get("q", "").strip()
-
     if not query:
         return redirect(url_for("home"))
 
     products = Product.query.filter(
-        (Product.name.ilike(f"%{query}%")) |
-        (Product.description.ilike(f"%{query}%"))
+        (Product.name.ilike(f"%{query}%"))
+        | (Product.description.ilike(f"%{query}%"))
     ).all()
 
     return render_template(
         "search_results.html",
         products=products,
         query=query,
-        categories=CATEGORIES
+        categories=CATEGORIES,
     )
 
 
 @app.route("/product/<int:id>")
 def product_detail(id):
     product = Product.query.get_or_404(id)
-
-    image = product.image_url or PLACEHOLDER_IMAGE
 
     whatsapp_link = None
     if WHATSAPP_NUMBER:
@@ -204,10 +217,70 @@ def product_detail(id):
     return render_template(
         "product_detail.html",
         product=product,
-        image=image,
         whatsapp_link=whatsapp_link,
         categories=CATEGORIES,
     )
+
+# =========================
+# CART ROUTES
+# =========================
+@app.route("/cart")
+def view_cart():
+    cart = get_cart()
+    total = sum(item["price"] for item in cart.values())
+    return render_template(
+        "cart.html",
+        cart=cart,
+        total=total,
+        categories=CATEGORIES,
+    )
+
+
+@app.route("/cart/add/<int:product_id>", methods=["POST"])
+def add_to_cart(product_id):
+    product = Product.query.get_or_404(product_id)
+    cart = get_cart()
+
+    cart[str(product_id)] = {
+        "name": product.name,
+        "price": product.price,
+        "image": product.image_url,
+    }
+
+    save_cart(cart)
+    flash("Product added to cart", "success")
+    return redirect(request.referrer or url_for("home"))
+
+
+# =====================================================
+# ✅ ADDITION: REMOVE FROM CART
+# =====================================================
+@app.route("/cart/remove/<int:product_id>", methods=["POST"])
+def remove_from_cart(product_id):
+    cart = get_cart()
+    cart.pop(str(product_id), None)
+    save_cart(cart)
+    flash("Product removed from cart", "info")
+    return redirect(url_for("view_cart"))
+
+
+@app.route("/cart/checkout")
+def checkout():
+    cart = get_cart()
+    if not cart or not WHATSAPP_NUMBER:
+        return redirect(url_for("home"))
+
+    message = "Hello! I would like to order:\n\n"
+    total = 0
+
+    for item in cart.values():
+        message += f"- {item['name']} (MWK {item['price']:,.0f})\n"
+        total += item["price"]
+
+    message += f"\nTotal: MWK {total:,.0f}"
+
+    session.pop("cart", None)
+    return redirect(f"https://wa.me/{WHATSAPP_NUMBER}?text={quote(message)}")
 
 # =========================
 # ADMIN AUTH
@@ -246,7 +319,11 @@ def admin_logout():
 @login_required
 def admin_dashboard():
     products = Product.query.order_by(Product.created_at.desc()).all()
-    return render_template("admin/dashboard.html", products=products, categories=CATEGORIES)
+    return render_template(
+        "admin/dashboard.html",
+        products=products,
+        categories=CATEGORIES,
+    )
 
 
 @app.route("/admin/product/add", methods=["GET", "POST"])
@@ -254,20 +331,15 @@ def admin_dashboard():
 def admin_add_product():
     if request.method == "POST":
         file = request.files.get("image")
-
         if not file:
             flash("Image is required", "danger")
             return redirect(request.url)
 
-        try:
-            upload = cloudinary.uploader.upload(
-                file,
-                folder="computer_aid_products",
-                transformation={"quality": "auto", "fetch_format": "auto"},
-            )
-        except Exception:
-            flash("Image upload failed", "danger")
-            return redirect(request.url)
+        upload = cloudinary.uploader.upload(
+            file,
+            folder="computer_aid_products",
+            transformation={"quality": "auto", "fetch_format": "auto"},
+        )
 
         product = Product(
             name=request.form.get("name"),
