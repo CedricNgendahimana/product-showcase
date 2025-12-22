@@ -14,9 +14,11 @@
 
 <body>
 
-<!-- NAVBAR -->
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
+
+        <!-- LOGO -->
         <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}"
                  alt="Computer Aid MW"
@@ -24,15 +26,17 @@
                  class="me-2">
         </a>
 
+        <!-- TOGGLER -->
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- NAV -->
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- LEFT NAV -->
+            <!-- LEFT -->
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('home') }}">
@@ -41,28 +45,40 @@
                 </li>
             </ul>
 
-            <!-- SEARCH -->
-            <form class="d-flex me-3" method="GET" action="{{ url_for('search') }}">
-                <input
-                    class="form-control form-control-sm me-2"
-                    type="search"
-                    name="q"
-                    placeholder="Search products..."
-                    aria-label="Search">
-                <button class="btn btn-sm btn-outline-light" type="submit">
+            <!-- 🔍 SEARCH (CLICK TO OPEN) -->
+            <div class="position-relative me-3">
+
+                <!-- SEARCH ICON -->
+                <button id="searchToggle"
+                        type="button"
+                        class="btn btn-sm btn-outline-light">
                     <i class="fas fa-search"></i>
                 </button>
-            </form>
 
-            <!-- CART -->
+                <!-- SEARCH INPUT -->
+                <form id="searchForm"
+                      method="GET"
+                      action="{{ url_for('search') }}"
+                      class="position-absolute end-0 mt-2 d-none"
+                      style="min-width: 220px; z-index: 1000;">
+                    <input class="form-control form-control-sm"
+                           type="search"
+                           name="q"
+                           placeholder="Search products..."
+                           autofocus>
+                </form>
+
+            </div>
+
+            <!-- 🛒 CART -->
             <ul class="navbar-nav">
                 <li class="nav-item position-relative">
                     <a class="nav-link" href="{{ url_for('view_cart') }}">
                         <i class="fas fa-shopping-cart"></i>
 
-                        {% if session.get('cart') %}
+                        {% if cart_count and cart_count > 0 %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ session.get('cart')|length }}
+                            {{ cart_count }}
                         </span>
                         {% endif %}
                     </a>
@@ -73,7 +89,7 @@
     </div>
 </nav>
 
-<!-- FLASH MESSAGES -->
+<!-- ================= FLASH MESSAGES ================= -->
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 <div class="container mt-3">
@@ -87,12 +103,12 @@
 {% endif %}
 {% endwith %}
 
-<!-- MAIN CONTENT -->
+<!-- ================= MAIN CONTENT ================= -->
 <main id="page-transition" class="page-transition">
     {% block content %}{% endblock %}
 </main>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 <footer class="footer mt-auto">
     <div class="container">
         <div class="row">
@@ -139,32 +155,40 @@
     </div>
 </footer>
 
-<!-- SCRIPTS -->
+<!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
+<!-- SEARCH TOGGLE SCRIPT -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.animationPlayState = "running";
-      }
-    });
-  }, { threshold: 0.1 });
+const toggle = document.getElementById("searchToggle");
+const form = document.getElementById("searchForm");
 
-  document.querySelectorAll('[class*="animate-"]')
-    .forEach(el => observer.observe(el));
-});
+if (toggle && form) {
+    toggle.addEventListener("click", e => {
+        e.stopPropagation();
+        form.classList.toggle("d-none");
+        const input = form.querySelector("input");
+        if (input) input.focus();
+    });
+
+    document.addEventListener("click", e => {
+        if (!form.contains(e.target) && !toggle.contains(e.target)) {
+            form.classList.add("d-none");
+        }
+    });
+}
 </script>
 
+<!-- PAGE TRANSITION -->
 <script>
 document.querySelectorAll("a").forEach(link => {
   link.addEventListener("click", e => {
     if (link.target === "_blank" || link.href.includes("#")) return;
 
     e.preventDefault();
-    document.getElementById("page-transition").style.opacity = 0;
+    const page = document.getElementById("page-transition");
+    if (page) page.style.opacity = 0;
 
     setTimeout(() => {
       window.location = link.href;
