@@ -41,7 +41,7 @@
                 </li>
             </ul>
 
-            <!-- 🔍 SEARCH FORM (ADDED) -->
+            <!-- SEARCH -->
             <form class="d-flex me-3" method="GET" action="{{ url_for('search') }}">
                 <input
                     class="form-control form-control-sm me-2"
@@ -54,10 +54,10 @@
                 </button>
             </form>
 
-            <!-- 🛒 CART ICON (ADDED) -->
+            <!-- CART -->
             <ul class="navbar-nav">
                 <li class="nav-item position-relative">
-                    <a class="nav-link" href="{{ url_for('cart') }}">
+                    <a class="nav-link" href="{{ url_for('view_cart') }}">
                         <i class="fas fa-shopping-cart"></i>
 
                         {% if session.get('cart') %}
