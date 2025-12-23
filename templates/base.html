@@ -3,8 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Aid MW</title>
+    <meta name="description" content="Computer Aid MW - Your trusted computer solutions provider in Malawi">
+    
+    <title>{% block title %}Computer Aid MW{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <!-- Your Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <!-- Your Color Variables and Styles -->
     <style>
+        :root {
+            --primary-color: #e94c2b;
+            --primary-dark: #c73e22;
+            --secondary-color: #16213e;
+            --accent-color: #ff6b4a;
+            --success-color: #25d366;
+            --text-dark: #2d3436;
+            --text-muted: #636e72;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,88 +43,311 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
             line-height: 1.6;
-            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 0 !important;
+            animation: pageIn 0.5s ease;
         }
 
-        /* Navbar Styles */
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        main {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* ===== NAVBAR STYLES ===== */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 3rem;
-            background-color: #ffffff;
-            border-bottom: 1px solid #eaeaea;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%) !important;
+            box-shadow: var(--shadow-md);
+            padding: 1rem 0;
+            position: relative;
             z-index: 1000;
         }
-
-        .nav-brand {
-            display: flex;
-            flex-direction: column;
+        
+        .navbar-brand img {
+            height: 45px;
+            transition: var(--transition);
         }
-
-        .brand-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2c3e50;
-            letter-spacing: 0.5px;
+        
+        .navbar-brand:hover img {
+            transform: scale(1.05);
         }
-
-        .brand-tagline {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-top: 0.3rem;
-            font-weight: 400;
+        
+        /* Desktop Navigation */
+        @media (min-width: 992px) {
+            .navbar {
+                padding: 1.2rem 0;
+            }
+            
+            .desktop-nav {
+                display: flex !important;
+                align-items: center;
+            }
+            
+            .nav-item {
+                margin: 0 0.3rem;
+            }
+            
+            .nav-link {
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-weight: 500;
+                padding: 0.6rem 1.2rem !important;
+                transition: var(--transition);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .nav-link:hover {
+                background: rgba(255,255,255,0.1);
+                color: var(--white) !important;
+                transform: translateY(-2px);
+            }
+            
+            .nav-link i {
+                font-size: 1.1rem;
+            }
+            
+            /* Desktop Search */
+            .search-wrapper-desktop {
+                position: relative;
+                margin-left: 1rem;
+            }
+            
+            .search-toggle-desktop {
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+                cursor: pointer;
+            }
+            
+            .search-toggle-desktop:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: scale(1.1);
+            }
+            
+            .search-input-desktop {
+                position: absolute;
+                top: 50%;
+                right: 100%;
+                transform: translateY(-50%) scaleX(0);
+                transform-origin: right;
+                width: 300px;
+                opacity: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                margin-right: 15px;
+            }
+            
+            .search-wrapper-desktop.active .search-input-desktop {
+                transform: translateY(-50%) scaleX(1);
+                opacity: 1;
+            }
+            
+            /* Desktop Cart */
+            .cart-wrapper-desktop {
+                position: relative;
+                margin-left: 1rem;
+            }
+            
+            .cart-link-desktop {
+                display: flex;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+                padding: 0.6rem 1.2rem;
+                border-radius: 8px;
+                transition: var(--transition);
+                gap: 0.5rem;
+            }
+            
+            .cart-link-desktop:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .cart-badge-desktop {
+                position: absolute;
+                top: 0;
+                right: 0;
+                transform: translate(50%, -50%);
+                background: var(--primary-color);
+                color: white;
+                font-size: 0.7rem;
+                font-weight: 600;
+                min-width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: pulse 2s infinite;
+            }
         }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
+        
+        /* Mobile Navigation */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: var(--secondary-color);
+                padding: 1.5rem;
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+                margin-top: 0.5rem;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .mobile-menu {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .mobile-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 1rem 1.2rem;
+                border-radius: 10px;
+                background: rgba(255,255,255,0.05);
+                color: #fff;
+                text-decoration: none;
+                transition: var(--transition);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-item:hover {
+                background: rgba(255,255,255,0.1);
+                transform: translateX(5px);
+            }
+            
+            .mobile-item i {
+                font-size: 1.1rem;
+                width: 30px;
+                text-align: center;
+            }
+            
+            .mobile-item span {
+                flex-grow: 1;
+                margin-left: 1rem;
+                font-weight: 500;
+            }
+            
+            /* Mobile Search */
+            .search-wrapper-mobile {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .search-toggle-mobile {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 1rem 1.2rem;
+                border-radius: 10px;
+                background: rgba(255,255,255,0.05);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            
+            .search-toggle-mobile:hover {
+                background: rgba(255,255,255,0.1);
+            }
+            
+            .search-input-mobile {
+                width: 100%;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease, opacity 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-radius: 8px;
+            }
+            
+            .search-input-mobile::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            .search-wrapper-mobile.active .search-input-mobile {
+                max-height: 70px;
+                opacity: 1;
+                padding: 0.75rem 1rem;
+            }
+            
+            /* Mobile Cart */
+            .cart-wrapper-mobile {
+                position: relative;
+            }
+            
+            .cart-badge-mobile {
+                position: absolute;
+                top: 0;
+                right: 0;
+                transform: translate(50%, -50%);
+                background: var(--primary-color);
+                color: white;
+                font-size: 0.7rem;
+                font-weight: 600;
+                min-width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: pulse 2s infinite;
+            }
         }
-
-        .nav-link {
-            color: #34495e;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-            border-radius: 6px;
-            font-size: 0.95rem;
+        
+        /* Navbar toggler */
+        .navbar-toggler {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 0.75rem;
         }
-
-        .nav-link:hover {
-            color: #3498db;
-            background-color: #f8f9fa;
-            transform: translateY(-2px);
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
         }
-
-        .nav-link.active {
-            color: #3498db;
-            background-color: #ebf5fb;
-        }
-
-        /* Hero Section */
+        
+        /* ===== HERO SECTION ===== */
         .hero-section {
-            width: 100%;
-            min-height: calc(100vh - 80px);
-            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 2rem;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%);
+            color: var(--white);
+            padding: 120px 0 80px;
             position: relative;
             overflow: hidden;
+            margin-top: 0;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
         }
-
+        
         .hero-section::before {
             content: '';
             position: absolute;
@@ -101,331 +355,640 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="white" opacity="0.05"/></svg>');
-            background-size: cover;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-
+        
         .hero-content {
-            max-width: 900px;
-            animation: fadeInUp 1s ease-out;
-            z-index: 1;
             position: relative;
+            z-index: 1;
         }
-
+        
         .hero-title {
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: -1px;
             line-height: 1.2;
-            background: linear-gradient(to right, #ffffff, #ecf0f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
-
+        
+        .text-accent {
+            color: var(--primary-color);
+        }
+        
         .hero-subtitle {
-            font-size: 1.4rem;
-            margin-bottom: 2.5rem;
+            font-size: 1.3rem;
             opacity: 0.9;
-            line-height: 1.6;
+            margin-bottom: 2rem;
             font-weight: 300;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 600px;
         }
-
-        .browse-btn {
-            display: inline-block;
-            background: linear-gradient(to right, #2ecc71, #27ae60);
-            color: white;
-            padding: 1.2rem 3rem;
+        
+        .hero-btn {
+            padding: 1rem 2.5rem;
             font-size: 1.1rem;
             font-weight: 600;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+            border-radius: 50px;
+            background: var(--primary-color);
             border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+        
+        .hero-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(233, 76, 43, 0.4);
+        }
+        
+        /* ===== OTHER STYLES ===== */
+        .alert {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Footer Styling */
+        footer {
+            background: var(--secondary-color);
             position: relative;
             overflow: hidden;
+            margin-top: auto;
+            color: var(--white);
         }
-
-        .browse-btn:hover {
+        
+        .footer-link {
+            color: rgba(255,255,255,0.7) !important;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            text-decoration: none;
+            color: rgba(255,255,255,0.7) !important;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary-color);
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
-            background: linear-gradient(to right, #27ae60, #219955);
+            color: var(--white) !important;
         }
-
-        .browse-btn:active {
-            transform: translateY(-1px);
+        
+        /* Back to Top Button */
+        .btn-back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
         }
-
-        .browse-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.7s;
+        
+        .btn-back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
         }
-
-        .browse-btn:hover::after {
-            left: 100%;
+        
+        /* Animation Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease forwards;
         }
-
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .animate-fade-in-delay {
+            animation: fadeIn 0.6s ease forwards;
+            animation-delay: 0.2s;
         }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        
+        .animate-fade-in-delay-2 {
+            animation: fadeIn 0.6s ease forwards;
+            animation-delay: 0.4s;
         }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
+        
+        .animate-fade-down {
+            animation: fadeDown 0.6s ease forwards;
         }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1.2rem;
-                padding: 1.2rem;
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-                width: 100%;
-            }
-
-            .nav-link {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-                padding: 0 1rem;
-            }
-
-            .hero-section {
-                min-height: calc(100vh - 140px);
-                padding: 1.5rem;
-            }
-
-            .browse-btn {
-                padding: 1rem 2.5rem;
-                font-size: 1rem;
-            }
+        
+        .animate-slide-left {
+            animation: slideLeft 0.7s ease forwards;
         }
-
-        @media (max-width: 480px) {
-            .brand-name {
-                font-size: 1.5rem;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .browse-btn {
-                padding: 0.9rem 2rem;
-                font-size: 0.95rem;
-            }
-            
-            .navbar {
-                padding: 1rem;
-            }
+        
+        .animate-slide-right {
+            animation: slideRight 0.7s ease forwards;
         }
-
-        /* Features Section */
-        .features-section {
-            padding: 5rem 2rem;
-            background-color: white;
-            text-align: center;
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: translate(50%, -50%) scale(1); }
+            50% { transform: translate(50%, -50%) scale(1.1); }
+            100% { transform: translate(50%, -50%) scale(1); }
         }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 3rem;
-            font-weight: 700;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .feature-card {
-            padding: 2rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #3498db;
+        
+        /* Remove body padding for full-page hero */
+        body {
+            padding-top: 0 !important;
         }
-
-        .feature-title {
-            font-size: 1.3rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .feature-description {
-            color: #7f8c8d;
-            line-height: 1.6;
+        
+        /* Ensure content starts right after navbar */
+        .navbar + * {
+            margin-top: 0 !important;
         }
     </style>
 </head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-brand">
-            <div class="brand-name">Computer Aid MW</div>
-            <div class="brand-tagline">Your trusted source for premium computer products</div>
+
+<body class="page-transition">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <!-- LOGO -->
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Aid MW">
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#navbarNav"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Desktop Navigation -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Desktop Menu (Visible on large screens) -->
+                <div class="desktop-nav d-none d-lg-flex align-items-center w-100">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}">
+                                <i class="fas fa-home"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">
+                                <i class="fas fa-laptop"></i>
+                                <span>Laptops</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('category_page', category='gaming-consoles') }}">
+                                <i class="fas fa-gamepad"></i>
+                                <span>Gaming Consoles</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('category_page', category='phones') }}">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Phones</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('category_page', category='desktops') }}">
+                                <i class="fas fa-desktop"></i>
+                                <span>Desktops</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Desktop Right Section (Search + Cart) -->
+                    <div class="d-flex align-items-center">
+                        <!-- Desktop Search -->
+                        <div class="search-wrapper-desktop">
+                            <button type="button" class="search-toggle-desktop" id="desktopSearchToggle">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <form method="GET" action="{{ url_for('search') }}" class="search-input-desktop">
+                                <input type="search" name="q" class="form-control" placeholder="Search products...">
+                            </form>
+                        </div>
+
+                        <!-- Desktop Cart -->
+                        <div class="cart-wrapper-desktop">
+                            <a href="{{ url_for('view_cart') }}" class="cart-link-desktop">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Cart</span>
+                            </a>
+                            {% if cart_count and cart_count > 0 %}
+                            <span class="cart-badge-desktop">
+                                {{ cart_count }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu (Visible on small screens) -->
+                <div class="mobile-menu d-flex d-lg-none flex-column">
+                    <!-- Mobile Menu Items -->
+                    <a href="{{ url_for('home') }}" class="mobile-item">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ url_for('category_page', category='laptops') }}" class="mobile-item">
+                        <i class="fas fa-laptop"></i>
+                        <span>Laptops</span>
+                    </a>
+                    <a href="{{ url_for('category_page', category='gaming-consoles') }}" class="mobile-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Gaming Consoles</span>
+                    </a>
+                    <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Phones</span>
+                    </a>
+                    <a href="{{ url_for('category_page', category='desktops') }}" class="mobile-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Desktops</span>
+                    </a>
+
+                    <!-- Mobile Search -->
+                    <div class="search-wrapper-mobile">
+                        <button type="button" class="search-toggle-mobile" id="mobileSearchToggle">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-search"></i>
+                                <span class="ms-3">Search products</span>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <form method="GET" action="{{ url_for('search') }}" class="search-input-mobile">
+                            <input type="search" name="q" class="form-control" placeholder="Type to search...">
+                        </form>
+                    </div>
+
+                    <!-- Mobile Cart -->
+                    <div class="cart-wrapper-mobile">
+                        <a href="{{ url_for('view_cart') }}" class="mobile-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                            {% if cart_count and cart_count > 0 %}
+                            <span class="cart-badge-mobile">
+                                {{ cart_count }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <ul class="nav-menu">
-            <li><a href="#" class="nav-link active">Home</a></li>
-            <li><a href="#" class="nav-link">Products</a></li>
-            <li><a href="#" class="nav-link">Accessories</a></li> <!-- Changed from Desktop -->
-            <li><a href="#" class="nav-link">Support</a></li>
-            <li><a href="#" class="nav-link">Contact</a></li>
-        </ul>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">Welcome to Computer Aid MW</h1>
-            <p class="hero-subtitle">
-                Your trusted source for premium computer products and accessories. 
-                Discover the latest technology and high-quality accessories for all your computing needs.
-            </p>
-            <a href="#" class="browse-btn">Browse Categories</a>
-        </div>
-    </section>
+    <!-- Main Content -->
+    <main>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category or 'info' }} alert-dismissible fade show modern-alert" role="alert">
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                            {% elif category == 'error' or category == 'danger' %}
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                            {% elif category == 'warning' %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle me-2"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Hero Section (Only on Home Page) -->
+        {% if request.endpoint == 'home' %}
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content animate-fade-in">
+                    <h1 class="hero-title">
+                        Welcome to <span class="text-accent">Computer Aid MW</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Your trusted partner for computer solutions, repairs, and technology services in Malawi. 
+                        Quality products with excellent customer support.
+                    </p>
+                    <a href="{{ url_for('category_page', category='laptops') }}" class="btn hero-btn">
+                        <i class="fas fa-shopping-bag me-2"></i>
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+        </section>
+        {% endif %}
 
-    <!-- Optional Features Section -->
-    <section class="features-section">
-        <h2 class="section-title">Why Choose Computer Aid MW?</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">💻</div>
-                <h3 class="feature-title">Premium Products</h3>
-                <p class="feature-description">High-quality computers and accessories from trusted brands worldwide.</p>
+        <!-- Page Content -->
+        <div class="container py-5">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Computer Aid MW</h5>
+                    <p class="text-white-50 mb-4">
+                        Your trusted computer solutions provider in Malawi. Quality products with excellent customer support.
+                    </p>
+                    <div class="social-links d-flex gap-3">
+                        <a href="#" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ url_for('home') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Home
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('category_page', category='laptops') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Laptops
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('category_page', category='gaming-consoles') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Gaming Consoles
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('view_cart') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Cart
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Our Services</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-wrench me-2"></i>Computer Repairs
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-laptop-medical me-2"></i>Hardware Upgrades
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-shield-alt me-2"></i>Virus Removal
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-network-wired me-2"></i>Network Setup
+                            </span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚚</div>
-                <h3 class="feature-title">Fast Delivery</h3>
-                <p class="feature-description">Quick and reliable shipping across the country. Get your products in no time.</p>
+
+            <!-- Contact Info -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h5 class="text-white mb-3">Contact Us</h5>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-map-marker-alt mt-1 me-3"></i>
+                                <div>
+                                    <span class="text-white-50 d-block">Lilongwe, Malawi</span>
+                                    <small class="text-white-30">Capital City</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-phone mt-1 me-3"></i>
+                                <div>
+                                    <a href="tel:+265123456789" class="text-white-50 text-decoration-none">
+                                        +265 123 456 789
+                                    </a>
+                                    <small class="text-white-30 d-block">Mon-Fri, 8AM-6PM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-envelope mt-1 me-3"></i>
+                                <div>
+                                    <a href="mailto:info@computeraidmw.com" class="text-white-50 text-decoration-none">
+                                        info@computeraidmw.com
+                                    </a>
+                                    <small class="text-white-30 d-block">Quick Response</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-clock mt-1 me-3"></i>
+                                <div>
+                                    <span class="text-white-50 d-block">Business Hours</span>
+                                    <small class="text-white-30">Mon-Sat: 8:00 - 18:00</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔧</div>
-                <h3 class="feature-title">Expert Support</h3>
-                <p class="feature-description">Professional technical support and warranty services for all products.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3 class="feature-title">Best Prices</h3>
-                <p class="feature-description">Competitive pricing with regular discounts and special offers.</p>
+
+            <hr class="my-4 opacity-25">
+
+            <!-- Copyright -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="text-white-50 small mb-0">
+                        &copy; 2024 Computer Aid MW. All rights reserved.
+                    </p>
+                </div>
             </div>
         </div>
-    </section>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="btn-back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId !== '#') {
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Desktop Search Toggle
+        const desktopSearchToggle = document.getElementById('desktopSearchToggle');
+        const desktopSearchWrapper = document.querySelector('.search-wrapper-desktop');
+        
+        if (desktopSearchToggle && desktopSearchWrapper) {
+            desktopSearchToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                desktopSearchWrapper.classList.toggle('active');
+                const input = desktopSearchWrapper.querySelector('input');
+                if (desktopSearchWrapper.classList.contains('active') && input) {
+                    input.focus();
+                }
+            });
+        }
+        
+        // Mobile Search Toggle
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+        const mobileSearchWrapper = document.querySelector('.search-wrapper-mobile');
+        
+        if (mobileSearchToggle && mobileSearchWrapper) {
+            mobileSearchToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                mobileSearchWrapper.classList.toggle('active');
+                const input = mobileSearchWrapper.querySelector('input');
+                const chevron = mobileSearchToggle.querySelector('.fa-chevron-down');
+                
+                if (mobileSearchWrapper.classList.contains('active')) {
+                    if (input) input.focus();
+                    if (chevron) chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                } else {
+                    if (chevron) chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            });
+        }
+        
+        // Close search when clicking outside
+        document.addEventListener('click', e => {
+            // Desktop search
+            if (desktopSearchWrapper && !desktopSearchWrapper.contains(e.target)) {
+                desktopSearchWrapper.classList.remove('active');
+            }
+            
+            // Mobile search
+            if (mobileSearchWrapper && !mobileSearchWrapper.contains(e.target)) {
+                mobileSearchWrapper.classList.remove('active');
+                const chevron = document.querySelector('.search-wrapper-mobile .fa-chevron-up');
+                if (chevron) {
+                    chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            }
+        });
+        
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        if (backToTopBtn) {
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-item[href]').forEach(item => {
+            item.addEventListener('click', function() {
+                const navbar = document.getElementById('navbarNav');
+                if (navbar && navbar.classList.contains('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbar);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
                 }
             });
         });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.backdropFilter = 'blur(10px)';
-                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
-            } else {
-                navbar.style.backgroundColor = '#ffffff';
-                navbar.style.backdropFilter = 'none';
-                navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+        
+        // Cart badge animation
+        const cartBadges = document.querySelectorAll('.cart-badge-desktop, .cart-badge-mobile');
+        cartBadges.forEach(badge => {
+            if (parseInt(badge.textContent) > 0) {
+                badge.style.animation = 'pulse 2s infinite';
             }
         });
-
-        // Add active class to clicked nav item
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.nav-link').forEach(item => {
-                    item.classList.remove('active');
-                });
-                this.classList.add('active');
+        
+        // Add page transition class to body
+        document.body.classList.add('page-transition');
+        
+        // Prevent body scrolling when mobile menu is open
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (navbarToggler) {
+            navbarToggler.addEventListener('click', function() {
+                document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
             });
-        });
-
-        // Button animation on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const browseBtn = document.querySelector('.browse-btn');
-            setTimeout(() => {
-                browseBtn.style.animation = 'float 3s ease-in-out infinite';
-            }, 1000);
-        });
+        }
+    });
     </script>
+
+    {% block scripts %}{% endblock %}
 </body>
 </html>
