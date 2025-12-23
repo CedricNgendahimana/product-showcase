@@ -336,16 +336,18 @@
         }
         
         /* ===== HERO SECTION ===== */
+        /* IMPORTANT: Ensure hero section fills the top area without white space */
         .hero-section {
             background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%);
             color: var(--white);
-            padding: 120px 0 80px;
+            padding: 0 !important; /* Remove any padding that creates white space */
             position: relative;
             overflow: hidden;
-            margin-top: 0;
+            margin-top: 0 !important;
             min-height: 85vh;
             display: flex;
             align-items: center;
+            width: 100%;
         }
         
         .hero-section::before {
@@ -361,6 +363,9 @@
         .hero-content {
             position: relative;
             z-index: 1;
+            padding: 120px 0 80px; /* Add padding inside the content instead */
+            width: 100%;
+            text-align: center;
         }
         
         .hero-title {
@@ -381,6 +386,8 @@
             margin-bottom: 2rem;
             font-weight: 300;
             max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .hero-btn {
@@ -528,9 +535,16 @@
             padding-top: 0 !important;
         }
         
-        /* Ensure content starts right after navbar */
+        /* Ensure content starts right after navbar - NO WHITE SPACE */
         .navbar + * {
             margin-top: 0 !important;
+        }
+        
+        /* Container override for hero section to remove side margins */
+        .hero-section .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            max-width: 100% !important;
         }
     </style>
 </head>
@@ -582,10 +596,11 @@
                                 <span>Phones</span>
                             </a>
                         </li>
+                        <!-- CHANGED: Desktop changed to Accessories -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('category_page', category='desktops') }}">
-                                <i class="fas fa-desktop"></i>
-                                <span>Desktops</span>
+                            <a class="nav-link" href="{{ url_for('category_page', category='accessories') }}">
+                                <i class="fas fa-keyboard"></i> <!-- Changed icon -->
+                                <span>Accessories</span> <!-- Changed text -->
                             </a>
                         </li>
                     </ul>
@@ -636,9 +651,10 @@
                         <i class="fas fa-mobile-alt"></i>
                         <span>Phones</span>
                     </a>
-                    <a href="{{ url_for('category_page', category='desktops') }}" class="mobile-item">
-                        <i class="fas fa-desktop"></i>
-                        <span>Desktops</span>
+                    <!-- CHANGED: Desktop changed to Accessories -->
+                    <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item">
+                        <i class="fas fa-keyboard"></i> <!-- Changed icon -->
+                        <span>Accessories</span> <!-- Changed text -->
                     </a>
 
                     <!-- Mobile Search -->
@@ -697,7 +713,6 @@
             {% endif %}
         {% endwith %}
         
-       
         <!-- Page Content -->
         <div class="container py-5">
             {% block content %}{% endblock %}
@@ -746,9 +761,10 @@
                                 <i class="fas fa-chevron-right small me-2"></i>Gaming Consoles
                             </a>
                         </li>
+                        <!-- CHANGED: Updated footer link -->
                         <li class="mb-2">
-                            <a href="{{ url_for('view_cart') }}" class="footer-link">
-                                <i class="fas fa-chevron-right small me-2"></i>Cart
+                            <a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Accessories
                             </a>
                         </li>
                     </ul>
@@ -771,8 +787,6 @@
                         <li class="mb-2">
                             <span class="text-white-50">
                                 <i class="fas fa-shield-alt me-2"></i>Virus Removal
-                            </span>
-                        </li>
                             </span>
                         </li>
                     </ul>
