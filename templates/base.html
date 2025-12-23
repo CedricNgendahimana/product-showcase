@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Computer Aid MW - Your trusted computer solutions provider in Malawi">
+    <meta name="description" content="Computer Aid MW - Trusted computer products in Malawi">
 
     <title>{% block title %}Computer Aid MW{% endblock %}</title>
 
@@ -16,99 +16,73 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
     <style>
-        :root {
-            --primary: #e94c2b;
-            --secondary: #16213e;
-            --bg-dark: #0f1e3d;
-            --bg-darker: #0c142b;
-            --text-light: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-        }
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg-dark);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fa;
+            color: #1f2937;
         }
 
-        /* ===== GLOBAL PAGE WRAPPER ===== */
-        .page-wrapper {
-            flex: 1;
-            width: 100%;
-            background: var(--bg-dark);
-        }
-
-        /* OPTIONAL CONTENT WIDTH */
-        .content-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 1rem;
+        main {
+            padding-top: 0;
         }
 
         /* ===== NAVBAR ===== */
         .navbar {
-            background: linear-gradient(135deg, #16213e, #101a33);
-            box-shadow: 0 8px 30px rgba(0,0,0,.35);
-            z-index: 1000;
+            background: linear-gradient(135deg, #16213e, #0f172a);
+            box-shadow: 0 4px 20px rgba(0,0,0,.15);
         }
 
         .navbar-brand img {
-            height: 45px;
+            height: 44px;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,.9) !important;
-            font-weight: 500;
-            padding: .6rem 1.1rem !important;
-            border-radius: 8px;
-        }
-
-        .nav-link:hover {
-            background: rgba(255,255,255,.1);
-        }
-
-        /* ===== DESKTOP SEARCH ===== */
+        /* Desktop nav links */
         @media (min-width: 992px) {
-            .search-wrapper-desktop {
+            .nav-link {
+                color: #fff !important;
+                font-weight: 500;
+                padding: .6rem 1rem;
+                border-radius: 8px;
+            }
+
+            .nav-link:hover {
+                background: rgba(255,255,255,.12);
+            }
+        }
+
+        /* ===== DESKTOP SEARCH SLIDE ===== */
+        @media (min-width: 992px) {
+            .search-wrapper {
                 position: relative;
             }
 
-            .search-toggle-desktop {
-                width: 42px;
-                height: 42px;
-                border-radius: 50%;
-                background: transparent;
-                border: 1px solid rgba(255,255,255,.35);
-                color: #fff;
-            }
-
-            .search-input-desktop {
+            .search-input {
                 position: absolute;
-                right: 55px;
+                right: 48px;
                 top: 50%;
                 transform: translateY(-50%) scaleX(0);
                 transform-origin: right;
-                width: 280px;
+                width: 260px;
                 opacity: 0;
-                transition: .25s ease;
+                transition: .3s ease;
             }
 
-            .search-wrapper-desktop.active .search-input-desktop {
+            .search-wrapper.active .search-input {
                 transform: translateY(-50%) scaleX(1);
                 opacity: 1;
+            }
+
+            .search-input input {
+                background: rgba(255,255,255,.1);
+                border: 1px solid rgba(255,255,255,.3);
+                color: #fff;
+            }
+
+            .search-input input::placeholder {
+                color: rgba(255,255,255,.7);
             }
         }
 
@@ -117,8 +91,9 @@
             position: absolute;
             top: 0;
             right: 0;
-            transform: translate(50%, -50%);
-            background: var(--primary);
+            transform: translate(50%,-50%);
+            background: #e11d48;
+            color: #fff;
             font-size: .7rem;
             min-width: 20px;
             height: 20px;
@@ -131,68 +106,63 @@
         /* ===== MOBILE MENU ===== */
         @media (max-width: 991px) {
             .navbar-collapse {
-                background: var(--secondary);
-                border-radius: 0 0 16px 16px;
+                background: #0f172a;
                 padding: 1rem;
-            }
-
-            .mobile-menu {
-                display: flex;
-                flex-direction: column;
-                gap: .7rem;
+                border-radius: 0 0 16px 16px;
             }
 
             .mobile-item {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
-                padding: .9rem 1rem;
+                gap: 12px;
+                padding: 12px 16px;
                 border-radius: 10px;
-                background: rgba(255,255,255,.06);
+                background: rgba(255,255,255,.08);
                 color: #fff;
                 text-decoration: none;
             }
 
+            .mobile-item + .mobile-item {
+                margin-top: 8px;
+            }
+
             .mobile-item:hover {
-                background: rgba(255,255,255,.12);
+                background: rgba(255,255,255,.15);
             }
 
-            .search-input-mobile {
-                max-height: 0;
-                overflow: hidden;
-                opacity: 0;
-                transition: .3s ease;
+            .mobile-search input {
+                background: rgba(255,255,255,.1);
+                border: 1px solid rgba(255,255,255,.25);
+                color: #fff;
             }
-
-            .search-wrapper-mobile.active .search-input-mobile {
-                max-height: 70px;
-                opacity: 1;
-            }
-        }
-
-        /* ===== HERO ===== */
-        .hero-section {
-            width: 100%;
-            background: linear-gradient(135deg, #16213e, #0f1e3d);
-            padding: 120px 0 90px;
-            text-align: center;
         }
 
         /* ===== FOOTER ===== */
         footer {
-            background: var(--bg-darker);
-            margin-top: auto;
+            background: #0f172a;
+            color: #cbd5f5;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #cbd5f5;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #fff;
         }
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='images/logo.png') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Aid MW">
         </a>
 
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -201,67 +171,52 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- DESKTOP -->
+            <!-- DESKTOP MENU -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home me-1"></i>Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='laptops') }}"><i class="fas fa-laptop me-1"></i>Laptops</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='consoles') }}"><i class="fas fa-gamepad me-1"></i>Gaming Consoles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='phones') }}"><i class="fas fa-mobile-alt me-1"></i>Phones</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='accessories') }}"><i class="fas fa-keyboard me-1"></i>Accessories</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">Laptops</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='consoles') }}">Consoles</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='phones') }}">Phones</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='accessories') }}">Accessories</a></li>
             </ul>
 
-            <!-- DESKTOP RIGHT -->
+            <!-- DESKTOP SEARCH + CART -->
             <div class="d-none d-lg-flex align-items-center gap-3">
-                <div class="search-wrapper-desktop">
-                    <button class="search-toggle-desktop" id="desktopSearchToggle">
+
+                <div class="search-wrapper">
+                    <button class="btn btn-outline-light" id="desktopSearchBtn">
                         <i class="fas fa-search"></i>
                     </button>
-                    <form method="GET" action="{{ url_for('search') }}" class="search-input-desktop">
+                    <form class="search-input" method="GET" action="{{ url_for('search') }}">
                         <input type="search" name="q" class="form-control" placeholder="Search products...">
                     </form>
                 </div>
 
-                <div class="position-relative">
-                    <a href="{{ url_for('view_cart') }}" class="nav-link">
-                        <i class="fas fa-shopping-cart"></i> Cart
-                    </a>
+                <a href="{{ url_for('view_cart') }}" class="btn btn-outline-light position-relative">
+                    <i class="fas fa-shopping-cart"></i>
                     {% if cart_count %}
-                        <span class="cart-badge">{{ cart_count }}</span>
+                    <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
-                </div>
+                </a>
             </div>
 
-            <!-- MOBILE -->
-            <div class="mobile-menu d-lg-none">
+            <!-- MOBILE MENU -->
+            <div class="d-lg-none mt-3">
                 <a href="{{ url_for('home') }}" class="mobile-item"><i class="fas fa-home"></i>Home</a>
                 <a href="{{ url_for('category_page', category='laptops') }}" class="mobile-item"><i class="fas fa-laptop"></i>Laptops</a>
-                <a href="{{ url_for('category_page', category='consoles') }}" class="mobile-item"><i class="fas fa-gamepad"></i>Gaming Consoles</a>
-                <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile-alt"></i>Phones</a>
+                <a href="{{ url_for('category_page', category='consoles') }}" class="mobile-item"><i class="fas fa-gamepad"></i>Consoles</a>
+                <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile"></i>Phones</a>
                 <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item"><i class="fas fa-keyboard"></i>Accessories</a>
 
-                <div class="search-wrapper-mobile">
-                    <button class="mobile-item" id="mobileSearchToggle">
-                        <i class="fas fa-search"></i>Search
-                    </button>
-                    <form method="GET" action="{{ url_for('search') }}" class="search-input-mobile">
-                        <input type="search" name="q" class="form-control" placeholder="Search products...">
-                    </form>
-                </div>
+                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}">
+                    <input type="search" name="q" class="form-control" placeholder="Search products...">
+                </form>
 
-                <a href="{{ url_for('view_cart') }}" class="mobile-item position-relative">
-                    <i class="fas fa-shopping-cart"></i>Cart
+                <a href="{{ url_for('view_cart') }}" class="mobile-item mt-3">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart
                     {% if cart_count %}
-                        <span class="cart-badge">{{ cart_count }}</span>
+                    <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
                 </a>
             </div>
@@ -270,37 +225,296 @@
     </div>
 </nav>
 
-<!-- PAGE -->
-<div class="page-wrapper">
-    {% block content %}{% endblock %}
+<!-- ===== FLASH ===== -->
+<div class="container mt-3">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endwith %}
 </div>
 
-<!-- FOOTER -->
-<footer class="py-4">
-    <div class="content-container text-center">
-        <p class="mb-0">&copy; 2024 Computer Aid MW</p>
+<!-- ===== MAIN ===== -->
+<main>
+{% block content %}{% endblock %}
+</main>
+
+ <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Computer Aid MW</h5>
+                    <p class="text-white-50 mb-4">
+                        Your trusted computer solutions provider in Malawi. Quality products with excellent customer support.
+                    </p>
+                    <div class="social-links d-flex gap-3">
+                        <a href="#" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ url_for('home') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Home
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('category_page', category='laptops') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Laptops
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('category_page', category='gaming-consoles') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Gaming Consoles
+                            </a>
+                        </li>
+                        <!-- CHANGED: Updated footer link -->
+                        <li class="mb-2">
+                            <a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">
+                                <i class="fas fa-chevron-right small me-2"></i>Accessories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Our Services</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-wrench me-2"></i>Computer Repairs
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-laptop-medical me-2"></i>Hardware Upgrades
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-white-50">
+                                <i class="fas fa-shield-alt me-2"></i>Virus Removal
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h5 class="text-white mb-3">Contact Us</h5>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-map-marker-alt mt-1 me-3"></i>
+                                <div>
+                                    <span class="text-white-50 d-block">Lilongwe, Malawi</span>
+                                    <small class="text-white-30">Capital City</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-phone mt-1 me-3"></i>
+                                <div>
+                                    <a href="tel:+265123456789" class="text-white-50 text-decoration-none">
+                                        +265 123 456 789
+                                    </a>
+                                    <small class="text-white-30 d-block">Mon-Fri, 8AM-6PM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-envelope mt-1 me-3"></i>
+                                <div>
+                                    <a href="mailto:info@computeraidmw.com" class="text-white-50 text-decoration-none">
+                                        info@computeraidmw.com
+                                    </a>
+                                    <small class="text-white-30 d-block">Quick Response</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-clock mt-1 me-3"></i>
+                                <div>
+                                    <span class="text-white-50 d-block">Business Hours</span>
+                                    <small class="text-white-30">Mon-Sat: 8:00 - 18:00</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4 opacity-25">
+
+            <!-- Copyright -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="text-white-50 small mb-0">
+                        &copy; 2024 Computer Aid MW. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="btn-back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Desktop Search Toggle
+        const desktopSearchToggle = document.getElementById('desktopSearchToggle');
+        const desktopSearchWrapper = document.querySelector('.search-wrapper-desktop');
+        
+        if (desktopSearchToggle && desktopSearchWrapper) {
+            desktopSearchToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                desktopSearchWrapper.classList.toggle('active');
+                const input = desktopSearchWrapper.querySelector('input');
+                if (desktopSearchWrapper.classList.contains('active') && input) {
+                    input.focus();
+                }
+            });
+        }
+        
+        // Mobile Search Toggle
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+        const mobileSearchWrapper = document.querySelector('.search-wrapper-mobile');
+        
+        if (mobileSearchToggle && mobileSearchWrapper) {
+            mobileSearchToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                mobileSearchWrapper.classList.toggle('active');
+                const input = mobileSearchWrapper.querySelector('input');
+                const chevron = mobileSearchToggle.querySelector('.fa-chevron-down');
+                
+                if (mobileSearchWrapper.classList.contains('active')) {
+                    if (input) input.focus();
+                    if (chevron) chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                } else {
+                    if (chevron) chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            });
+        }
+        
+        // Close search when clicking outside
+        document.addEventListener('click', e => {
+            // Desktop search
+            if (desktopSearchWrapper && !desktopSearchWrapper.contains(e.target)) {
+                desktopSearchWrapper.classList.remove('active');
+            }
+            
+            // Mobile search
+            if (mobileSearchWrapper && !mobileSearchWrapper.contains(e.target)) {
+                mobileSearchWrapper.classList.remove('active');
+                const chevron = document.querySelector('.search-wrapper-mobile .fa-chevron-up');
+                if (chevron) {
+                    chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            }
+        });
+        
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        if (backToTopBtn) {
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-item[href]').forEach(item => {
+            item.addEventListener('click', function() {
+                const navbar = document.getElementById('navbarNav');
+                if (navbar && navbar.classList.contains('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbar);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
+                }
+            });
+        });
+        
+        // Cart badge animation
+        const cartBadges = document.querySelectorAll('.cart-badge-desktop, .cart-badge-mobile');
+        cartBadges.forEach(badge => {
+            if (parseInt(badge.textContent) > 0) {
+                badge.style.animation = 'pulse 2s infinite';
+            }
+        });
+        
+        // Add page transition class to body
+        document.body.classList.add('page-transition');
+        
+        // Prevent body scrolling when mobile menu is open
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (navbarToggler) {
+            navbarToggler.addEventListener('click', function() {
+                document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
+            });
+        }
+    });
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+        <hr class="my-4 opacity-25">
+        <p class="text-center small mb-0">&copy; 2025 Computer Aid MW</p>
     </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const d = document.getElementById('desktopSearchToggle');
-    const m = document.getElementById('mobileSearchToggle');
-
-    if (d) d.onclick = e => {
-        e.stopPropagation();
-        d.closest('.search-wrapper-desktop').classList.toggle('active');
-    };
-
-    if (m) m.onclick = e => {
-        e.stopPropagation();
-        m.closest('.search-wrapper-mobile').classList.toggle('active');
-    };
+document.getElementById('desktopSearchBtn')?.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelector('.search-wrapper')?.classList.toggle('active');
 });
 </script>
 
-{% block scripts %}{% endblock %}
 </body>
 </html>
