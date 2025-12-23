@@ -3,448 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Computer Aid MW - Your trusted computer solutions provider">
-    <meta name="keywords" content="computers, technology, repairs, Malawi">
-    <meta name="author" content="Computer Aid MW">
-    
-    <!-- Open Graph / Social Media Meta -->
-    <meta property="og:title" content="Computer Aid MW">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png') }}">
-    
-    <title>{% block title %}Computer Aid MW - Computer Solutions{% endblock %}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <title>{% block title %}Computer Aid MW{% endblock %}</title>
 
-    <!-- CSS Libraries -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <!-- Bootstrap + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
+
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <!-- Inline Styles (Keep minimal) -->
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --accent-color: #3b82f6;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --bg-light: #f8fafc;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            color: var(--text-dark);
-            padding-top: 76px; /* Prevent navbar overlap */
+            padding-top: 76px;
         }
 
-        /* ===== NAVBAR ENHANCEMENTS ===== */
         .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            background: linear-gradient(135deg, #0f1e3d, #162a52);
         }
 
-        .navbar-brand img {
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-brand:hover img {
-            transform: scale(1.05);
-        }
-
-        .nav-link, .mobile-item {
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .nav-link:hover, .mobile-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-1px);
-        }
-
-        /* ===== SEARCH IMPROVEMENTS ===== */
-        .search-wrapper {
-            position: relative;
-        }
-
-        .search-input {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Desktop search */
+        /* ===== DESKTOP SEARCH ===== */
         @media (min-width: 992px) {
             .search-wrapper {
                 position: relative;
-                width: auto;
-            }
-            
-            .search-wrapper.active .search-input {
-                width: 280px;
-                opacity: 1;
-                margin-left: 10px;
+                display: flex;
+                align-items: center;
             }
 
             .search-input {
                 width: 0;
                 opacity: 0;
-                overflow: hidden;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
+                margin-left: 8px;
+                transition: all 0.3s ease;
             }
 
-            .search-input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
-
-            /* Desktop search button */
-            .search-toggle-btn {
-                color: white;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                background: rgba(255, 255, 255, 0.1);
-                padding: 8px 16px;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
+            .search-wrapper.active .search-input {
+                width: 240px;
+                opacity: 1;
             }
         }
 
-        /* ===== MOBILE ENHANCEMENTS ===== */
+        /* ===== MOBILE MENU ===== */
         @media (max-width: 991px) {
             .navbar-collapse {
-                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                padding: 15px;
+                background: #0f1e3d;
+                padding: 1rem;
                 border-radius: 0 0 12px 12px;
-                margin-top: 10px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            }
-
-            .mobile-menu {
-                gap: 8px;
             }
 
             .mobile-item {
-                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px;
                 border-radius: 8px;
-                background: rgba(255, 255, 255, 0.08);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
+                color: #fff;
+                text-decoration: none;
             }
 
             .mobile-item:hover {
-                background: rgba(255, 255, 255, 0.15);
-            }
-
-            .search-wrapper {
-                margin-bottom: 5px;
-            }
-
-            .search-input {
-                margin-top: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-            }
-
-            .search-input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
+                background: rgba(255,255,255,0.1);
             }
         }
 
-        /* ===== CART BADGE ===== */
         .cart-badge {
-            font-size: 0.7rem;
-            min-width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        main {
-            min-height: calc(100vh - 180px);
-        }
-
-        /* ===== FOOTER (Add this in your base template) ===== */
-        footer {
-            background: var(--text-dark);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
+            font-size: 0.65rem;
+            padding: 4px 6px;
         }
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-<!-- Navigation -->
+<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
+
         <!-- LOGO -->
-        <a class="navbar-brand" href="{{ url_for('home') }}" aria-label="Computer Aid MW Home">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" 
-                 height="45" 
-                 alt="Computer Aid MW Logo"
-                 loading="lazy">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" height="42">
         </a>
 
         <!-- TOGGLER -->
-        <button class="navbar-toggler" 
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- MENU -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- DESKTOP NAVIGATION -->
+        <div class="collapse navbar-collapse" id="nav">
+
+            <!-- LEFT (DESKTOP) -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('home') }}">
                         <i class="fas fa-home me-1"></i> Home
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('products') }}">
-                        <i class="fas fa-laptop me-1"></i> Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('services') }}">
-                        <i class="fas fa-tools me-1"></i> Services
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('about') }}">
-                        <i class="fas fa-info-circle me-1"></i> About
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('contact') }}">
-                        <i class="fas fa-envelope me-1"></i> Contact
-                    </a>
-                </li>
             </ul>
 
-            <!-- MOBILE / UTILITY MENU -->
-            <div class="mobile-menu ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-lg-3">
-                <!-- DESKTOP SEARCH BUTTON -->
+            <!-- RIGHT -->
+            <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center">
+
+                <!-- DESKTOP SEARCH -->
                 <div class="search-wrapper d-none d-lg-flex">
-                    <button type="button"
-                            class="search-toggle-btn btn"
-                            id="desktopSearchToggle"
-                            aria-label="Toggle search">
+                    <button class="btn btn-outline-light btn-sm" id="searchToggle">
                         <i class="fas fa-search"></i>
-                        <span>Search</span>
                     </button>
-                    <form method="GET"
-                          action="{{ url_for('search') }}"
-                          class="search-input"
-                          role="search">
-                        <input type="search"
-                               name="q"
-                               class="form-control"
-                               placeholder="Search products..."
-                               aria-label="Search products">
+                    <form method="GET" action="{{ url_for('search') }}">
+                        <input type="search" name="q" class="form-control form-control-sm search-input"
+                               placeholder="Search products...">
                     </form>
                 </div>
 
-                <!-- MOBILE SEARCH (Separate for mobile) -->
-                <div class="search-wrapper d-lg-none">
-                    <button type="button"
-                            class="mobile-item w-100 text-start"
-                            id="mobileSearchToggle"
-                            aria-expanded="false"
-                            aria-controls="mobileSearchInput">
-                        <i class="fas fa-search"></i>
-                        <span>Search products</span>
-                    </button>
-                    <form method="GET"
-                          action="{{ url_for('search') }}"
-                          class="search-input"
-                          id="mobileSearchInput"
-                          role="search">
-                        <input type="search"
-                               name="q"
-                               class="form-control"
-                               placeholder="Type to search..."
-                               aria-label="Search products">
-                    </form>
-                </div>
+                <!-- MOBILE SEARCH -->
+                <form method="GET" action="{{ url_for('search') }}" class="d-lg-none">
+                    <input type="search" name="q" class="form-control form-control-sm mb-2"
+                           placeholder="Search products...">
+                </form>
 
-                <!-- MOBILE MENU ITEMS -->
-                <a href="{{ url_for('products') }}" class="mobile-item d-lg-none">
-                    <i class="fas fa-laptop"></i>
-                    <span>Products</span>
-                </a>
-
-                <a href="{{ url_for('services') }}" class="mobile-item d-lg-none">
-                    <i class="fas fa-tools"></i>
-                    <span>Services</span>
-                </a>
-
-                <a href="{{ url_for('about') }}" class="mobile-item d-lg-none">
-                    <i class="fas fa-info-circle"></i>
-                    <span>About</span>
-                </a>
-
-                <a href="{{ url_for('contact') }}" class="mobile-item d-lg-none">
-                    <i class="fas fa-envelope"></i>
-                    <span>Contact</span>
-                </a>
-
-                <!-- CART (Visible on both) -->
-                <a href="{{ url_for('view_cart') }}" 
-                   class="mobile-item position-relative"
-                   aria-label="View shopping cart">
+                <!-- CART -->
+                <a href="{{ url_for('view_cart') }}" class="nav-link position-relative text-white">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="d-lg-none ms-2">Cart</span>
-                    {% if cart_count and cart_count > 0 %}
-                    <span class="badge bg-danger cart-badge position-absolute top-0 start-100 translate-middle">
+                    {% if cart_count %}
+                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle cart-badge">
                         {{ cart_count }}
-                        <span class="visually-hidden">items in cart</span>
                     </span>
                     {% endif %}
-                </a>
-
-                <!-- USER ACCOUNT (Optional) -->
-                <a href="{{ url_for('account') }}" class="mobile-item">
-                    <i class="fas fa-user"></i>
-                    <span>Account</span>
                 </a>
             </div>
         </div>
     </div>
 </nav>
 
-<!-- Main Content -->
-<main class="container py-4">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category or 'info' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    
+<!-- FLASH -->
+<div class="container mt-3">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endwith %}
+</div>
+
+<!-- MAIN -->
+<main class="flex-fill">
     {% block content %}{% endblock %}
 </main>
 
-<!-- Footer (Add to your base template) -->
-<footer class="bg-dark text-white py-4 mt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <h5>Computer Aid MW</h5>
-                <p class="text-white-50">Your trusted computer solutions provider in Malawi.</p>
-            </div>
-            <div class="col-md-4 mb-3">
-                <h5>Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="{{ url_for('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
-                    <li><a href="{{ url_for('products') }}" class="text-white-50 text-decoration-none">Products</a></li>
-                    <li><a href="{{ url_for('contact') }}" class="text-white-50 text-decoration-none">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4 mb-3">
-                <h5>Contact</h5>
-                <p class="text-white-50 mb-1">
-                    <i class="fas fa-phone me-2"></i> +265 XXX XXX XXX
-                </p>
-                <p class="text-white-50">
-                    <i class="fas fa-envelope me-2"></i> info@computeraidmw.com
-                </p>
-            </div>
-        </div>
-        <hr class="bg-white-50">
-        <div class="text-center text-white-50">
-            <small>&copy; {{ now.year }} Computer Aid MW. All rights reserved.</small>
-        </div>
+<!-- FOOTER -->
+<footer class="bg-dark text-white mt-auto py-4">
+    <div class="container text-center">
+        <small>&copy; {{ now().year if now else 2024 }} Computer Aid MW</small>
     </div>
 </footer>
 
-<!-- JavaScript -->
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Enhanced search toggle functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Desktop search
-    const desktopToggle = document.getElementById('desktopSearchToggle');
-    const mobileToggle = document.getElementById('mobileSearchToggle');
-    
-    if (desktopToggle) {
-        desktopToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const wrapper = this.closest('.search-wrapper');
-            wrapper.classList.toggle('active');
-            const input = wrapper.querySelector('input');
-            if (wrapper.classList.contains('active') && input) {
-                input.focus();
-            }
-        });
-    }
-    
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const wrapper = this.closest('.search-wrapper');
-            wrapper.classList.toggle('active');
-            const input = wrapper.querySelector('input');
-            if (wrapper.classList.contains('active') && input) {
-                input.focus();
-            }
-            this.setAttribute('aria-expanded', 
-                wrapper.classList.contains('active'));
-        });
-    }
-    
-    // Close search when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.search-wrapper')) {
-            document.querySelectorAll('.search-wrapper.active').forEach(wrapper => {
-                wrapper.classList.remove('active');
-                const toggle = wrapper.querySelector('[aria-expanded="true"]');
-                if (toggle) toggle.setAttribute('aria-expanded', 'false');
-            });
-        }
-    });
-    
-    // Close mobile menu when clicking a link
-    document.querySelectorAll('.mobile-item[href]').forEach(item => {
-        item.addEventListener('click', function() {
-            const navbar = document.getElementById('navbarNav');
-            if (navbar.classList.contains('show')) {
-                bootstrap.Collapse.getInstance(navbar).hide();
-            }
-        });
-    });
+document.getElementById('searchToggle')?.addEventListener('click', function (e) {
+    e.stopPropagation();
+    this.closest('.search-wrapper').classList.toggle('active');
+});
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.search-wrapper.active')
+        .forEach(w => w.classList.remove('active'));
 });
 </script>
-
-{% block scripts %}{% endblock %}
 
 </body>
 </html>
