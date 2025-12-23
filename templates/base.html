@@ -1,175 +1,972 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
 
-    <title>{% block title %}Computer Aid MW{% endblock %}</title>
+{% block title %}{{ product.name }} - Computer Aid MW{% endblock %}
 
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
-    <!-- Bootstrap + Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-
-    <style>
-        body {
-            padding-top: 76px;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #0f1e3d, #162a52);
-        }
-
-        /* ===== DESKTOP SEARCH ===== */
-        @media (min-width: 992px) {
-            .search-wrapper {
-                position: relative;
-                display: flex;
-                align-items: center;
-            }
-
-            .search-input {
-                width: 0;
-                opacity: 0;
-                margin-left: 8px;
-                transition: all 0.3s ease;
-            }
-
-            .search-wrapper.active .search-input {
-                width: 240px;
-                opacity: 1;
-            }
-        }
-
-        /* ===== MOBILE MENU ===== */
-        @media (max-width: 991px) {
-            .navbar-collapse {
-                background: #0f1e3d;
-                padding: 1rem;
-                border-radius: 0 0 12px 12px;
-            }
-
-            .mobile-item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 12px;
-                border-radius: 8px;
-                color: #fff;
-                text-decoration: none;
-            }
-
-            .mobile-item:hover {
-                background: rgba(255,255,255,0.1);
-            }
-        }
-
-        .cart-badge {
-            font-size: 0.65rem;
-            padding: 4px 6px;
-        }
-    </style>
-</head>
-
-<body class="d-flex flex-column min-vh-100">
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+{% block content %}
+<section class="product-detail-section py-4 py-lg-5">
     <div class="container">
-
-        <!-- LOGO -->
-        <a class="navbar-brand" href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" height="42">
-        </a>
-
-        <!-- TOGGLER -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="nav">
-
-            <!-- LEFT (DESKTOP) -->
-            <ul class="navbar-nav me-auto d-none d-lg-flex">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('home') }}">
-                        <i class="fas fa-home me-1"></i> Home
+        <!-- BREADCRUMB -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('home') }}">
+                        <i class="fas fa-home"></i>
                     </a>
                 </li>
-            </ul>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('category_page', category=product.category) }}">
+                        {{ categories[product.category].name }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active text-truncate">
+                    {{ product.name }}
+                </li>
+            </ol>
+        </nav>
 
-            <!-- RIGHT -->
-            <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-center">
-
-                <!-- DESKTOP SEARCH -->
-                <div class="search-wrapper d-none d-lg-flex">
-                    <button class="btn btn-outline-light btn-sm" id="searchToggle">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <form method="GET" action="{{ url_for('search') }}">
-                        <input type="search" name="q" class="form-control form-control-sm search-input"
-                               placeholder="Search products...">
-                    </form>
+        <div class="row g-4 g-lg-5 align-items-start">
+            <!-- IMAGE -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-3 p-lg-4">
+                        <div class="product-image-wrapper text-center">
+                            <img src="{{ product.image_url }}"
+                                 alt="{{ product.name }}"
+                                 class="img-fluid rounded shadow-sm product-detail-image"
+                                 loading="lazy"
+                                 id="mainProductImage"
+                                 style="max-height: 450px; width: 100%; object-fit: contain;"
+                                 onerror="this.src='https://via.placeholder.com/600x400/f5f5f5/666?text=No+Image+Available'">
+                            
+                            {% if product.get('stock', 10) <= 5 and product.get('stock', 10) > 0 %}
+                            <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-3">
+                                <i class="fas fa-exclamation-circle me-1"></i>Low Stock
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="image-thumbnails mt-3 d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-primary active" 
+                                    data-image="{{ product.image_url }}">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <!-- MOBILE SEARCH -->
-                <form method="GET" action="{{ url_for('search') }}" class="d-lg-none">
-                    <input type="search" name="q" class="form-control form-control-sm mb-2"
-                           placeholder="Search products...">
-                </form>
+            <!-- INFO -->
+            <div class="col-lg-6">
+                <div class="product-info-card card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <!-- Category -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary bg-gradient rounded-pill">
+                                {{ categories[product.category].name }}
+                            </span>
+                            <small class="text-muted">
+                                <i class="fas fa-hashtag me-1"></i>ID: {{ product.id }}
+                            </small>
+                        </div>
 
-                <!-- CART -->
-                <a href="{{ url_for('view_cart') }}" class="nav-link position-relative text-white">
-                    <i class="fas fa-shopping-cart"></i>
-                    {% if cart_count %}
-                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle cart-badge">
-                        {{ cart_count }}
-                    </span>
-                    {% endif %}
-                </a>
+                        <!-- Name -->
+                        <h1 class="product-title h2 mb-3">
+                            {{ product.name }}
+                        </h1>
+
+                        <!-- Rating -->
+                        <div class="product-rating mb-3">
+                            <div class="stars text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-muted ms-2 small">(12 reviews)</span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="price-section mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="display-5 fw-bold text-primary">
+                                    MWK {{ "{:,.0f}".format(product.price) }}
+                                </span>
+                                {% if product.get('original_price', 0) > product.price %}
+                                <span class="text-muted text-decoration-line-through ms-3">
+                                    MWK {{ "{:,.0f}".format(product.original_price) }}
+                                </span>
+                                <span class="badge bg-success ms-2">
+                                    Save {{ ((product.original_price - product.price) / product.original_price * 100)|int }}%
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i>All prices include VAT
+                            </div>
+                        </div>
+
+                        <!-- Stock Status -->
+                        <div class="stock-status mb-4 p-3 bg-light rounded">
+                            {% set stock = product.get('stock', 10) %}
+                            {% if stock > 10 %}
+                            <div class="text-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span class="fw-medium">In Stock</span>
+                                <span class="text-muted ms-2">({{ stock }} available)</span>
+                            </div>
+                            {% elif stock > 0 and stock <= 10 %}
+                            <div class="text-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <span class="fw-medium">Low Stock</span>
+                                <span class="text-muted ms-2">(Only {{ stock }} left)</span>
+                            </div>
+                            {% else %}
+                            <div class="text-danger">
+                                <i class="fas fa-times-circle me-2"></i>
+                                <span class="fw-medium">Out of Stock</span>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-outline-secondary btn-sm" id="notifyMeBtn">
+                                    <i class="fas fa-bell me-1"></i>Notify when available
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons mb-4">
+                            {% if whatsapp_link %}
+                            <a href="{{ whatsapp_link }}"
+                               target="_blank"
+                               class="btn btn-success btn-lg w-100 mb-3 shadow-sm">
+                                <i class="fab fa-whatsapp me-2"></i>
+                                Contact on WhatsApp
+                            </a>
+                            {% endif %}
+
+                            <!-- Add to Cart Form -->
+                            <form method="POST"
+                                  action="{{ url_for('add_to_cart', product_id=product.id) }}"
+                                  class="add-to-cart-form mb-3">
+                                <div class="row g-2">
+                                    <div class="col-auto">
+                                        <div class="input-group" style="width: 140px;">
+                                            <button class="btn btn-outline-secondary" type="button" id="decreaseQty">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" 
+                                                   name="quantity" 
+                                                   value="1" 
+                                                   min="1" 
+                                                   max="{{ product.get('stock', 10) }}"
+                                                   class="form-control text-center"
+                                                   id="quantityInput">
+                                            <button class="btn btn-outline-secondary" type="button" id="increaseQty">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" 
+                                                class="btn btn-primary btn-lg w-100"
+                                                {% if product.get('stock', 10) <= 0 %}disabled{% endif %}>
+                                            <i class="fas fa-cart-plus me-2"></i>
+                                            {% if product.get('stock', 10) <= 0 %}Out of Stock{% else %}Add to Cart{% endif %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('category_page', category=product.category) }}"
+                                   class="btn btn-outline-secondary flex-fill">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to {{ categories[product.category].name }}
+                                </a>
+                                <button class="btn btn-outline-secondary flex-fill" id="shareProductBtn">
+                                    <i class="fas fa-share-alt me-2"></i>
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Trust Features -->
+                        <div class="trust-features mt-4">
+                            <div class="row g-3 text-center">
+                                <div class="col-4">
+                                    <div class="trust-item p-2">
+                                        <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                                        <div class="small fw-medium">1 Year Warranty</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="trust-item p-2">
+                                        <i class="fas fa-shipping-fast fa-2x text-primary mb-2"></i>
+                                        <div class="small fw-medium">Fast Delivery</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="trust-item p-2">
+                                        <i class="fas fa-headset fa-2x text-warning mb-2"></i>
+                                        <div class="small fw-medium">24/7 Support</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <ul class="nav nav-tabs border-bottom" id="productTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" 
+                                        id="specs-tab" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#specs" 
+                                        type="button">
+                                    <i class="fas fa-list-alt me-2"></i>Specifications
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" 
+                                        id="desc-tab" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#desc" 
+                                        type="button">
+                                    <i class="fas fa-align-left me-2"></i>Description
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content p-4">
+                            <!-- Specifications -->
+                            <div class="tab-pane fade show active" id="specs" role="tabpanel">
+                                <div class="row">
+                                    {% for line in product.description.splitlines() %}
+                                    {% if line.strip() %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="spec-item d-flex align-items-center p-3 bg-light rounded">
+                                            <i class="fas fa-check text-success me-3"></i>
+                                            <div class="flex-grow-1">
+                                                {{ line }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="tab-pane fade" id="desc" role="tabpanel">
+                                <h5 class="mb-4">
+                                    <i class="fas fa-info-circle me-2"></i>Product Overview
+                                </h5>
+                                <div class="description-content">
+                                    {% for line in product.description.splitlines() %}
+                                    {% if line.strip() %}
+                                    <p class="mb-3">
+                                        <i class="fas fa-angle-right text-primary me-2"></i>
+                                        {{ line }}
+                                    </p>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</nav>
+</section>
 
-<!-- FLASH -->
-<div class="container mt-3">
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }}">{{ message }}</div>
-{% endfor %}
-{% endwith %}
+<!-- Modals -->
+<div class="modal fade" id="shareModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-share-alt me-2"></i>Share Product
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center gap-3 mb-4">
+                    <a href="#" class="share-option text-center" data-platform="whatsapp">
+                        <div class="icon-wrapper bg-success rounded-circle p-3 mb-2">
+                            <i class="fab fa-whatsapp fa-2x text-white"></i>
+                        </div>
+                        <span class="small">WhatsApp</span>
+                    </a>
+                    <a href="#" class="share-option text-center" data-platform="facebook">
+                        <div class="icon-wrapper bg-primary rounded-circle p-3 mb-2">
+                            <i class="fab fa-facebook-f fa-2x text-white"></i>
+                        </div>
+                        <span class="small">Facebook</span>
+                    </a>
+                    <a href="#" class="share-option text-center" data-platform="twitter">
+                        <div class="icon-wrapper bg-info rounded-circle p-3 mb-2">
+                            <i class="fab fa-twitter fa-2x text-white"></i>
+                        </div>
+                        <span class="small">Twitter</span>
+                    </a>
+                </div>
+                <div class="input-group">
+                    <input type="text" 
+                           class="form-control" 
+                           id="shareLink"
+                           value="{{ request.url }}"
+                           readonly>
+                    <button class="btn btn-primary" type="button" id="copyLinkBtn">
+                        <i class="fas fa-copy me-2"></i>Copy Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- MAIN -->
-<main class="flex-fill">
-    {% block content %}{% endblock %}
-</main>
+<!-- Footer -->
+<footer class="bg-dark text-white pt-5 pb-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Company Info -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="footer-brand mb-3">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" 
+                         alt="Computer Aid MW Logo" 
+                         height="50"
+                         class="mb-3">
+                    <h5 class="text-white fw-bold">Computer Aid MW</h5>
+                </div>
+                <p class="text-white-50 mb-4">
+                    Your trusted partner for computer solutions, repairs, and technology services in Malawi.
+                </p>
+                <div class="social-links d-flex gap-3">
+                    <a href="#" class="text-white-50">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-white-50">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-white-50">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
 
-<!-- FOOTER -->
-<footer class="bg-dark text-white mt-auto py-4">
-    <div class="container text-center">
-        <small>&copy; {{ now().year if now else 2024 }} Computer Aid MW</small>
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h5 class="text-white fw-bold mb-4">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{{ url_for('home') }}" class="text-white-50 text-decoration-none">
+                            <i class="fas fa-chevron-right small me-2"></i>Home
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('category_page', category='laptops') }}" class="text-white-50 text-decoration-none">
+                            <i class="fas fa-chevron-right small me-2"></i>Products
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-white-50 text-decoration-none">
+                            <i class="fas fa-chevron-right small me-2"></i>Services
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('view_cart') }}" class="text-white-50 text-decoration-none">
+                            <i class="fas fa-chevron-right small me-2"></i>Cart
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Services -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="text-white fw-bold mb-4">Our Services</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <span class="text-white-50">
+                            <i class="fas fa-wrench me-2"></i>Computer Repairs
+                        </span>
+                    </li>
+                    <li class="mb-2">
+                        <span class="text-white-50">
+                            <i class="fas fa-laptop-medical me-2"></i>Hardware Upgrades
+                        </span>
+                    </li>
+                    <li class="mb-2">
+                        <span class="text-white-50">
+                            <i class="fas fa-shield-alt me-2"></i>Virus Removal
+                        </span>
+                    </li>
+                    <li class="mb-2">
+                        <span class="text-white-50">
+                            <i class="fas fa-database me-2"></i>Data Recovery
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="text-white fw-bold mb-4">Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-map-marker-alt mt-1 me-3"></i>
+                            <div>
+                                <span class="text-white-50">Lilongwe, Malawi</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-phone mt-1 me-3"></i>
+                            <div>
+                                <a href="tel:+265123456789" class="text-white-50 text-decoration-none">
+                                    +265 123 456 789
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-3">
+                        <div class="d-flex">
+                            <i class="fas fa-envelope mt-1 me-3"></i>
+                            <div>
+                                <a href="mailto:info@computeraidmw.com" class="text-white-50 text-decoration-none">
+                                    info@computeraidmw.com
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="row mt-4 pt-4 border-top border-secondary">
+            <div class="col-lg-6 mb-3">
+                <h6 class="text-white mb-3">Stay Updated</h6>
+                <form class="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" 
+                               class="form-control bg-dark border-secondary text-white" 
+                               placeholder="Enter your email"
+                               required>
+                        <button class="btn btn-primary" type="submit">
+                            Subscribe
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="col-lg-6 mb-3">
+                <h6 class="text-white mb-3">Payment Methods</h6>
+                <div class="payment-methods d-flex flex-wrap gap-2">
+                    <div class="bg-light rounded p-2">
+                        <i class="fab fa-cc-visa text-dark"></i>
+                    </div>
+                    <div class="bg-light rounded p-2">
+                        <i class="fab fa-cc-mastercard text-dark"></i>
+                    </div>
+                    <div class="bg-light rounded p-2">
+                        <span class="fw-bold text-dark">Airtel Money</span>
+                    </div>
+                    <div class="bg-light rounded p-2">
+                        <span class="fw-bold text-dark">Cash</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="row mt-4 pt-3 border-top border-secondary">
+            <div class="col-md-12 text-center">
+                <p class="text-white-50 small mb-0">
+                    &copy; 2024 Computer Aid MW. All rights reserved.
+                </p>
+            </div>
+        </div>
     </div>
 </footer>
 
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Back to Top -->
+<button class="btn btn-primary btn-back-to-top" id="backToTop">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
+<style>
+/* Product Detail Styles */
+.product-image-wrapper {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 30px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.product-detail-image {
+    max-height: 400px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.product-detail-image:hover {
+    transform: scale(1.03);
+}
+
+.product-info-card {
+    border-left: 4px solid #0d6efd !important;
+}
+
+.product-title {
+    color: #212529;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.price-section .display-5 {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.stock-status {
+    border-left: 4px solid;
+    border-color: #198754;
+}
+
+.stock-status.text-warning {
+    border-color: #ffc107;
+}
+
+.stock-status.text-danger {
+    border-color: #dc3545;
+}
+
+.trust-item {
+    transition: all 0.2s ease;
+}
+
+.trust-item:hover {
+    transform: translateY(-3px);
+}
+
+.spec-item {
+    transition: all 0.2s ease;
+    border-left: 3px solid #0d6efd;
+}
+
+.spec-item:hover {
+    background-color: #e9ecef !important;
+    transform: translateX(5px);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+    background: transparent;
+}
+
+/* Share Modal */
+.share-option {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.share-option:hover {
+    transform: scale(1.1);
+}
+
+.icon-wrapper {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Footer Styles */
+footer {
+    background: #212529;
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: #0d6efd;
+    color: white !important;
+    transform: translateY(-3px);
+}
+
+.payment-methods div {
+    width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.payment-methods div:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.newsletter-form .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    background: #2d2d2d;
+}
+
+/* Back to Top Button */
+.btn-back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .product-image-wrapper {
+        padding: 20px;
+        min-height: 250px;
+    }
+    
+    .product-detail-image {
+        max-height: 300px;
+    }
+    
+    .price-section .display-5 {
+        font-size: 2rem;
+    }
+    
+    .product-title {
+        font-size: 1.5rem;
+    }
+    
+    .action-buttons .row {
+        flex-direction: column;
+    }
+    
+    .action-buttons .col-auto {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .action-buttons .input-group {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    
+    .spec-item {
+        margin-bottom: 10px;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .tab-content {
+        padding: 1.5rem !important;
+    }
+    
+    footer .col-lg-4, 
+    footer .col-lg-2, 
+    footer .col-lg-3 {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .trust-features .col-4 {
+        margin-bottom: 15px;
+    }
+    
+    .btn-back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+</style>
 
 <script>
-document.getElementById('searchToggle')?.addEventListener('click', function (e) {
-    e.stopPropagation();
-    this.closest('.search-wrapper').classList.toggle('active');
-});
-
-document.addEventListener('click', () => {
-    document.querySelectorAll('.search-wrapper.active')
-        .forEach(w => w.classList.remove('active'));
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity controls
+    const quantityInput = document.getElementById('quantityInput');
+    const decreaseBtn = document.getElementById('decreaseQty');
+    const increaseBtn = document.getElementById('increaseQty');
+    
+    if (decreaseBtn && increaseBtn && quantityInput) {
+        decreaseBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+        
+        increaseBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            let max = parseInt(quantityInput.max);
+            if (value < max) {
+                quantityInput.value = value + 1;
+            }
+        });
+    }
+    
+    // Share functionality
+    const shareBtn = document.getElementById('shareProductBtn');
+    const shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+    const copyBtn = document.getElementById('copyLinkBtn');
+    const shareLink = document.getElementById('shareLink');
+    
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            shareModal.show();
+        });
+    }
+    
+    // Copy link
+    if (copyBtn && shareLink) {
+        copyBtn.addEventListener('click', () => {
+            shareLink.select();
+            navigator.clipboard.writeText(shareLink.value)
+                .then(() => {
+                    showToast('Link copied!', 'success');
+                })
+                .catch(err => {
+                    console.error('Failed to copy:', err);
+                    showToast('Failed to copy link', 'error');
+                });
+        });
+    }
+    
+    // Share buttons
+    document.querySelectorAll('.share-option').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const platform = this.dataset.platform;
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out {{ product.name }} on Computer Aid MW");
+            
+            let shareUrl;
+            switch(platform) {
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${text}%20${url}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+                shareModal.hide();
+            }
+        });
+    });
+    
+    // Add to cart AJAX
+    const addToCartForm = document.querySelector('.add-to-cart-form');
+    if (addToCartForm) {
+        addToCartForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding...';
+            submitBtn.disabled = true;
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success || data.cart_count !== undefined) {
+                    // Update cart badge
+                    const cartBadges = document.querySelectorAll('.cart-badge');
+                    cartBadges.forEach(badge => {
+                        if (data.cart_count > 0) {
+                            badge.textContent = data.cart_count;
+                            badge.classList.remove('d-none');
+                        }
+                    });
+                    
+                    showToast('Added to cart!', 'success');
+                } else {
+                    showToast('Error adding to cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Network error. Please try again.', 'error');
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1000);
+            });
+        });
+    }
+    
+    // Notify button
+    const notifyBtn = document.getElementById('notifyMeBtn');
+    if (notifyBtn) {
+        notifyBtn.addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-bell me-1"></i>Notifications On';
+            this.classList.remove('btn-outline-secondary');
+            this.classList.add('btn-success');
+            showToast('We\'ll notify you when available!', 'success');
+        });
+    }
+    
+    // Image click zoom
+    const mainImage = document.getElementById('mainProductImage');
+    if (mainImage) {
+        mainImage.addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.createElement('div'));
+            modal._element.className = 'modal fade';
+            modal._element.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content border-0 bg-transparent">
+                        <div class="modal-body p-0 text-center">
+                            <img src="${this.src}" 
+                                 alt="${this.alt}" 
+                                 class="img-fluid rounded shadow-lg"
+                                 style="max-height: 80vh; max-width: 90vw;">
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal._element);
+            modal.show();
+            
+            modal._element.addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        });
+    }
+    
+    // Back to top button
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    // Toast notifications
+    function showToast(message, type = 'info') {
+        const toastContainer = document.querySelector('.toast-container') || createToastContainer();
+        const toastId = 'toast-' + Date.now();
+        const bgClass = type === 'success' ? 'bg-success' : 
+                       type === 'error' ? 'bg-danger' : 'bg-info';
+        
+        const toastHtml = `
+            <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        const toastEl = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+        
+        toastEl.addEventListener('hidden.bs.toast', function() {
+            this.remove();
+        });
+    }
+    
+    function createToastContainer() {
+        const container = document.createElement('div');
+        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        document.body.appendChild(container);
+        return container;
+    }
 });
 </script>
-
-</body>
-</html>
+{% endblock %}
