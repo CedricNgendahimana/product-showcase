@@ -1,136 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ product.name }} - Computer Aid MW{% endblock %}
-
-{% block content %}
-<section class="product-detail-section py-4 py-lg-5">
-    <div class="container">
-
-        <!-- BREADCRUMB -->
-        <nav aria-label="breadcrumb" class="mb-3 animate-fade-down">
-            <ol class="breadcrumb small">
-                <li class="breadcrumb-item">
-                    <a href="{{ url_for('home') }}">
-                        <i class="fas fa-home"></i>
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="{{ url_for('category_page', category=product.category) }}">
-                        {{ categories[product.category].name }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active text-truncate">
-                    {{ product.name }}
-                </li>
-            </ol>
-        </nav>
-
-        <div class="row g-4 g-lg-5 align-items-start">
-
-            <!-- IMAGE -->
-            <div class="col-lg-6 animate-slide-left">
-                <div class="product-detail-image-wrapper text-center">
-                    <img src="{{ product.image_url }}"
-                         alt="{{ product.name }}"
-                         class="img-fluid rounded shadow-sm product-detail-image"
-                         loading="lazy"
-                         style="max-height: 420px; width: 100%; object-fit: contain;"
-                         onerror="this.src='https://via.placeholder.com/600x400/f5f5f5/666?text=No+Image'">
-                </div>
-            </div>
-
-            <!-- INFO -->
-            <div class="col-lg-6 animate-slide-right">
-                <div class="product-detail-info">
-
-                    <!-- CATEGORY -->
-                    <span class="badge bg-secondary mb-2 animate-fade-in">
-                        {{ categories[product.category].name }}
-                    </span>
-
-                    <!-- NAME -->
-                    <h1 class="product-detail-name h3 h2-lg mt-2 animate-fade-in-delay">
-                        {{ product.name }}
-                    </h1>
-
-                    <!-- PRICE -->
-                    <div class="product-detail-price fs-4 fw-bold text-primary my-3 animate-fade-in-delay-2">
-                        MWK {{ "{:,.0f}".format(product.price) }}
-                    </div>
-
-                    <!-- SPECS -->
-                    <div class="product-detail-description mt-4 animate-fade-in-delay-3">
-                        <h5 class="mb-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Specifications
-                        </h5>
-
-                        <ul class="list-group list-group-flush small">
-                            {% for line in product.description.splitlines() %}
-                                {% if line.strip() %}
-                                <li class="list-group-item px-0 animate-fade-up">
-                                    <i class="fas fa-check text-success me-2"></i>
-                                    {{ line }}
-                                </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <!-- ACTION BUTTONS -->
-                    <div class="product-actions mt-4 d-grid gap-3 animate-fade-in-delay-4">
-
-                        {% if whatsapp_link %}
-                        <a href="{{ whatsapp_link }}"
-                           target="_blank"
-                           class="btn btn-success btn-lg shadow-sm">
-                            <i class="fab fa-whatsapp me-2"></i>
-                            Contact Seller on WhatsApp
-                        </a>
-                        {% endif %}
-
-                        <!-- 🛒 ADD TO CART (WORKS WITH YOUR app.py) -->
-                        <form method="POST"
-                              action="{{ url_for('add_to_cart', product_id=product.id) }}">
-                            <button type="submit"
-                                    class="btn btn-outline-primary btn-lg w-100">
-                                <i class="fas fa-cart-plus me-2"></i>
-                                Add to Cart
-                            </button>
-                        </form>
-
-                        <a href="{{ url_for('category_page', category=product.category) }}"
-                           class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            Back to {{ categories[product.category].name }}
-                        </a>
-                    </div>
-
-                    <!-- TRUST FEATURES -->
-                    <div class="product-features mt-4 d-flex flex-wrap gap-3 small animate-fade-in-delay-5">
-                        <div class="feature-item d-flex align-items-center gap-2">
-                            <i class="fas fa-shield-alt text-success"></i>
-                            <span>Quality Guaranteed</span>
-                        </div>
-                        <div class="feature-item d-flex align-items-center gap-2">
-                            <i class="fas fa-truck text-primary"></i>
-                            <span>Fast Delivery</span>
-                        </div>
-                        <div class="feature-item d-flex align-items-center gap-2">
-                            <i class="fas fa-headset text-warning"></i>
-                            <span>24/7 Support</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% block title %}
+{{ product.name }} - Computer Aid MW
 {% endblock %}
-{% extends 'base.html' %}
-
-{% block title %}{{ product.name }} - Computer Aid MW{% endblock %}
 
 {% block content %}
 <section class="product-detail-section py-4 py-lg-5">
@@ -219,7 +91,7 @@
                         </a>
                         {% endif %}
 
-                        <!-- 🛒 ADD TO CART (AJAX, NO PAGE RELOAD) -->
+                        <!-- 🛒 ADD TO CART (AJAX – SAME AS SEARCH PAGE) -->
                         <form class="add-to-cart-form"
                               data-product-id="{{ product.id }}">
                             <button type="submit"
@@ -276,11 +148,12 @@ document.querySelectorAll(".add-to-cart-form").forEach(form => {
         .then(data => {
             if (!data || !data.cart_count) return;
 
-            const badge = document.querySelector(".badge");
+            const badge = document.querySelector(".cart-count");
             if (badge) {
                 badge.textContent = data.cart_count;
             }
-        });
+        })
+        .catch(err => console.error("Add to cart error:", err));
     });
 });
 </script>
