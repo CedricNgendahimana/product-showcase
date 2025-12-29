@@ -15,6 +15,7 @@ from flask import (
     url_for,
     flash,
     session,
+    jsonify,
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
@@ -27,6 +28,7 @@ from flask_login import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import quote
+from sqlalchemy import func   # ✅ FIX: REQUIRED FOR SAFE SEARCH
 
 # =========================
 # APP CONFIG
@@ -74,8 +76,6 @@ CATEGORIES = {
     "accessories": {"name": "Accessories", "icon": "fas fa-keyboard"},
 }
 
-PLACEHOLDER_IMAGE = "https://via.placeholder.com/600x400?text=No+Image"
-
 # =========================
 # EXTENSIONS
 # =========================
@@ -122,7 +122,6 @@ def load_user(user_id):
 
 
 def seed_database():
-    """Create admin user ONCE (safe on redeploy)"""
     if not ADMIN_USERNAME or not ADMIN_PASSWORD:
         return
 
@@ -145,8 +144,7 @@ def save_cart(cart):
 
 @app.context_processor
 def inject_cart_count():
-    cart = session.get("cart", {})
-    return {"cart_count": len(cart)}
+    return {"cart_count": len(session.get("cart", {}))}
 
 # =========================
 # DB INIT
@@ -182,17 +180,20 @@ def category_page(category):
         categories=CATEGORIES,
     )
 
-
+# =========================
+# ✅ FIXED SEARCH (NAME + DESCRIPTION)
+# =========================
 @app.route("/search")
 def search():
     query = request.args.get("q", "").strip()
+
     if not query:
         return redirect(url_for("home"))
 
     products = Product.query.filter(
-        (Product.name.ilike(f"%{query}%"))
-        | (Product.description.ilike(f"%{query}%"))
-    ).all()
+        func.lower(Product.name).contains(query.lower()) |
+        func.lower(Product.description).contains(query.lower())
+    ).order_by(Product.created_at.desc()).all()
 
     return render_template(
         "search_results.html",
@@ -248,13 +249,14 @@ def add_to_cart(product_id):
     }
 
     save_cart(cart)
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify(status="ok", cart_count=len(cart))
+
     flash("Product added to cart", "success")
     return redirect(request.referrer or url_for("home"))
 
 
-# =====================================================
-# ✅ ADDITION: REMOVE FROM CART
-# =====================================================
 @app.route("/cart/remove/<int:product_id>", methods=["POST"])
 def remove_from_cart(product_id):
     cart = get_cart()

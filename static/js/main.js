@@ -83,3 +83,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 });
+
+document.querySelectorAll(".add-to-cart-form").forEach(form => {
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+
+        const productId = form.dataset.productId;
+
+        fetch(`/cart/add/${productId}`, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+            if (!data) return;
+
+            // update cart badge
+            const badge = document.querySelector(".badge");
+            if (badge) {
+                badge.textContent = data.cart_count;
+            } else {
+                location.reload();
+            }
+        });
+    });
+});
+
+const toggle = document.getElementById("searchToggle");
+const form = document.getElementById("searchForm");
+
+if (toggle && form) {
+    toggle.addEventListener("click", () => {
+        form.classList.toggle("d-none");
+        form.querySelector("input").focus();
+    });
+}
