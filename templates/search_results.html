@@ -42,14 +42,16 @@
 
                         <div class="mt-auto d-grid gap-2">
 
-                            <!-- VIEW -->
+                            <!-- VIEW DETAILS -->
                             <a href="{{ url_for('product_detail', id=product.id) }}"
                                class="btn btn-sm btn-outline-primary">
                                 View Details
                             </a>
 
-                            <!-- ADD TO CART (AJAX) -->
+                            <!-- ADD TO CART (AJAX + FALLBACK SAFE) -->
                             <form class="add-to-cart-form"
+                                  action="{{ url_for('add_to_cart', product_id=product.id) }}"
+                                  method="post"
                                   data-product-id="{{ product.id }}">
                                 <button type="submit"
                                         class="btn btn-sm btn-outline-success w-100">
@@ -96,17 +98,21 @@ document.querySelectorAll(".add-to-cart-form").forEach(form => {
 
         fetch(`/cart/add/${productId}`, {
             method: "POST",
-            headers: { "X-Requested-With": "XMLHttpRequest" }
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "same-origin"
         })
         .then(res => res.json())
         .then(data => {
-            if (!data || !data.cart_count) return;
+            if (!data || typeof data.cart_count === "undefined") return;
 
-            const badge = document.querySelector(".badge");
+            const badge = document.querySelector(".cart-count");
             if (badge) {
                 badge.textContent = data.cart_count;
             }
-        });
+        })
+        .catch(err => console.error(err));
     });
 });
 </script>
