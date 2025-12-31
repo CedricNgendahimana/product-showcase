@@ -1,12 +1,13 @@
 :root {
-    --primary-color: #e94c2b;
-    --primary-dark: #c73e22;
-    --secondary-color: #16213e;
-    --accent-color: #ff6b4a;
+    /* ORIGINAL CLEAN COLORS - Reverted from orange/red theme */
+    --primary-color: #1a73e8;     /* Clean blue accent */
+    --primary-dark: #0d62d9;      /* Darker blue for hover states */
+    --secondary-color: #333333;   /* Dark text color */
+    --accent-color: #34a853;      /* Green accent */
     --success-color: #25d366;
     --text-dark: #2d3436;
     --text-muted: #636e72;
-    --bg-light: #f8f9fa;
+    --bg-light: #f8f9fa;          /* Light gray background */
     --white: #ffffff;
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
     --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
@@ -82,10 +83,10 @@ body {
 }
 
 /* ====================
-   IMPROVED NAVBAR
+   IMPROVED NAVBAR - REVERTED TO CLEAN LOOK
 ==================== */
 .navbar {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%);
+    background: var(--bg-light);  /* Changed to light gray */
     padding: 0.8rem 0;
     box-shadow: var(--shadow-md);
     position: sticky;
@@ -97,7 +98,7 @@ body {
 .navbar.scrolled {
     padding: 0.5rem 0;
     backdrop-filter: blur(10px);
-    background: linear-gradient(135deg, rgba(22, 33, 62, 0.95) 0%, rgba(22, 33, 62, 0.98) 100%);
+    background: var(--bg-light);  /* Changed to light gray */
 }
 
 .navbar-brand img {
@@ -118,6 +119,7 @@ body {
     border-radius: 8px;
     margin: 0 0.2rem;
     position: relative;
+    color: var(--text-dark);  /* Added dark text color */
 }
 
 .nav-link::after {
@@ -127,7 +129,7 @@ body {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue underline */
     transition: all var(--duration-normal) ease;
     transform: translateX(-50%);
 }
@@ -138,7 +140,7 @@ body {
 }
 
 .nav-link:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(26, 115, 232, 0.1);  /* Light blue hover */
     transform: translateY(-2px);
 }
 
@@ -154,7 +156,7 @@ body {
     }
     
     .navbar-collapse {
-        background: var(--secondary-color);
+        background: var(--bg-light);
         border-radius: var(--border-radius);
         margin-top: var(--space-sm);
         padding: var(--space-md);
@@ -163,11 +165,11 @@ body {
 }
 
 /* ====================
-   ENHANCED HERO SECTION
+   ENHANCED HERO SECTION - REVERTED TO CLEAN LOOK
 ==================== */
 .hero-section {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%);
-    color: var(--white);
+    background: var(--bg-light);  /* Changed to light gray */
+    color: var(--text-dark);      /* Changed to dark text */
     padding: 100px 0 150px;
     position: relative;
     overflow: hidden;
@@ -183,7 +185,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a73e8' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     animation: backgroundMove 20s linear infinite;
 }
 
@@ -211,7 +213,7 @@ body {
 }
 
 .text-accent {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue accent */
     display: inline-block;
     position: relative;
 }
@@ -241,7 +243,7 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     border-radius: 50px;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue button */
     border: none;
     transition: var(--transition);
     position: relative;
@@ -268,9 +270,9 @@ body {
 }
 
 .hero-btn:hover {
-    background: var(--primary-dark);
+    background: var(--primary-dark);  /* Darker blue on hover */
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(233, 76, 43, 0.4);
+    box-shadow: 0 10px 30px rgba(26, 115, 232, 0.4);  /* Blue shadow */
 }
 
 .hero-btn:active {
@@ -446,7 +448,7 @@ body {
     left: 0;
     width: 60px;
     height: 4px;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue underline */
     border-radius: 2px;
 }
 
@@ -489,7 +491,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(233, 76, 43, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(26, 115, 232, 0.1), transparent);  /* Blue shimmer */
     transition: left 0.6s ease;
 }
 
@@ -500,12 +502,12 @@ body {
 .category-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: var(--shadow-lg);
-    border-color: var(--primary-color);
+    border-color: var(--primary-color);  /* Blue border on hover */
 }
 
 .category-icon {
     font-size: 3rem;
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue icon */
     margin-bottom: 1rem;
     display: inline-block;
     transition: var(--transition);
@@ -525,12 +527,12 @@ body {
 }
 
 .category-card:hover .category-name {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue text on hover */
 }
 
 .category-hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    color: var(--white);
+    background: var(--bg-light);  /* Changed from orange gradient */
+    color: var(--text-dark);      /* Changed from white */
     padding: 60px 0;
     text-align: center;
     position: relative;
@@ -580,7 +582,7 @@ body {
 .product-card:hover {
     transform: scale(1.02) translateY(-5px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--primary-color);
+    border-color: var(--primary-color);  /* Blue border on hover */
 }
 
 .product-image-wrapper {
@@ -611,7 +613,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(233, 76, 43, 0.9) 0%, rgba(26, 26, 46, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.9) 0%, rgba(33, 33, 33, 0.8) 100%);  /* Blue overlay */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -641,7 +643,7 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue badge */
     color: var(--white);
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
@@ -672,7 +674,7 @@ body {
 }
 
 .product-card:hover .product-name {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue text on hover */
 }
 
 .product-description {
@@ -697,7 +699,7 @@ body {
 .product-price {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue price */
     transition: var(--transition);
 }
 
@@ -721,7 +723,7 @@ body {
 }
 
 .breadcrumb a {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue breadcrumb */
     text-decoration: none;
     transition: var(--transition);
     position: relative;
@@ -734,7 +736,7 @@ body {
 
 .category-tag {
     display: inline-block;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue tag */
     color: var(--white);
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -795,7 +797,7 @@ body {
 .product-detail-price {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 800;
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue price */
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -867,7 +869,7 @@ body {
 }
 
 .feature-item:hover {
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue hover */
     color: var(--white);
     transform: translateY(-3px);
 }
@@ -877,7 +879,7 @@ body {
 }
 
 .feature-item i {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue icon */
     font-size: 1.2rem;
     transition: var(--transition);
 }
@@ -898,19 +900,20 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e94c2b' fill-opacity='0.05'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z'/%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a73e8' fill-opacity='0.05'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z'/%3E%3C/g%3E%3C/svg%3E");
     animation: backgroundMove 30s linear infinite;
 }
 
 .cta-card {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, #16213e 100%);
-    color: var(--white);
+    background: var(--bg-light);  /* Changed from dark gradient */
+    color: var(--text-dark);      /* Changed from white */
     padding: 3rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
     position: relative;
     z-index: 1;
     overflow: hidden;
+    border: 1px solid rgba(26, 115, 232, 0.1);  /* Light blue border */
 }
 
 .cta-card::before {
@@ -920,7 +923,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(45deg, transparent, rgba(26, 115, 232, 0.1), transparent);  /* Blue shimmer */
     transform: rotate(45deg);
     animation: shine 3s infinite;
 }
@@ -958,7 +961,7 @@ body {
 }
 
 .login-header i {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue icon */
     font-size: 2.5rem;
     margin-bottom: var(--space-md);
 }
@@ -978,8 +981,8 @@ body {
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(233, 76, 43, 0.1);
+    border-color: var(--primary-color);  /* Blue focus border */
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);  /* Blue shadow */
     transform: translateY(-2px);
 }
 
@@ -988,7 +991,7 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue button */
     border-color: var(--primary-color);
     padding: 0.8rem 2rem;
     font-weight: 600;
@@ -1002,7 +1005,7 @@ body {
     background: var(--primary-dark);
     border-color: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(233, 76, 43, 0.3);
+    box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);  /* Blue shadow */
 }
 
 .btn-primary:active {
@@ -1028,7 +1031,7 @@ body {
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     height: 100%;
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid var(--primary-color);  /* Blue accent border */
 }
 
 .stat-card:hover {
@@ -1046,6 +1049,7 @@ body {
     color: var(--white);
     font-size: 1.5rem;
     flex-shrink: 0;
+    background: var(--primary-color);  /* Blue icon background */
 }
 
 .stat-info h3 {
@@ -1115,15 +1119,15 @@ body {
 }
 
 .table tr:hover td {
-    background: rgba(233, 76, 43, 0.05);
+    background: rgba(26, 115, 232, 0.05);  /* Light blue hover */
 }
 
 /* ====================
-   IMPROVED FOOTER
+   IMPROVED FOOTER - REVERTED TO CLEAN LOOK
 ==================== */
 .footer {
-    background: var(--secondary-color);
-    color: var(--white);
+    background: var(--bg-light);  /* Changed from dark blue to light gray */
+    color: var(--text-dark);      /* Changed from white to dark text */
     padding: 4rem 0 2rem;
     margin-top: auto;
     position: relative;
@@ -1136,7 +1140,7 @@ body {
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);  /* Blue gradient line */
 }
 
 .footer h5, .footer h6 {
@@ -1144,6 +1148,7 @@ body {
     margin-bottom: 1rem;
     position: relative;
     display: inline-block;
+    color: var(--secondary-color);
 }
 
 .footer h5::after, .footer h6::after {
@@ -1153,11 +1158,11 @@ body {
     left: 0;
     width: 40px;
     height: 2px;
-    background: var(--primary-color);
+    background: var(--primary-color);  /* Blue underline */
 }
 
 .footer a {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted);  /* Changed from white to muted gray */
     text-decoration: none;
     transition: var(--transition);
     display: inline-block;
@@ -1165,17 +1170,17 @@ body {
 }
 
 .footer a:hover {
-    color: var(--primary-color);
+    color: var(--primary-color);  /* Blue on hover */
     transform: translateX(5px);
 }
 
 .footer hr {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);  /* Darker border */
     margin: 2rem 0;
 }
 
 .footer .text-muted {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: var(--text-muted) !important;
 }
 
 /* ====================
