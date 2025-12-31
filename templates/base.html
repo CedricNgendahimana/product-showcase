@@ -24,39 +24,86 @@
             background: #f8f9fa;
             color: #1f2937;
             padding-top: 0 !important;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         main {
             padding-top: 0;
             margin-top: 0;
+            flex: 1;
         }
 
-        /* ===== NAVBAR ===== */
+        /* ===== BLUE & ORANGE COLOR SCHEME ===== */
+        :root {
+            --primary-blue: #1a73e8;
+            --primary-blue-dark: #0d62d9;
+            --accent-orange: #ff6b35;
+            --accent-orange-dark: #e55a2b;
+            --dark-bg: #0f172a;
+            --light-text: #ffffff;
+            --light-bg: #f8f9fa;
+        }
+
+        /* ===== NAVBAR - BLUE THEME ===== */
         .navbar {
-            background: linear-gradient(135deg, #16213e, #0f172a);
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
             box-shadow: 0 4px 20px rgba(0,0,0,.15);
             margin-bottom: 0 !important;
+            padding: 0.8rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(26, 115, 232, 0.95);
+            backdrop-filter: blur(10px);
         }
 
         .navbar-brand img {
             height: 44px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: scale(1.05);
         }
 
         /* Desktop nav links */
         @media (min-width: 992px) {
             .nav-link {
-                color: #fff !important;
+                color: var(--light-text) !important;
                 font-weight: 500;
                 padding: .6rem 1rem;
                 border-radius: 8px;
+                position: relative;
+                transition: all 0.3s ease;
+            }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: 5px;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: var(--accent-orange);
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
+
+            .nav-link:hover::after,
+            .nav-link.active::after {
+                width: calc(100% - 2rem);
             }
 
             .nav-link:hover {
-                background: rgba(255,255,255,.12);
+                background: rgba(255, 107, 53, 0.1);
+                color: var(--accent-orange) !important;
             }
         }
 
-        /* ===== DESKTOP SEARCH SLIDE ===== */
+        /* ===== DESKTOP SEARCH SLIDE - ORANGE ACCENT ===== */
         @media (min-width: 992px) {
             .search-wrapper {
                 position: relative;
@@ -70,7 +117,8 @@
                 transform-origin: right;
                 width: 260px;
                 opacity: 0;
-                transition: .3s ease;
+                transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000;
             }
 
             .search-wrapper.active .search-input {
@@ -79,39 +127,74 @@
             }
 
             .search-input input {
-                background: rgba(255,255,255,.1);
-                border: 1px solid rgba(255,255,255,.3);
-                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid rgba(255, 107, 53, 0.3);
+                color: var(--light-text);
+                border-radius: 25px;
+                padding: 0.5rem 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .search-input input:focus {
+                border-color: var(--accent-orange);
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+                background: rgba(255, 255, 255, 0.15);
             }
 
             .search-input input::placeholder {
-                color: rgba(255,255,255,.7);
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .btn-outline-light {
+                border-color: rgba(255, 255, 255, 0.3);
+                color: var(--light-text);
+                transition: all 0.3s ease;
+            }
+
+            .btn-outline-light:hover {
+                border-color: var(--accent-orange);
+                background: rgba(255, 107, 53, 0.1);
+                color: var(--accent-orange);
             }
         }
 
-        /* ===== CART BADGE ===== */
+        /* ===== CART BADGE - ORANGE ===== */
         .cart-badge {
             position: absolute;
             top: 0;
             right: 0;
-            transform: translate(50%,-50%);
-            background: #e11d48;
-            color: #fff;
+            transform: translate(50%, -50%);
+            background: var(--accent-orange);
+            color: var(--light-text);
             font-size: .7rem;
+            font-weight: 600;
             min-width: 20px;
             height: 20px;
             border-radius: 50%;
             display: flex;
-                align-items: center;
-                justify-content: center;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
-        /* ===== MOBILE MENU ===== */
+        .cart-badge:hover {
+            background: var(--accent-orange-dark);
+            transform: translate(50%, -50%) scale(1.1);
+        }
+
+        /* ===== MOBILE MENU - BLUE THEME ===== */
         @media (max-width: 991px) {
             .navbar-collapse {
-                background: #0f172a;
+                background: var(--primary-blue-dark);
                 padding: 1rem;
                 border-radius: 0 0 16px 16px;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .navbar-collapse.show {
+                max-height: 500px;
             }
 
             .mobile-item {
@@ -120,23 +203,41 @@
                 gap: 12px;
                 padding: 12px 16px;
                 border-radius: 10px;
-                background: rgba(255,255,255,.08);
-                color: #fff;
+                background: rgba(255, 255, 255, .08);
+                color: var(--light-text);
                 text-decoration: none;
+                transition: all 0.3s ease;
+                margin-bottom: 8px;
             }
 
-            .mobile-item + .mobile-item {
-                margin-top: 8px;
+            .mobile-item:last-child {
+                margin-bottom: 0;
             }
 
             .mobile-item:hover {
-                background: rgba(255,255,255,.15);
+                background: rgba(255, 107, 53, 0.2);
+                color: var(--accent-orange);
+                transform: translateX(5px);
+            }
+
+            .mobile-item i {
+                color: var(--accent-orange);
+                width: 20px;
+                text-align: center;
             }
 
             .mobile-search input {
-                background: rgba(255,255,255,.1);
-                border: 1px solid rgba(255,255,255,.25);
-                color: #fff;
+                background: rgba(255, 255, 255, .1);
+                border: 2px solid rgba(255, 107, 53, 0.3);
+                color: var(--light-text);
+                border-radius: 25px;
+                padding: 0.5rem 1rem;
+            }
+
+            .mobile-search input:focus {
+                border-color: var(--accent-orange);
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+                background: rgba(255, 255, 255, 0.15);
             }
         }
 
@@ -151,24 +252,104 @@
             margin-top: 0;
         }
 
-        /* ===== FOOTER ===== */
-        footer {
-            background: #0f172a;
-            color: #cbd5f5;
+        .alert {
+            margin-bottom: 0;
+            border: none;
+            border-radius: 0;
+            padding: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        /* ===== FOOTER - BLUE GRADIENT ===== */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--light-text);
             padding: 3rem 0 1.5rem;
             margin-top: auto;
         }
 
-        footer a {
-            color: #cbd5f5;
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-        footer a:hover {
-            color: #fff;
+        .footer a:hover {
+            color: var(--accent-orange);
+            transform: translateX(3px);
         }
 
-        /* ===== BACK TO TOP BUTTON ===== */
+        .footer h5 {
+            color: var(--light-text);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer h5::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-orange);
+            border-radius: 2px;
+        }
+
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .text-white-30 {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-link i {
+            color: var(--accent-orange);
+            font-size: 0.8rem;
+        }
+
+        /* ===== BACK TO TOP BUTTON - ORANGE ===== */
         .btn-back-to-top {
             position: fixed;
             bottom: 30px;
@@ -176,24 +357,29 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: #e11d48;
-            color: white;
+            background: var(--accent-orange);
+            color: var(--light-text);
             border: none;
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
 
         .btn-back-to-top:hover {
-            background: #be123c;
-            transform: translateY(-3px);
+            background: var(--accent-orange-dark);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-back-to-top:active {
+            transform: translateY(-2px) scale(1);
         }
 
         /* ===== HERO SECTION OVERRIDES ===== */
-        /* This ensures hero section fills space after navbar */
         .hero-section {
             margin-top: 0 !important;
             padding-top: 0 !important;
@@ -204,8 +390,70 @@
             margin-top: 0 !important;
         }
 
-        .alert {
-            margin-bottom: 0;
+        /* ===== RESPONSIVE IMPROVEMENTS ===== */
+        @media (max-width: 768px) {
+            .navbar-brand img {
+                height: 36px;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer .row > div {
+                margin-bottom: 2rem;
+            }
+            
+            .btn-back-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .mobile-item {
+                padding: 10px 14px;
+            }
+            
+            .footer h5 {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .navbar, .footer, .btn-back-to-top {
+                display: none !important;
+            }
+            
+            body {
+                color: #000;
+                background: #fff;
+            }
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+            
+            .btn-back-to-top:hover {
+                transform: none;
+            }
+            
+            .mobile-item:hover {
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -213,13 +461,13 @@
 <body>
 
 <!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Aid MW">
         </a>
 
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -238,17 +486,17 @@
             <div class="d-none d-lg-flex align-items-center gap-3">
 
                 <div class="search-wrapper">
-                    <button class="btn btn-outline-light" id="desktopSearchBtn">
+                    <button class="btn btn-outline-light" id="desktopSearchBtn" aria-label="Search products">
                         <i class="fas fa-search"></i>
                     </button>
-                    <form class="search-input" method="GET" action="{{ url_for('search') }}">
-                        <input type="search" name="q" class="form-control" placeholder="Search products...">
+                    <form class="search-input" method="GET" action="{{ url_for('search') }}" role="search">
+                        <input type="search" name="q" class="form-control" placeholder="Search products..." aria-label="Search products">
                     </form>
                 </div>
 
-                <a href="{{ url_for('view_cart') }}" class="btn btn-outline-light position-relative">
+                <a href="{{ url_for('view_cart') }}" class="btn btn-outline-light position-relative" aria-label="Shopping cart">
                     <i class="fas fa-shopping-cart"></i>
-                    {% if cart_count %}
+                    {% if cart_count and cart_count > 0 %}
                     <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
                 </a>
@@ -262,14 +510,14 @@
                 <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile"></i>Phones</a>
                 <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item"><i class="fas fa-keyboard"></i>Accessories</a>
 
-                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}">
-                    <input type="search" name="q" class="form-control" placeholder="Search products...">
+                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}" role="search">
+                    <input type="search" name="q" class="form-control" placeholder="Search products..." aria-label="Search products">
                 </form>
 
                 <a href="{{ url_for('view_cart') }}" class="mobile-item mt-3">
                     <i class="fas fa-shopping-cart"></i>
                     Cart
-                    {% if cart_count %}
+                    {% if cart_count and cart_count > 0 %}
                     <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
                 </a>
@@ -283,13 +531,16 @@
 <div class="flash-container">
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% for category, message in messages %}
-<div class="alert alert-{{ category }} m-0 border-0 rounded-0">{{ message }}</div>
+<div class="alert alert-{{ category }} m-0 border-0 rounded-0 alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 {% endfor %}
 {% endwith %}
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main>
+<main class="pt-5">
 {% block content %}{% endblock %}
 </main>
 
@@ -298,7 +549,7 @@
     <div class="container">
         <div class="row">
             <!-- Company Info -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <h5 class="text-white mb-3">Computer Aid MW</h5>
                 <p class="text-white-50 mb-4">
                     Your trusted computer solutions provider in Malawi. Quality products with excellent customer support.
@@ -317,7 +568,7 @@
             </div>
 
             <!-- Quick Links -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <h5 class="text-white mb-3">Quick Links</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
@@ -344,7 +595,7 @@
             </div>
 
             <!-- Services -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <h5 class="text-white mb-3">Our Services</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
@@ -371,18 +622,18 @@
             <div class="col-12">
                 <h5 class="text-white mb-3">Contact Us</h5>
                 <div class="row">
-                    <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="col-lg-3 col-md-6 mb-3">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-map-marker-alt mt-1 me-3"></i>
+                            <i class="fas fa-map-marker-alt mt-1 me-3" style="color: var(--accent-orange);"></i>
                             <div>
                                 <span class="text-white-50 d-block">Lilongwe, Malawi</span>
                                 <small class="text-white-30">Capital City</small>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="col-lg-3 col-md-6 mb-3">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-phone mt-1 me-3"></i>
+                            <i class="fas fa-phone mt-1 me-3" style="color: var(--accent-orange);"></i>
                             <div>
                                 <a href="tel:+265123456789" class="text-white-50 text-decoration-none">
                                     +265 123 456 789
@@ -391,9 +642,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="col-lg-3 col-md-6 mb-3">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-envelope mt-1 me-3"></i>
+                            <i class="fas fa-envelope mt-1 me-3" style="color: var(--accent-orange);"></i>
                             <div>
                                 <a href="mailto:info@computeraidmw.com" class="text-white-50 text-decoration-none">
                                     info@computeraidmw.com
@@ -402,9 +653,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="col-lg-3 col-md-6 mb-3">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-clock mt-1 me-3"></i>
+                            <i class="fas fa-clock mt-1 me-3" style="color: var(--accent-orange);"></i>
                             <div>
                                 <span class="text-white-50 d-block">Business Hours</span>
                                 <small class="text-white-30">Mon-Sat: 8:00 - 18:00</small>
@@ -435,6 +686,7 @@
 
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -445,17 +697,27 @@ document.addEventListener('DOMContentLoaded', function() {
     if (desktopSearchBtn && searchWrapper) {
         desktopSearchBtn.addEventListener('click', e => {
             e.stopPropagation();
+            e.preventDefault();
             searchWrapper.classList.toggle('active');
             const input = searchWrapper.querySelector('input');
             if (searchWrapper.classList.contains('active') && input) {
-                input.focus();
+                setTimeout(() => input.focus(), 100);
             }
         });
     }
     
     // Close search when clicking outside
     document.addEventListener('click', e => {
-        if (searchWrapper && !searchWrapper.contains(e.target)) {
+        if (searchWrapper && !searchWrapper.contains(e.target) && 
+            e.target !== desktopSearchBtn && 
+            !desktopSearchBtn.contains(e.target)) {
+            searchWrapper.classList.remove('active');
+        }
+    });
+    
+    // Close search on escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && searchWrapper && searchWrapper.classList.contains('active')) {
             searchWrapper.classList.remove('active');
         }
     });
@@ -484,8 +746,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-            bsAlert.close();
+            if (alert && alert.parentNode) {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            }
         }, 5000);
     });
     
@@ -502,12 +766,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Sticky navbar on scroll
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
     
-    const cartBadges = document.querySelectorAll('.cart-badge');
-    cartBadges.forEach(badge => {
-        if (parseInt(badge.textContent) > 0) {
-            badge.style.animation = 'none'; // Remove animation if not needed
-        }
+    // Form validation for search
+    const searchForms = document.querySelectorAll('form[action*="search"]');
+    searchForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const input = this.querySelector('input[name="q"]');
+            if (input && input.value.trim().length < 2) {
+                e.preventDefault();
+                input.focus();
+                input.style.borderColor = 'var(--accent-orange)';
+                input.style.boxShadow = '0 0 0 3px rgba(255, 107, 53, 0.2)';
+                
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                }, 2000);
+            }
+        });
     });
 });
 </script>
