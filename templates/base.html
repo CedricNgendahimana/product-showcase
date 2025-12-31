@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Computer Aid MW - Trusted computer products in Malawi">
 
     <title>{% block title %}Computer Aid MW{% endblock %}</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
 
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,77 +17,29 @@
 
     <style>
         /* ===== RESET & BASE ===== */
-        :root {
-            --primary-color: #e11d48;
-            --primary-dark: #be123c;
-            --secondary-color: #16213e;
-            --dark-bg: #0f172a;
-            --light-text: #cbd5f5;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow-md: 0 4px 20px rgba(0,0,0,.15);
-            --shadow-lg: 0 8px 30px rgba(0,0,0,.2);
-        }
-
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f8f9fa;
             color: #1f2937;
             padding-top: 0 !important;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         main {
             padding-top: 0;
             margin-top: 0;
-            flex: 1;
         }
 
-        /* ===== ENHANCED NAVBAR ===== */
+        /* ===== NAVBAR ===== */
         .navbar {
-            background: linear-gradient(135deg, var(--secondary-color), var(--dark-bg));
-            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, #16213e, #0f172a);
+            box-shadow: 0 4px 20px rgba(0,0,0,.15);
             margin-bottom: 0 !important;
-            position: sticky;
-            top: 0;
-            z-index: 1030;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            backdrop-filter: blur(10px);
-            background: linear-gradient(135deg, rgba(22, 33, 62, 0.95), rgba(15, 23, 42, 0.98));
-        }
-
-        .navbar-brand {
-            transition: var(--transition);
         }
 
         .navbar-brand img {
             height: 44px;
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-brand:hover img {
-            transform: scale(1.05);
         }
 
         /* Desktop nav links */
@@ -98,34 +49,14 @@
                 font-weight: 500;
                 padding: .6rem 1rem;
                 border-radius: 8px;
-                position: relative;
-                transition: var(--transition);
-                overflow: hidden;
-            }
-
-            .nav-link::before {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                width: 0;
-                height: 2px;
-                background: var(--primary-color);
-                transition: all 0.3s ease;
-                transform: translateX(-50%);
-            }
-
-            .nav-link:hover::before {
-                width: calc(100% - 2rem);
             }
 
             .nav-link:hover {
                 background: rgba(255,255,255,.12);
-                transform: translateY(-2px);
             }
         }
 
-        /* ===== ENHANCED DESKTOP SEARCH SLIDE ===== */
+        /* ===== DESKTOP SEARCH SLIDE ===== */
         @media (min-width: 992px) {
             .search-wrapper {
                 position: relative;
@@ -137,10 +68,9 @@
                 top: 50%;
                 transform: translateY(-50%) scaleX(0);
                 transform-origin: right;
-                width: 280px;
+                width: 260px;
                 opacity: 0;
-                transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease;
-                z-index: 100;
+                transition: .3s ease;
             }
 
             .search-wrapper.active .search-input {
@@ -152,16 +82,6 @@
                 background: rgba(255,255,255,.1);
                 border: 1px solid rgba(255,255,255,.3);
                 color: #fff;
-                padding: 0.5rem 1rem;
-                border-radius: 25px;
-                transition: var(--transition);
-            }
-
-            .search-input input:focus {
-                background: rgba(255,255,255,.15);
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
-                width: 100%;
             }
 
             .search-input input::placeholder {
@@ -169,43 +89,29 @@
             }
         }
 
-        /* ===== ENHANCED CART BADGE ===== */
+        /* ===== CART BADGE ===== */
         .cart-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--primary-color);
+            top: 0;
+            right: 0;
+            transform: translate(50%,-50%);
+            background: #e11d48;
             color: #fff;
             font-size: .7rem;
-            font-weight: 600;
-            min-width: 22px;
-            height: 22px;
+            min-width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: badgePulse 2s infinite;
-            box-shadow: 0 2px 8px rgba(225, 29, 72, 0.3);
+                align-items: center;
+                justify-content: center;
         }
 
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* ===== ENHANCED MOBILE MENU ===== */
+        /* ===== MOBILE MENU ===== */
         @media (max-width: 991px) {
             .navbar-collapse {
-                background: var(--dark-bg);
+                background: #0f172a;
                 padding: 1rem;
                 border-radius: 0 0 16px 16px;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease-out;
-            }
-
-            .navbar-collapse.show {
-                max-height: 500px;
             }
 
             .mobile-item {
@@ -217,23 +123,6 @@
                 background: rgba(255,255,255,.08);
                 color: #fff;
                 text-decoration: none;
-                transition: var(--transition);
-                transform: translateX(-10px);
-                opacity: 0;
-                animation: slideInRight 0.3s ease forwards;
-            }
-
-            .mobile-item:nth-child(1) { animation-delay: 0.1s; }
-            .mobile-item:nth-child(2) { animation-delay: 0.15s; }
-            .mobile-item:nth-child(3) { animation-delay: 0.2s; }
-            .mobile-item:nth-child(4) { animation-delay: 0.25s; }
-            .mobile-item:nth-child(5) { animation-delay: 0.3s; }
-
-            @keyframes slideInRight {
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
             }
 
             .mobile-item + .mobile-item {
@@ -242,350 +131,86 @@
 
             .mobile-item:hover {
                 background: rgba(255,255,255,.15);
-                transform: translateX(5px);
-            }
-
-            .mobile-search {
-                opacity: 0;
-                transform: translateY(-10px);
-                animation: fadeInUp 0.4s ease 0.4s forwards;
-            }
-
-            @keyframes fadeInUp {
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
             }
 
             .mobile-search input {
                 background: rgba(255,255,255,.1);
                 border: 1px solid rgba(255,255,255,.25);
                 color: #fff;
-                padding: 0.75rem 1rem;
-                border-radius: 10px;
-            }
-
-            .mobile-search input:focus {
-                background: rgba(255,255,255,.15);
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
             }
         }
 
-        /* ===== ENHANCED FLASH MESSAGES ===== */
+        /* ===== FLASH MESSAGES ===== */
         .flash-container {
             margin: 0;
             padding: 0;
-            position: relative;
-            z-index: 1020;
         }
 
-        .alert {
-            margin-bottom: 0;
-            border-radius: 0;
-            border: none;
-            padding: 1rem 0;
-            animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+        .flash-container .container {
+            padding-top: 0;
+            margin-top: 0;
         }
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .alert-success {
-            background: linear-gradient(90deg, #10b981, #059669);
-            color: white;
-        }
-
-        .alert-danger {
-            background: linear-gradient(90deg, #ef4444, #dc2626);
-            color: white;
-        }
-
-        .alert-info {
-            background: linear-gradient(90deg, #3b82f6, #2563eb);
-            color: white;
-        }
-
-        .alert-warning {
-            background: linear-gradient(90deg, #f59e0b, #d97706);
-            color: white;
-        }
-
-        .alert::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.3);
-            animation: progressBar 5s linear forwards;
-        }
-
-        @keyframes progressBar {
-            from { width: 100%; }
-            to { width: 0; }
-        }
-
-        /* ===== ENHANCED FOOTER ===== */
+        /* ===== FOOTER ===== */
         footer {
-            background: var(--dark-bg);
-            color: var(--light-text);
+            background: #0f172a;
+            color: #cbd5f5;
             padding: 3rem 0 1.5rem;
             margin-top: auto;
-            position: relative;
-        }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), transparent);
         }
 
         footer a {
-            color: var(--light-text);
+            color: #cbd5f5;
             text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
         }
 
         footer a:hover {
             color: #fff;
-            transform: translateX(5px);
         }
 
-        .footer-link {
-            padding: 0.25rem 0;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            background: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        /* ===== ENHANCED BACK TO TOP BUTTON ===== */
+        /* ===== BACK TO TOP BUTTON ===== */
         .btn-back-to-top {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 56px;
-            height: 56px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: #e11d48;
             color: white;
             border: none;
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 999;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .btn-back-to-top.show {
-            display: flex;
-            animation: fadeInUpBtn 0.3s ease forwards;
-        }
-
-        @keyframes fadeInUpBtn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
         }
 
         .btn-back-to-top:hover {
-            background: var(--primary-dark);
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        .btn-back-to-top:active {
-            transform: translateY(-2px) scale(1);
+            background: #be123c;
+            transform: translateY(-3px);
         }
 
         /* ===== HERO SECTION OVERRIDES ===== */
+        /* This ensures hero section fills space after navbar */
         .hero-section {
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
 
+        /* Remove any padding/margin that might create white space */
         .navbar + * {
             margin-top: 0 !important;
         }
 
-        /* ===== LOADING ANIMATION ===== */
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .page-loader.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== CART HOVER ANIMATION ===== */
-        .cart-link {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cart-link::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .cart-link:hover::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        /* ===== TOAST NOTIFICATIONS ===== */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            max-width: 350px;
-        }
-
-        .toast {
-            animation: slideInRightToast 0.3s ease;
-            border: none;
-            border-left: 4px solid;
-            box-shadow: var(--shadow-lg);
-        }
-
-        @keyframes slideInRightToast {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* ===== RESPONSIVE ADJUSTMENTS ===== */
-        @media (max-width: 768px) {
-            .btn-back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-            }
-
-            footer {
-                padding: 2rem 0 1rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .navbar-brand img {
-                height: 38px;
-            }
-        }
-
-        /* ===== REDUCED MOTION ===== */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-
-            html {
-                scroll-behavior: auto;
-            }
-        }
-
-        /* ===== SMOOTH SCROLL BEHAVIOR ===== */
-        .scroll-container {
-            scroll-behavior: smooth;
-        }
-
-        /* ===== FOCUS VISIBLE ===== */
-        :focus-visible {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
-            border-radius: 4px;
+        .alert {
+            margin-bottom: 0;
         }
     </style>
 </head>
 
 <body>
-<!-- ===== PAGE LOADER ===== -->
-<div class="page-loader" id="pageLoader">
-    <div class="loader-spinner"></div>
-</div>
 
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar navbar-expand-lg navbar-dark">
@@ -594,12 +219,12 @@
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Aid MW">
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+
             <!-- DESKTOP MENU -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
@@ -611,17 +236,17 @@
 
             <!-- DESKTOP SEARCH + CART -->
             <div class="d-none d-lg-flex align-items-center gap-3">
+
                 <div class="search-wrapper">
-                    <button class="btn btn-outline-light" id="desktopSearchBtn" aria-label="Search products">
+                    <button class="btn btn-outline-light" id="desktopSearchBtn">
                         <i class="fas fa-search"></i>
                     </button>
-                    <form class="search-input" method="GET" action="{{ url_for('search') }}" role="search">
-                        <input type="search" name="q" class="form-control" placeholder="Search products..." 
-                               aria-label="Search products" autocomplete="off">
+                    <form class="search-input" method="GET" action="{{ url_for('search') }}">
+                        <input type="search" name="q" class="form-control" placeholder="Search products...">
                     </form>
                 </div>
 
-                <a href="{{ url_for('view_cart') }}" class="btn btn-outline-light position-relative cart-link">
+                <a href="{{ url_for('view_cart') }}" class="btn btn-outline-light position-relative">
                     <i class="fas fa-shopping-cart"></i>
                     {% if cart_count %}
                     <span class="cart-badge">{{ cart_count }}</span>
@@ -637,9 +262,8 @@
                 <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile"></i>Phones</a>
                 <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item"><i class="fas fa-keyboard"></i>Accessories</a>
 
-                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}" role="search">
-                    <input type="search" name="q" class="form-control" placeholder="Search products..." 
-                           aria-label="Search products">
+                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}">
+                    <input type="search" name="q" class="form-control" placeholder="Search products...">
                 </form>
 
                 <a href="{{ url_for('view_cart') }}" class="mobile-item mt-3">
@@ -650,6 +274,7 @@
                     {% endif %}
                 </a>
             </div>
+
         </div>
     </div>
 </nav>
@@ -658,12 +283,7 @@
 <div class="flash-container">
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% for category, message in messages %}
-<div class="alert alert-{{ category }} m-0 border-0 rounded-0" role="alert">
-    <div class="container d-flex justify-content-between align-items-center">
-        <span>{{ message }}</span>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-</div>
+<div class="alert alert-{{ category }} m-0 border-0 rounded-0">{{ message }}</div>
 {% endfor %}
 {% endwith %}
 </div>
@@ -801,7 +421,7 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <p class="text-white-50 small mb-0">
-                    &copy; <span id="currentYear"></span> Computer Aid MW. All rights reserved.
+                    &copy; 2025 Computer Aid MW. All rights reserved.
                 </p>
             </div>
         </div>
@@ -813,336 +433,82 @@
     <i class="fas fa-chevron-up"></i>
 </button>
 
-<!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
-
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ===== REMOVE PAGE LOADER =====
-    setTimeout(() => {
-        const pageLoader = document.getElementById('pageLoader');
-        if (pageLoader) {
-            pageLoader.classList.add('fade-out');
-            setTimeout(() => {
-                pageLoader.remove();
-            }, 500);
-        }
-    }, 800);
-
-    // ===== SET CURRENT YEAR =====
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-    // ===== ENHANCED DESKTOP SEARCH TOGGLE =====
+    // Desktop Search Toggle
     const desktopSearchBtn = document.getElementById('desktopSearchBtn');
     const searchWrapper = document.querySelector('.search-wrapper');
     
     if (desktopSearchBtn && searchWrapper) {
         desktopSearchBtn.addEventListener('click', e => {
             e.stopPropagation();
-            e.preventDefault();
-            
-            const isActive = searchWrapper.classList.contains('active');
             searchWrapper.classList.toggle('active');
-            
             const input = searchWrapper.querySelector('input');
-            if (!isActive && input) {
-                setTimeout(() => {
-                    input.focus();
-                    // Animate search icon
-                    desktopSearchBtn.style.transform = 'rotate(90deg)';
-                    desktopSearchBtn.style.transition = 'transform 0.3s ease';
-                }, 150);
-            } else {
-                desktopSearchBtn.style.transform = 'rotate(0deg)';
-            }
-        });
-        
-        // Close search when clicking outside
-        document.addEventListener('click', e => {
-            if (searchWrapper && !searchWrapper.contains(e.target) && 
-                e.target !== desktopSearchBtn && !desktopSearchBtn.contains(e.target)) {
-                searchWrapper.classList.remove('active');
-                desktopSearchBtn.style.transform = 'rotate(0deg)';
-            }
-        });
-        
-        // Close on escape key
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && searchWrapper.classList.contains('active')) {
-                searchWrapper.classList.remove('active');
-                desktopSearchBtn.style.transform = 'rotate(0deg)';
+            if (searchWrapper.classList.contains('active') && input) {
+                input.focus();
             }
         });
     }
     
-    // ===== ENHANCED BACK TO TOP BUTTON =====
+    // Close search when clicking outside
+    document.addEventListener('click', e => {
+        if (searchWrapper && !searchWrapper.contains(e.target)) {
+            searchWrapper.classList.remove('active');
+        }
+    });
+    
+    // Back to Top Button
     const backToTopBtn = document.getElementById('backToTop');
     
     if (backToTopBtn) {
-        function toggleBackToTop() {
+        window.addEventListener('scroll', function() {
             if (window.pageYOffset > 300) {
-                backToTopBtn.classList.add('show');
+                backToTopBtn.style.display = 'flex';
             } else {
-                backToTopBtn.classList.remove('show');
+                backToTopBtn.style.display = 'none';
             }
-        }
-        
-        window.addEventListener('scroll', toggleBackToTop);
+        });
         
         backToTopBtn.addEventListener('click', function() {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
-            
-            // Add click animation
-            this.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
         });
-        
-        // Initial check
-        toggleBackToTop();
     }
     
-    // ===== ENHANCED ALERT AUTO-HIDE =====
+    // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert');
-    alerts.forEach((alert, index) => {
-        // Add entrance animation
-        alert.style.animationDelay = `${index * 0.1}s`;
-        
-        // Auto-dismiss
+    alerts.forEach(alert => {
         setTimeout(() => {
             const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
             bsAlert.close();
         }, 5000);
-        
-        // Manual dismiss animation
-        const closeBtn = alert.querySelector('.btn-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                alert.style.transition = 'all 0.3s ease';
-                alert.style.transform = 'translateY(-100%)';
-                alert.style.opacity = '0';
-                alert.style.height = '0';
-                alert.style.padding = '0';
-                alert.style.margin = '0';
-                
-                setTimeout(() => {
-                    alert.remove();
-                }, 300);
-            });
-        }
     });
     
-    // ===== ENHANCED MOBILE MENU =====
-    const navbar = document.getElementById('navbarNav');
-    const mobileLinks = document.querySelectorAll('.mobile-item[href]');
-    
-    if (navbar) {
-        // Smooth mobile menu toggle
-        navbar.addEventListener('show.bs.collapse', function() {
-            this.style.maxHeight = '0';
-            setTimeout(() => {
-                this.style.maxHeight = this.scrollHeight + 'px';
-            }, 10);
-        });
-        
-        navbar.addEventListener('hide.bs.collapse', function() {
-            this.style.maxHeight = this.scrollHeight + 'px';
-            setTimeout(() => {
-                this.style.maxHeight = '0';
-            }, 10);
-        });
-        
-        // Close menu when clicking mobile links
-        mobileLinks.forEach(item => {
-            item.addEventListener('click', function() {
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.mobile-item[href]').forEach(item => {
+        item.addEventListener('click', function() {
+            const navbar = document.getElementById('navbarNav');
+            if (navbar && navbar.classList.contains('show')) {
                 const bsCollapse = bootstrap.Collapse.getInstance(navbar);
                 if (bsCollapse) {
                     bsCollapse.hide();
                 }
-            });
+            }
         });
-    }
+    });
     
-    // ===== ENHANCED CART BADGE ANIMATION =====
+    
     const cartBadges = document.querySelectorAll('.cart-badge');
     cartBadges.forEach(badge => {
         if (parseInt(badge.textContent) > 0) {
-            // Add subtle bounce animation
-            badge.style.animation = 'badgePulse 2s ease-in-out infinite';
-            
-            // Highlight badge on page load
-            setTimeout(() => {
-                badge.style.transform = 'scale(1.3)';
-                badge.style.transition = 'transform 0.3s ease';
-                
-                setTimeout(() => {
-                    badge.style.transform = 'scale(1)';
-                }, 300);
-            }, 1000);
+            badge.style.animation = 'none'; // Remove animation if not needed
         }
     });
-    
-    // ===== STICKY NAVBAR ON SCROLL =====
-    window.addEventListener('scroll', function() {
-        const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-    
-    // ===== IMAGE LAZY LOADING =====
-    const lazyImages = document.querySelectorAll('img[data-src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                
-                // Add fade-in animation
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.5s ease';
-                
-                img.onload = () => {
-                    img.style.opacity = '1';
-                    img.classList.add('loaded');
-                };
-                
-                observer.unobserve(img);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '50px' });
-    
-    lazyImages.forEach(img => imageObserver.observe(img));
-    
-    // ===== ENHANCED TOAST FUNCTION =====
-    window.showToast = function(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-        
-        const toast = document.createElement('div');
-        toast.className = `toast alert alert-${type} mb-2`;
-        toast.setAttribute('role', 'alert');
-        
-        const icon = type === 'success' ? 'check-circle' : 
-                    type === 'error' ? 'exclamation-circle' : 
-                    type === 'warning' ? 'exclamation-triangle' : 'info-circle';
-        
-        toast.innerHTML = `
-            <div class="d-flex align-items-center">
-                <i class="fas fa-${icon} me-3"></i>
-                <div class="flex-grow-1">${message}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        `;
-        
-        container.appendChild(toast);
-        
-        const bsToast = new bootstrap.Toast(toast, {
-            animation: true,
-            autohide: true,
-            delay: 3000
-        });
-        
-        bsToast.show();
-        
-        // Remove from DOM after hiding
-        toast.addEventListener('hidden.bs.toast', function() {
-            this.remove();
-        });
-    };
-    
-    // ===== ENHANCED FORM VALIDATION ANIMATIONS =====
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const inputs = this.querySelectorAll('input[required], select[required], textarea[required]');
-            let isValid = true;
-            
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    isValid = false;
-                    
-                    // Add shake animation
-                    input.style.animation = 'none';
-                    input.offsetHeight; // Trigger reflow
-                    input.style.animation = 'shake 0.5s ease';
-                    
-                    // Add error class
-                    input.classList.add('is-invalid');
-                    
-                    // Remove after animation
-                    setTimeout(() => {
-                        input.style.animation = '';
-                    }, 500);
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                
-                // Show error toast
-                showToast('Please fill in all required fields', 'error');
-            }
-        });
-        
-        // Add shake animation
-        if (!document.querySelector('#shakeKeyframes')) {
-            const style = document.createElement('style');
-            style.id = 'shakeKeyframes';
-            style.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-5px); }
-                    75% { transform: translateX(5px); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    });
-    
-    // ===== ENHANCED HOVER EFFECTS FOR TOUCH DEVICES =====
-    if ('ontouchstart' in window || navigator.maxTouchPoints) {
-        // Add active state for touch devices
-        document.querySelectorAll('.btn, .nav-link, .mobile-item, .social-links a').forEach(el => {
-            el.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.95)';
-                this.style.transition = 'transform 0.1s ease';
-            });
-            
-            el.addEventListener('touchend', function() {
-                this.style.transform = '';
-            });
-        });
-    }
-    
-    // ===== RESIZE HANDLER =====
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            // Recalculate mobile menu height
-            if (navbar && navbar.classList.contains('show')) {
-                navbar.style.maxHeight = navbar.scrollHeight + 'px';
-            }
-            
-            // Trigger toast for orientation change
-            if (window.orientation !== undefined) {
-                showToast('Screen orientation changed', 'info');
-            }
-        }, 150);
-    });
-    
-    // ===== INITIAL SCROLL POSITION =====
-    window.scrollTo(0, 0);
 });
 </script>
 
