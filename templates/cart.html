@@ -193,6 +193,7 @@
     /* Main container adjustments */
     .container.mt-5 {
         padding-top: 2rem;
+        margin-top: 0 !important;
     }
     
     /* Cart Table Styles */
@@ -247,22 +248,22 @@
     /* Price Display */
     .price-display {
         font-size: 1.1rem;
-        color: var(--primary-blue);
+        color: var(--accent-orange) !important;
     }
     
-    /* Remove Button */
+    /* Remove Button - Fixed to use orange instead of red */
     .remove-btn {
         transition: all 0.3s ease;
-        border-color: #dc3545;
-        color: #dc3545;
+        border-color: var(--accent-orange) !important;
+        color: var(--accent-orange) !important;
         font-weight: 500;
     }
     
     .remove-btn:hover {
-        background-color: #dc3545;
-        color: white;
+        background-color: var(--accent-orange) !important;
+        color: white !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
     }
     
     /* Checkout Button */
@@ -292,6 +293,13 @@
     /* Clear Cart Button */
     .clear-cart-btn {
         font-weight: 500;
+        border-color: var(--accent-orange) !important;
+        color: var(--accent-orange) !important;
+    }
+    
+    .clear-cart-btn:hover {
+        background-color: var(--accent-orange) !important;
+        color: white !important;
     }
     
     /* ===== RESPONSIVE DESIGN ===== */
@@ -300,7 +308,6 @@
     @media (max-width: 768px) {
         .container.mt-5 {
             padding-top: 1rem;
-            margin-top: 1rem !important;
         }
         
         .cart-table {

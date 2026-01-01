@@ -51,11 +51,23 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    animation: pageIn 0.5s ease;
     overflow-x: hidden;
     width: 100%;
     padding-top: 0 !important;
     margin-top: 0 !important;
+}
+
+/* ===== CRITICAL FIX: ENSURE ALL CONTENT IS VISIBLE ===== */
+main, 
+.container,
+.row,
+[class*="col-"],
+.product-card,
+.category-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
 }
 
 /* ===== FIXED NAVBAR - NO MARGIN/PADDING BELOW ===== */
@@ -154,8 +166,8 @@ body {
 .hero-section {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
-    padding: 60px 0 100px !important; /* REDUCED top padding, kept bottom */
-    margin-top: 0 !important;
+    padding: 60px 0 100px;
+    margin-top: 0;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -164,11 +176,10 @@ body {
 }
 
 /* Force zero margin/padding on hero section */
-.hero-section,
 .hero-section .container,
 .hero-section .row {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .hero-section::before {
@@ -195,7 +206,7 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
-    padding-top: 20px; /* Add minimal padding instead of section padding */
+    padding-top: 20px;
 }
 
 .hero-title {
@@ -299,7 +310,7 @@ body {
     }
 }
 
-/* ===== ANIMATION SYSTEM ===== */
+/* ===== FIXED ANIMATION SYSTEM ===== */
 @keyframes pageIn {
     from {
         opacity: 0;
@@ -398,17 +409,7 @@ body {
     }
 }
 
-.loading-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 1000px 100%;
-    animation: shimmer 2s infinite linear;
-}
-
-[class*="animate-"] {
-    opacity: 0;
-    animation-fill-mode: forwards;
-}
-
+/* FIXED: Don't set opacity to 0 by default */
 .animate-fade-in {
     animation: fadeIn 0.8s ease forwards;
 }
@@ -433,6 +434,7 @@ body {
     animation: scaleIn 0.5s ease forwards;
 }
 
+/* Animation utility classes */
 .animate-delay-100 { animation-delay: 0.1s; }
 .animate-delay-200 { animation-delay: 0.2s; }
 .animate-delay-300 { animation-delay: 0.3s; }
@@ -443,6 +445,12 @@ body {
 .animate-delay-800 { animation-delay: 0.8s; }
 .animate-delay-900 { animation-delay: 0.9s; }
 .animate-delay-1000 { animation-delay: 1s; }
+
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}
 
 /* ===== SECTIONS ===== */
 .section-padding {
@@ -556,7 +564,6 @@ body {
 }
 
 .category-hero-content {
-    animation: fadeIn 0.8s ease forwards;
     position: relative;
     z-index: 1;
 }
@@ -569,9 +576,10 @@ body {
     padding: var(--space-md) 0;
 }
 
-/* ===== PRODUCT CARDS ===== */
+/* ===== PRODUCT CARDS - FIXED ===== */
 .featured-section {
     background: var(--white);
+    padding: var(--space-2xl) 0;
 }
 
 .product-card-link {
@@ -591,6 +599,9 @@ body {
     display: flex;
     flex-direction: column;
     border: 2px solid transparent;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
 }
 
 .product-card:hover {
@@ -1297,7 +1308,7 @@ a.text-danger,
     }
     
     .hero-section {
-        padding: 40px 0 80px !important;
+        padding: 40px 0 80px;
         min-height: 60vh;
     }
     
@@ -1381,7 +1392,7 @@ a.text-danger,
 
 @media (max-width: 576px) {
     .hero-section {
-        padding: 30px 0 60px !important;
+        padding: 30px 0 60px;
     }
     
     .hero-title {
@@ -1419,7 +1430,7 @@ a.text-danger,
     .hero-section {
         background: #fff !important;
         color: #000;
-        padding: 20px 0 !important;
+        padding: 20px 0;
     }
     
     .product-card, .category-card {
@@ -1472,4 +1483,70 @@ a.text-danger,
 
 .skip-to-main:focus {
     top: 0;
+}
+
+/* ===== CRITICAL FIXES FOR PRODUCT DISPLAY ===== */
+/* Ensure all content is visible */
+main .container {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Fix for search results */
+.search-results .row,
+.search-results .col {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Remove any animation that hides content */
+[class*="animate-"]:not(.animate-fade-in):not(.animate-fade-up):not(.animate-fade-down):not(.animate-fade-right):not(.animate-fade-left):not(.animate-scale-in) {
+    opacity: 1 !important;
+}
+
+/* ===== CRITICAL FIX: ENSURE PRODUCTS ARE VISIBLE ===== */
+/* Override any hiding from animation or other CSS */
+.product-card,
+.category-card,
+.row > div,
+[class*="col-"],
+.container .row,
+.featured-section .row {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Specifically target product sections */
+.featured-section,
+.categories-section,
+.search-results {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Ensure all Bootstrap grid elements are visible */
+.row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.col-lg-4,
+.col-md-6,
+.col-sm-6 {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Remove any problematic universal selectors */
+*[style*="opacity: 0"],
+*[style*="visibility: hidden"],
+*[style*="display: none"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
 }

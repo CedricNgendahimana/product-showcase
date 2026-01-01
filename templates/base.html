@@ -35,6 +35,20 @@
             flex: 1;
         }
 
+        /* ===== CRITICAL FIX: ENSURE ALL CONTENT IS VISIBLE ===== */
+        .container, 
+        .row,
+        [class*="col-"],
+        .product-card,
+        .category-card,
+        .product-image-wrapper,
+        .product-info {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+            position: relative !important;
+        }
+
         /* ===== BLUE & ORANGE COLOR SCHEME ===== */
         :root {
             --primary-blue: #1059b9;
@@ -284,20 +298,24 @@
         .hero-section {
             background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
             color: var(--light-text);
-            padding: 60px 0 100px !important;
-            margin-top: 0 !important;
+            padding: 60px 0 100px;
+            margin-top: 0;
             position: relative;
             overflow: hidden;
         }
 
         .hero-section .container,
         .hero-section .row {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
+            margin-top: 0;
+            padding-top: 0;
         }
 
-        /* Remove any padding/margin that might create white space */
-        .navbar + * {
+        /* FIXED: Only target flash container, not all elements */
+        .navbar + .flash-container {
+            margin-top: 0 !important;
+        }
+
+        .flash-container + .hero-section {
             margin-top: 0 !important;
         }
 
@@ -428,7 +446,7 @@
             }
             
             .hero-section {
-                padding: 40px 0 80px !important;
+                padding: 40px 0 80px;
             }
             
             .footer {
@@ -466,7 +484,7 @@
             }
 
             .hero-section {
-                padding: 30px 0 60px !important;
+                padding: 30px 0 60px;
             }
 
             .stat-number {
@@ -930,12 +948,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Form validation for search
+    // Form validation for search - FIXED VERSION
     const searchForms = document.querySelectorAll('form[action*="search"]');
     searchForms.forEach(form => {
         form.addEventListener('submit', function(e) {
             const input = this.querySelector('input[name="q"]');
-            if (input && input.value.trim().length < 2) {
+            // Only prevent if search is empty, not if it's less than 2 characters
+            if (input && input.value.trim().length === 0) {
                 e.preventDefault();
                 input.focus();
                 input.style.borderColor = 'var(--accent-orange)';
@@ -945,23 +964,52 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.style.borderColor = '';
                     input.style.boxShadow = '';
                 }, 2000);
+                return false;
             }
+            // Allow search for any non-empty query
+            return true;
         });
     });
 
-    // Force remove any remaining white space
-    const heroSection = document.querySelector('.hero-section');
-    if (heroSection) {
-        heroSection.style.marginTop = '0';
-        heroSection.style.paddingTop = '0';
+    // CRITICAL FIX: Force all product content to be visible
+    setTimeout(() => {
+        // Fix all product-related elements
+        const fixVisibility = () => {
+            const allProductElements = document.querySelectorAll(
+                '.product-card, .category-card, .row, .col, [class*="col-"], .container, main section'
+            );
+            
+            allProductElements.forEach(el => {
+                if (el) {
+                    const style = window.getComputedStyle(el);
+                    if (style.opacity === '0' || style.visibility === 'hidden' || style.display === 'none') {
+                        el.style.opacity = '1';
+                        el.style.visibility = 'visible';
+                        el.style.display = el.classList.contains('row') ? 'flex' : 'block';
+                    }
+                }
+            });
+            
+            // Specifically ensure product cards are visible
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.visibility = 'visible';
+                card.style.display = 'block';
+            });
+        };
         
-        // Also fix any potential flash message spacing
-        const flashContainer = document.querySelector('.flash-container');
-        if (flashContainer) {
-            flashContainer.style.marginTop = '0';
-        }
-    }
-
+        // Run immediately and after a short delay
+        fixVisibility();
+        setTimeout(fixVisibility, 100);
+        setTimeout(fixVisibility, 500);
+        
+        // Also fix any CSS animation classes that might be hiding content
+        document.querySelectorAll('[class*="animate-"]').forEach(el => {
+            el.style.opacity = '1';
+        });
+    }, 100);
+    
     // Fix for mobile navbar spacing
     const navToggler = document.querySelector('.navbar-toggler');
     if (navToggler) {
@@ -973,6 +1021,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Remove any problematic margin-top from content sections
+    document.querySelectorAll('main > *').forEach(section => {
+        if (section !== document.querySelector('.hero-section')) {
+            section.style.marginTop = '';
+        }
+    });
 });
 </script>
 
