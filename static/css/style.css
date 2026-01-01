@@ -1,7 +1,7 @@
 :root {
     /* BLUE & ORANGE COLOR SCHEME */
-    --primary-color: #1a73e8;     /* Primary blue */
-    --primary-dark: #0d62d9;      /* Darker blue for hover states */
+    --primary-color: #235495;     /* Primary blue */
+    --primary-dark: #1a4480;      /* Darker blue for hover states */
     --accent-color: #ff6b35;      /* Orange accent */
     --accent-dark: #e55a2b;       /* Darker orange for hover */
     --secondary-color: #333333;   /* Dark text color */
@@ -30,19 +30,20 @@
     --duration-slow: 0.5s;
 }
 
+/* ===== CRITICAL FIX: REMOVE ALL WHITE SPACE ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Smooth scrolling */
 html {
     scroll-behavior: smooth;
     max-width: 100vw;
     overflow-x: hidden;
 }
 
+/* FIX: Remove all padding that causes white space */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-dark);
@@ -53,39 +54,11 @@ body {
     animation: pageIn 0.5s ease;
     overflow-x: hidden;
     width: 100%;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
 }
 
-/* Improved page entrance */
-@keyframes pageIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Enhanced loading state */
-@keyframes shimmer {
-    0% {
-        background-position: -1000px 0;
-    }
-    100% {
-        background-position: 1000px 0;
-    }
-}
-
-.loading-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 1000px 100%;
-    animation: shimmer 2s infinite linear;
-}
-
-/* ====================
-   IMPROVED NAVBAR - BLUE & ORANGE THEME
-==================== */
+/* ===== FIXED NAVBAR - NO MARGIN/PADDING BELOW ===== */
 .navbar {
     background: var(--white);
     padding: 0.8rem 0;
@@ -94,7 +67,16 @@ body {
     top: 0;
     z-index: 1000;
     transition: var(--transition);
-    border-bottom: 3px solid var(--accent-color); /* Orange bottom border */
+    border-bottom: 3px solid var(--accent-color);
+    margin-bottom: 0 !important;
+}
+
+/* Remove any bottom margin/padding */
+.navbar,
+.navbar > .container,
+.navbar .navbar-collapse {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .navbar.scrolled {
@@ -131,7 +113,7 @@ body {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--accent-color); /* Orange underline */
+    background: var(--accent-color);
     transition: all var(--duration-normal) ease;
     transform: translateX(-50%);
 }
@@ -142,7 +124,7 @@ body {
 }
 
 .nav-link:hover {
-    background: rgba(255, 107, 53, 0.1); /* Light orange hover */
+    background: rgba(255, 107, 53, 0.1);
     color: var(--accent-color);
     transform: translateY(-2px);
 }
@@ -168,18 +150,25 @@ body {
     }
 }
 
-/* ====================
-   ENHANCED HERO SECTION - BLUE BACKGROUND WITH ORANGE ACCENTS
-==================== */
+/* ===== FIXED HERO SECTION - NO WHITE SPACE ===== */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); /* Blue gradient */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
-    padding: 100px 0 150px;
+    padding: 60px 0 100px !important; /* REDUCED top padding, kept bottom */
+    margin-top: 0 !important;
     position: relative;
     overflow: hidden;
-    min-height: 85vh;
     display: flex;
     align-items: center;
+    min-height: 70vh;
+}
+
+/* Force zero margin/padding on hero section */
+.hero-section,
+.hero-section .container,
+.hero-section .row {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .hero-section::before {
@@ -206,6 +195,7 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
+    padding-top: 20px; /* Add minimal padding instead of section padding */
 }
 
 .hero-title {
@@ -217,7 +207,7 @@ body {
 }
 
 .text-accent {
-    color: var(--accent-color); /* Orange accent text */
+    color: var(--accent-color);
     display: inline-block;
     position: relative;
 }
@@ -247,7 +237,7 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     border-radius: 50px;
-    background: var(--accent-color); /* Orange button */
+    background: var(--accent-color);
     border: none;
     color: var(--white);
     transition: var(--transition);
@@ -275,9 +265,9 @@ body {
 }
 
 .hero-btn:hover {
-    background: var(--accent-dark); /* Darker orange on hover */
+    background: var(--accent-dark);
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4); /* Orange shadow */
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
 }
 
 .hero-btn:active {
@@ -296,7 +286,7 @@ body {
     display: block;
     width: 100%;
     height: 80px;
-    fill: var(--accent-color); /* Orange wave */
+    fill: var(--accent-color);
     opacity: 0.3;
 }
 
@@ -309,9 +299,27 @@ body {
     }
 }
 
-/* ====================
-   IMPROVED ANIMATION SYSTEM
-==================== */
+/* ===== ANIMATION SYSTEM ===== */
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -390,7 +398,12 @@ body {
     }
 }
 
-/* Animation utility classes with delays */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}
+
 [class*="animate-"] {
     opacity: 0;
     animation-fill-mode: forwards;
@@ -420,7 +433,6 @@ body {
     animation: scaleIn 0.5s ease forwards;
 }
 
-/* Staggered animation delays */
 .animate-delay-100 { animation-delay: 0.1s; }
 .animate-delay-200 { animation-delay: 0.2s; }
 .animate-delay-300 { animation-delay: 0.3s; }
@@ -432,9 +444,7 @@ body {
 .animate-delay-900 { animation-delay: 0.9s; }
 .animate-delay-1000 { animation-delay: 1s; }
 
-/* ====================
-   IMPROVED SECTIONS
-==================== */
+/* ===== SECTIONS ===== */
 .section-padding {
     padding: var(--space-2xl) 0;
 }
@@ -455,7 +465,7 @@ body {
     left: 0;
     width: 60px;
     height: 4px;
-    background: var(--accent-color); /* Orange underline */
+    background: var(--accent-color);
     border-radius: 2px;
 }
 
@@ -465,9 +475,7 @@ body {
     margin-bottom: var(--space-xl);
 }
 
-/* ====================
-   ENHANCED CATEGORIES
-==================== */
+/* ===== CATEGORIES ===== */
 .categories-section {
     background: var(--bg-light);
 }
@@ -498,7 +506,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent); /* Orange shimmer */
+    background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
     transition: left 0.6s ease;
 }
 
@@ -509,12 +517,12 @@ body {
 .category-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: var(--shadow-lg);
-    border-color: var(--accent-color); /* Orange border on hover */
+    border-color: var(--accent-color);
 }
 
 .category-icon {
     font-size: 3rem;
-    color: var(--primary-color); /* Blue icon */
+    color: var(--primary-color);
     margin-bottom: 1rem;
     display: inline-block;
     transition: var(--transition);
@@ -523,7 +531,7 @@ body {
 
 .category-card:hover .category-icon {
     transform: scale(1.3) translateY(-10px);
-    color: var(--accent-color); /* Orange on hover */
+    color: var(--accent-color);
     animation: popBounce 0.6s ease;
 }
 
@@ -535,11 +543,11 @@ body {
 }
 
 .category-card:hover .category-name {
-    color: var(--accent-color); /* Orange text on hover */
+    color: var(--accent-color);
 }
 
 .category-hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); /* Blue gradient */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
     padding: 60px 0;
     text-align: center;
@@ -561,9 +569,7 @@ body {
     padding: var(--space-md) 0;
 }
 
-/* ====================
-   IMPROVED PRODUCT CARDS
-==================== */
+/* ===== PRODUCT CARDS ===== */
 .featured-section {
     background: var(--white);
 }
@@ -590,7 +596,7 @@ body {
 .product-card:hover {
     transform: scale(1.02) translateY(-5px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--accent-color); /* Orange border on hover */
+    border-color: var(--accent-color);
 }
 
 .product-image-wrapper {
@@ -621,7 +627,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.9) 0%, rgba(33, 33, 33, 0.8) 100%); /* Orange overlay */
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.9) 0%, rgba(33, 33, 33, 0.8) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -651,7 +657,7 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: var(--accent-color); /* Orange badge */
+    background: var(--accent-color);
     color: var(--white);
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
@@ -682,7 +688,7 @@ body {
 }
 
 .product-card:hover .product-name {
-    color: var(--accent-color); /* Orange text on hover */
+    color: var(--accent-color);
 }
 
 .product-description {
@@ -707,7 +713,7 @@ body {
 .product-price {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--accent-color); /* Orange price */
+    color: var(--accent-color);
     transition: var(--transition);
 }
 
@@ -715,9 +721,7 @@ body {
     transform: scale(1.05);
 }
 
-/* ====================
-   ENHANCED PRODUCT DETAIL
-==================== */
+/* ===== PRODUCT DETAIL ===== */
 .product-detail-section {
     background: var(--bg-light);
     min-height: calc(100vh - 200px);
@@ -731,7 +735,7 @@ body {
 }
 
 .breadcrumb a {
-    color: var(--accent-color); /* Orange breadcrumb */
+    color: var(--accent-color);
     text-decoration: none;
     transition: var(--transition);
     position: relative;
@@ -744,7 +748,7 @@ body {
 
 .category-tag {
     display: inline-block;
-    background: var(--accent-color); /* Orange tag */
+    background: var(--accent-color);
     color: var(--white);
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -807,7 +811,7 @@ body {
 .product-detail-price {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 800;
-    color: var(--accent-color); /* Orange price */
+    color: var(--accent-color);
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -879,7 +883,7 @@ body {
 }
 
 .feature-item:hover {
-    background: var(--accent-color); /* Orange hover */
+    background: var(--accent-color);
     color: var(--white);
     transform: translateY(-3px);
 }
@@ -889,16 +893,14 @@ body {
 }
 
 .feature-item i {
-    color: var(--accent-color); /* Orange icon */
+    color: var(--accent-color);
     font-size: 1.2rem;
     transition: var(--transition);
 }
 
-/* ====================
-   IMPROVED CTA SECTION
-==================== */
+/* ===== CTA SECTION ===== */
 .cta-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); /* Blue gradient */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     position: relative;
     overflow: hidden;
     color: var(--white);
@@ -925,19 +927,7 @@ body {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    border: 2px solid rgba(255, 107, 53, 0.3); /* Orange border */
-}
-
-.cta-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.2), transparent); /* Orange shimmer */
-    transform: rotate(45deg);
-    animation: shine 3s infinite;
+    border: 2px solid rgba(255, 107, 53, 0.3);
 }
 
 @keyframes shine {
@@ -947,6 +937,18 @@ body {
     100% {
         transform: translateX(100%) translateY(100%) rotate(45deg);
     }
+}
+
+.cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
 }
 
 .cta-card h3 {
@@ -972,9 +974,7 @@ body {
     box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
 }
 
-/* ====================
-   ENHANCED FORMS & LOGIN
-==================== */
+/* ===== FORMS & LOGIN ===== */
 .login-card, .form-card {
     background: var(--white);
     padding: 3rem;
@@ -991,7 +991,7 @@ body {
 }
 
 .login-header i {
-    color: var(--accent-color); /* Orange icon */
+    color: var(--accent-color);
     font-size: 2.5rem;
     margin-bottom: var(--space-md);
 }
@@ -1011,8 +1011,8 @@ body {
 }
 
 .form-control:focus {
-    border-color: var(--accent-color); /* Orange focus border */
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1); /* Orange shadow */
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
     transform: translateY(-2px);
 }
 
@@ -1021,7 +1021,7 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary-color); /* Blue button */
+    background: var(--primary-color);
     border-color: var(--primary-color);
     padding: 0.8rem 2rem;
     font-weight: 600;
@@ -1043,7 +1043,7 @@ body {
 }
 
 .btn-accent {
-    background: var(--accent-color); /* Orange button */
+    background: var(--accent-color);
     border-color: var(--accent-color);
     color: var(--white);
     padding: 0.8rem 2rem;
@@ -1059,9 +1059,7 @@ body {
     box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
 }
 
-/* ====================
-   IMPROVED DASHBOARD
-==================== */
+/* ===== DASHBOARD ===== */
 .dashboard-header h2 {
     color: var(--secondary-color);
     font-weight: 700;
@@ -1078,7 +1076,7 @@ body {
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     height: 100%;
-    border-left: 4px solid var(--accent-color); /* Orange accent border */
+    border-left: 4px solid var(--accent-color);
 }
 
 .stat-card:hover {
@@ -1096,7 +1094,7 @@ body {
     color: var(--white);
     font-size: 1.5rem;
     flex-shrink: 0;
-    background: var(--accent-color); /* Orange icon background */
+    background: var(--accent-color);
 }
 
 .stat-info h3 {
@@ -1168,14 +1166,12 @@ body {
 }
 
 .table tr:hover td {
-    background: rgba(255, 107, 53, 0.05); /* Light orange hover */
+    background: rgba(255, 107, 53, 0.05);
 }
 
-/* ====================
-   IMPROVED FOOTER - BLUE & ORANGE THEME
-==================== */
+/* ===== FOOTER ===== */
 .footer {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); /* Blue gradient */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
     padding: 4rem 0 2rem;
     margin-top: auto;
@@ -1189,7 +1185,7 @@ body {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--accent-color); /* Orange top line */
+    background: var(--accent-color);
 }
 
 .footer h5, .footer h6 {
@@ -1207,7 +1203,7 @@ body {
     left: 0;
     width: 40px;
     height: 2px;
-    background: var(--accent-color); /* Orange underline */
+    background: var(--accent-color);
 }
 
 .footer a {
@@ -1219,7 +1215,7 @@ body {
 }
 
 .footer a:hover {
-    color: var(--accent-color); /* Orange on hover */
+    color: var(--accent-color);
     transform: translateX(5px);
 }
 
@@ -1228,9 +1224,7 @@ body {
     margin: 2rem 0;
 }
 
-/* ====================
-   MODERN ALERTS
-==================== */
+/* ===== MODERN ALERTS ===== */
 .modern-alert {
     border: none;
     border-radius: var(--border-radius);
@@ -1245,9 +1239,7 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-/* ====================
-   RED COLOR OVERRIDES - REMOVE ALL RED
-==================== */
+/* ===== CRITICAL: REMOVE ALL RED COLORS ===== */
 .text-danger,
 .text-danger *:not(i),
 .text-danger:hover,
@@ -1256,6 +1248,10 @@ body {
 .btn-danger,
 .alert-danger,
 .border-danger,
+a.text-danger,
+.btn-danger,
+.alert-danger,
+.badge.bg-danger,
 [style*="color: red"],
 [style*="color: #ff0000"],
 [style*="color: rgb(255, 0, 0)"],
@@ -1263,36 +1259,50 @@ body {
 [style*="background-color: red"],
 [style*="background: red"],
 [style*="background-color: #ff0000"],
-[style*="background: #ff0000"] {
-    color: var(--accent-color) !important; /* Orange instead of red */
+[style*="background: #ff0000"],
+[style*="border-color: red"],
+[style*="border-color: #ff0000"],
+[style*="border-color: rgb(255, 0, 0)"],
+[class*="danger"] {
+    color: var(--accent-color) !important;
     background-color: var(--accent-color) !important;
     border-color: var(--accent-color) !important;
 }
 
 .text-danger:hover,
-.btn-danger:hover {
+.btn-danger:hover,
+.alert-danger:hover {
     color: var(--accent-dark) !important;
     background-color: var(--accent-dark) !important;
     border-color: var(--accent-dark) !important;
 }
 
-/* ====================
-   RESPONSIVE IMPROVEMENTS
-==================== */
+/* Specifically target Bootstrap danger classes */
+.btn-outline-danger {
+    color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
+
+.btn-outline-danger:hover {
+    color: white !important;
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    /* Improved mobile spacing */
     :root {
         --space-xl: 1.5rem;
         --space-2xl: 2rem;
     }
     
     .hero-section {
-        padding: 80px 0 120px;
-        min-height: 70vh;
+        padding: 40px 0 80px !important;
+        min-height: 60vh;
     }
     
     .hero-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
         margin-bottom: 1rem;
     }
     
@@ -1354,12 +1364,10 @@ body {
         margin: 0 var(--space-sm);
     }
     
-    /* Improved touch targets */
     .btn, .nav-link, .form-control {
         min-height: 44px;
     }
     
-    /* Better mobile grid */
     .row {
         margin-left: -var(--space-sm);
         margin-right: -var(--space-sm);
@@ -1371,10 +1379,9 @@ body {
     }
 }
 
-/* Extra small devices */
 @media (max-width: 576px) {
     .hero-section {
-        padding: 60px 0 100px;
+        padding: 30px 0 60px !important;
     }
     
     .hero-title {
@@ -1394,14 +1401,12 @@ body {
     }
 }
 
-/* Large devices */
 @media (min-width: 1200px) {
     .container {
         max-width: 1140px;
     }
 }
 
-/* Print styles */
 @media print {
     .navbar, .footer, .hero-btn, .btn-whatsapp {
         display: none !important;
@@ -1414,7 +1419,7 @@ body {
     .hero-section {
         background: #fff !important;
         color: #000;
-        padding: 20px 0;
+        padding: 20px 0 !important;
     }
     
     .product-card, .category-card {
@@ -1423,7 +1428,6 @@ body {
     }
 }
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -1434,7 +1438,6 @@ body {
     }
 }
 
-/* Dark mode support (optional) */
 @media (prefers-color-scheme: dark) {
     body {
         background: #121212;
@@ -1450,14 +1453,12 @@ body {
     }
 }
 
-/* Focus styles for accessibility */
 :focus-visible {
-    outline: 2px solid var(--accent-color); /* Orange focus outline */
+    outline: 2px solid var(--accent-color);
     outline-offset: 2px;
     border-radius: 4px;
 }
 
-/* Skip to main content link */
 .skip-to-main {
     position: absolute;
     top: -40px;

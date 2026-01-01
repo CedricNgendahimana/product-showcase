@@ -30,15 +30,15 @@
         }
 
         main {
-            padding-top: 0;
-            margin-top: 0;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
             flex: 1;
         }
 
         /* ===== BLUE & ORANGE COLOR SCHEME ===== */
         :root {
-            --primary-blue: #1a73e8;
-            --primary-blue-dark: #0d62d9;
+            --primary-blue: #1059b9;
+            --primary-blue-dark: #0b4faf;
             --accent-orange: #ff6b35;
             --accent-orange-dark: #e55a2b;
             --dark-bg: #0f172a;
@@ -53,10 +53,13 @@
             margin-bottom: 0 !important;
             padding: 0.8rem 0;
             transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar.scrolled {
-            background: rgba(26, 115, 232, 0.95);
+            background: rgba(16, 89, 185, 0.95);
             backdrop-filter: blur(10px);
         }
 
@@ -267,7 +270,7 @@
 
         .alert-danger {
             background: #fee2e2;
-            color: #991b1b;
+            color: var(--accent-orange) !important;
             border-left: 4px solid var(--accent-orange);
         }
 
@@ -275,6 +278,45 @@
             background: #dbeafe;
             color: #1e40af;
             border-left: 4px solid var(--primary-blue);
+        }
+
+        /* ===== HERO SECTION - NO WHITE SPACE ===== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--light-text);
+            padding: 60px 0 100px !important;
+            margin-top: 0 !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section .container,
+        .hero-section .row {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        /* Remove any padding/margin that might create white space */
+        .navbar + * {
+            margin-top: 0 !important;
+        }
+
+        .hero-stats {
+            margin-top: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 0.5rem;
         }
 
         /* ===== FOOTER - BLUE GRADIENT ===== */
@@ -379,21 +421,14 @@
             transform: translateY(-2px) scale(1);
         }
 
-        /* ===== HERO SECTION OVERRIDES ===== */
-        .hero-section {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        /* Remove any padding/margin that might create white space */
-        .navbar + * {
-            margin-top: 0 !important;
-        }
-
         /* ===== RESPONSIVE IMPROVEMENTS ===== */
         @media (max-width: 768px) {
             .navbar-brand img {
                 height: 36px;
+            }
+            
+            .hero-section {
+                padding: 40px 0 80px !important;
             }
             
             .footer {
@@ -410,6 +445,10 @@
                 bottom: 20px;
                 right: 20px;
             }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -425,6 +464,14 @@
             .footer h5 {
                 font-size: 1.1rem;
             }
+
+            .hero-section {
+                padding: 30px 0 60px !important;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
         }
 
         /* ===== PRINT STYLES ===== */
@@ -436,6 +483,12 @@
             body {
                 color: #000;
                 background: #fff;
+            }
+
+            .hero-section {
+                background: #fff !important;
+                color: #000 !important;
+                padding: 20px 0 !important;
             }
         }
 
@@ -454,6 +507,61 @@
             .mobile-item:hover {
                 transform: none;
             }
+        }
+
+        /* ===== CRITICAL: REMOVE ALL RED COLORS ===== */
+        .text-danger,
+        .text-danger *:not(i),
+        .text-danger:hover,
+        .text-danger:focus,
+        .bg-danger,
+        .btn-danger,
+        .alert-danger,
+        .border-danger,
+        [style*="color: red"],
+        [style*="color: #ff0000"],
+        [style*="color: rgb(255, 0, 0)"],
+        [style*="color: rgba(255, 0, 0"],
+        [style*="background-color: red"],
+        [style*="background: red"],
+        [style*="background-color: #ff0000"],
+        [style*="background: #ff0000"] {
+            color: var(--accent-orange) !important;
+            background-color: var(--accent-orange) !important;
+            border-color: var(--accent-orange) !important;
+        }
+
+        .text-danger:hover,
+        .btn-danger:hover {
+            color: var(--accent-orange-dark) !important;
+            background-color: var(--accent-orange-dark) !important;
+            border-color: var(--accent-orange-dark) !important;
+        }
+
+        .btn-outline-danger {
+            color: var(--accent-orange) !important;
+            border-color: var(--accent-orange) !important;
+        }
+
+        .btn-outline-danger:hover {
+            color: white !important;
+            background-color: var(--accent-orange) !important;
+            border-color: var(--accent-orange) !important;
+        }
+
+        /* ===== FIX BOOTSTRAP CONFLICTS ===== */
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--light-text) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue) !important;
+            border-color: var(--primary-blue) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-blue-dark) !important;
+            border-color: var(--primary-blue-dark) !important;
         }
     </style>
 </head>
@@ -475,7 +583,7 @@
 
             <!-- DESKTOP MENU -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">Laptops</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='consoles') }}">Consoles</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='phones') }}">Phones</a></li>
@@ -540,8 +648,52 @@
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main class="pt-5">
-{% block content %}{% endblock %}
+<main>
+{% block content %}
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Welcome to <span style="color: var(--accent-orange);">Computer Aid MW</span></h1>
+                <p class="lead mb-4">
+                    Your trusted source for premium computer products and accessories in Malawi
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{{ url_for('category_page', category='laptops') }}" 
+                       class="btn btn-lg px-4 py-3 fw-semibold" 
+                       style="background: var(--accent-orange); border: none; color: white;">
+                        Browse Categories
+                    </a>
+                    <a href="#products" 
+                       class="btn btn-lg px-4 py-3 fw-semibold" 
+                       style="background: transparent; border: 2px solid white; color: white;">
+                        Latest Products
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row text-center hero-stats">
+                    <div class="col-md-4 mb-4">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <span class="stat-number">7</span>
+                        <span class="stat-label">Products</span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <span class="stat-number">24</span>
+                        <span class="stat-label">Hour Support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rest of your page content goes here -->
+{% endblock %}
 </main>
 
 <!-- ===== FOOTER ===== -->
@@ -796,6 +948,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Force remove any remaining white space
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        heroSection.style.marginTop = '0';
+        heroSection.style.paddingTop = '0';
+        
+        // Also fix any potential flash message spacing
+        const flashContainer = document.querySelector('.flash-container');
+        if (flashContainer) {
+            flashContainer.style.marginTop = '0';
+        }
+    }
+
+    // Fix for mobile navbar spacing
+    const navToggler = document.querySelector('.navbar-toggler');
+    if (navToggler) {
+        navToggler.addEventListener('click', function() {
+            const navbarCollapse = document.getElementById('navbarNav');
+            if (navbarCollapse) {
+                // Ensure no margin is added when menu opens
+                navbarCollapse.style.marginTop = '0';
+            }
+        });
+    }
 });
 </script>
 
