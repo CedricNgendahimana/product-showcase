@@ -20,13 +20,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f8f9fa;
             color: #1f2937;
             padding-top: 0 !important;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         main {
@@ -35,21 +36,7 @@
             flex: 1;
         }
 
-        /* ===== CRITICAL FIX: ENSURE ALL CONTENT IS VISIBLE ===== */
-        .container, 
-        .row,
-        [class*="col-"],
-        .product-card,
-        .category-card,
-        .product-image-wrapper,
-        .product-info {
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
-            position: relative !important;
-        }
-
-        /* ===== BLUE & ORANGE COLOR SCHEME ===== */
+        /* ===== COLOR SCHEME ===== */
         :root {
             --primary-blue: #1059b9;
             --primary-blue-dark: #0b4faf;
@@ -58,9 +45,11 @@
             --dark-bg: #0f172a;
             --light-text: #ffffff;
             --light-bg: #f8f9fa;
+            --card-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            --card-shadow-hover: 0 15px 35px rgba(0,0,0,0.12);
         }
 
-        /* ===== NAVBAR - BLUE THEME ===== */
+        /* ===== NAVBAR ===== */
         .navbar {
             background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
             box-shadow: 0 4px 20px rgba(0,0,0,.15);
@@ -194,9 +183,231 @@
             transition: transform 0.3s ease, background 0.3s ease;
         }
 
-        .cart-badge:hover {
+        /* ===== PRODUCT LISTING STYLES ===== */
+        .products-section {
+            padding: 5rem 0;
+            background: #ffffff;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-orange);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        /* ===== PRODUCT CARD ===== */
+        .product-card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--accent-orange);
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+            text-align: center;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent-orange);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-category {
+            color: var(--primary-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .product-specs {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .spec-item i {
+            color: var(--accent-orange);
+            font-size: 0.8rem;
+            width: 16px;
+        }
+
+        .product-price {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px dashed #e5e7eb;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-add-cart:hover {
             background: var(--accent-orange-dark);
-            transform: translate(50%, -50%) scale(1.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-view-details {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-details:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* ===== CATEGORY FILTER ===== */
+        .category-filter {
+            margin-bottom: 3rem;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #6b7280;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 5px 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            border-color: var(--accent-orange);
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        /* ===== NO PRODUCTS MESSAGE ===== */
+        .no-products {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .no-products-icon {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+
+        .no-products h3 {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
         }
 
         /* ===== MOBILE MENU - BLUE THEME ===== */
@@ -449,6 +660,14 @@
                 padding: 40px 0 80px;
             }
             
+            .products-section {
+                padding: 3rem 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
             .footer {
                 padding: 2rem 0 1rem;
             }
@@ -466,6 +685,10 @@
 
             .stat-number {
                 font-size: 2.5rem;
+            }
+            
+            .product-card {
+                margin-bottom: 1rem;
             }
         }
 
@@ -489,6 +712,12 @@
 
             .stat-number {
                 font-size: 2rem;
+            }
+            
+            .category-btn {
+                padding: 0.5rem 1rem;
+                margin: 2px;
+                font-size: 0.9rem;
             }
         }
 
@@ -523,6 +752,14 @@
             }
             
             .mobile-item:hover {
+                transform: none;
+            }
+            
+            .product-card:hover {
+                transform: none;
+            }
+            
+            .btn-add-cart:hover {
                 transform: none;
             }
         }
@@ -580,6 +817,26 @@
         .btn-primary:hover {
             background-color: var(--primary-blue-dark) !important;
             border-color: var(--primary-blue-dark) !important;
+        }
+        
+        /* ===== GRID GAP ===== */
+        .products-grid {
+            row-gap: 2rem;
+        }
+        
+        /* ===== PRICE STYLING ===== */
+        .currency-symbol {
+            font-size: 1.2rem;
+            color: var(--primary-blue-dark);
+        }
+        
+        .price-amount {
+            font-size: 1.8rem;
+        }
+        
+        .price-period {
+            font-size: 0.9rem;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -678,15 +935,10 @@
                     Your trusted source for premium computer products and accessories in Malawi
                 </p>
                 <div class="d-flex flex-wrap gap-3 mb-4">
-                    <a href="{{ url_for('category_page', category='laptops') }}" 
-                       class="btn btn-lg px-4 py-3 fw-semibold" 
-                       style="background: var(--accent-orange); border: none; color: white;">
-                        Browse Categories
-                    </a>
                     <a href="#products" 
                        class="btn btn-lg px-4 py-3 fw-semibold" 
-                       style="background: transparent; border: 2px solid white; color: white;">
-                        Latest Products
+                       style="background: var(--accent-orange); border: none; color: white;">
+                        Browse Products
                     </a>
                 </div>
             </div>
@@ -710,7 +962,449 @@
     </div>
 </section>
 
-<!-- Rest of your page content goes here -->
+<!-- ===== PRODUCTS SECTION ===== -->
+<section id="products" class="products-section">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <h1 class="section-title">Featured Products</h1>
+            <p class="section-subtitle">
+                Explore our curated selection of high-quality computer products in Malawi
+            </p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter text-center mb-5">
+            <a href="{{ url_for('category_page', category='all') }}" 
+               class="category-btn active">
+                All Products
+            </a>
+            <a href="{{ url_for('category_page', category='laptops') }}" 
+               class="category-btn">
+                <i class="fas fa-laptop me-1"></i> Laptops
+            </a>
+            <a href="{{ url_for('category_page', category='consoles') }}" 
+               class="category-btn">
+                <i class="fas fa-gamepad me-1"></i> Consoles
+            </a>
+            <a href="{{ url_for('category_page', category='phones') }}" 
+               class="category-btn">
+                <i class="fas fa-mobile-alt me-1"></i> Phones
+            </a>
+            <a href="{{ url_for('category_page', category='accessories') }}" 
+               class="category-btn">
+                <i class="fas fa-keyboard me-1"></i> Accessories
+            </a>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row products-grid">
+            <!-- Product 1 -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="product-card">
+                    <!-- Product Badge -->
+                    <div class="product-badge">Featured</div>
+
+                    <!-- Product Image -->
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/laptop1.png') }}" 
+                             alt="GAMING PC Pro" 
+                             class="product-image">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <!-- Category -->
+                        <span class="product-category">
+                            Laptops
+                        </span>
+
+                        <!-- Title -->
+                        <h3 class="product-title">
+                            GAMING PC Pro
+                        </h3>
+
+                        <!-- Specifications -->
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>16GB RAM</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>128GB SSD</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>8GB Dedicated Memory</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Intel i7 Processor</span>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price">
+                            MWK 650,000
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="product-actions">
+                            <button class="btn-add-cart" data-product-id="1">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                            <button class="btn-view-details" data-bs-toggle="modal" data-bs-target="#productModal1">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="product-card">
+                    <!-- Product Image -->
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/laptop2.png') }}" 
+                             alt="Business Laptop Elite" 
+                             class="product-image">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <!-- Category -->
+                        <span class="product-category">
+                            Laptops
+                        </span>
+
+                        <!-- Title -->
+                        <h3 class="product-title">
+                            Business Laptop Elite
+                        </h3>
+
+                        <!-- Specifications -->
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>8GB RAM</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>512GB SSD</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Intel i5 Processor</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>14" FHD Display</span>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price">
+                            MWK 450,000
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="product-actions">
+                            <button class="btn-add-cart" data-product-id="2">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                            <button class="btn-view-details" data-bs-toggle="modal" data-bs-target="#productModal2">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="product-card">
+                    <!-- Product Badge -->
+                    <div class="product-badge">Hot Deal</div>
+
+                    <!-- Product Image -->
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/ps5.png') }}" 
+                             alt="PlayStation 5" 
+                             class="product-image">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <!-- Category -->
+                        <span class="product-category">
+                            Consoles
+                        </span>
+
+                        <!-- Title -->
+                        <h3 class="product-title">
+                            PlayStation 5
+                        </h3>
+
+                        <!-- Specifications -->
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>825GB SSD</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>4K Gaming</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Ray Tracing Support</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>DualSense Controller</span>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price">
+                            MWK 850,000
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="product-actions">
+                            <button class="btn-add-cart" data-product-id="3">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                            <button class="btn-view-details" data-bs-toggle="modal" data-bs-target="#productModal3">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="product-card">
+                    <!-- Product Image -->
+                    <div class="product-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/products/mouse.png') }}" 
+                             alt="Wireless Mouse Pro" 
+                             class="product-image">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <!-- Category -->
+                        <span class="product-category">
+                            Accessories
+                        </span>
+
+                        <!-- Title -->
+                        <h3 class="product-title">
+                            Wireless Mouse Pro
+                        </h3>
+
+                        <!-- Specifications -->
+                        <div class="product-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Wireless 2.4GHz</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>1600 DPI</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Ergonomic Design</span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>12 Months Battery</span>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price">
+                            MWK 25,000
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="product-actions">
+                            <button class="btn-add-cart" data-product-id="4">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                            <button class="btn-view-details" data-bs-toggle="modal" data-bs-target="#productModal4">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Modals -->
+<!-- Modal 1 -->
+<div class="modal fade" id="productModal1" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">GAMING PC Pro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/products/laptop1.png') }}" 
+                             class="img-fluid rounded" 
+                             alt="GAMING PC Pro">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">MWK 650,000</h4>
+                        <h6 class="text-muted mb-3">Specifications:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>16GB RAM</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>128GB SSD</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>8GB Dedicated Memory</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Intel i7 Processor</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>15.6" FHD Display</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>NVIDIA Graphics</li>
+                        </ul>
+                        <div class="mt-4">
+                            <button class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal fade" id="productModal2" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Business Laptop Elite</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/products/laptop2.png') }}" 
+                             class="img-fluid rounded" 
+                             alt="Business Laptop Elite">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">MWK 450,000</h4>
+                        <h6 class="text-muted mb-3">Specifications:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>8GB RAM</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>512GB SSD</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Intel i5 Processor</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>14" FHD Display</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Windows 11 Pro</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>12 Hours Battery</li>
+                        </ul>
+                        <div class="mt-4">
+                            <button class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3 -->
+<div class="modal fade" id="productModal3" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">PlayStation 5</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/products/ps5.png') }}" 
+                             class="img-fluid rounded" 
+                             alt="PlayStation 5">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">MWK 850,000</h4>
+                        <h6 class="text-muted mb-3">Specifications:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>825GB SSD</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>4K Gaming</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Ray Tracing Support</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>DualSense Controller</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>120Hz Refresh Rate</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>8K Output Support</li>
+                        </ul>
+                        <div class="mt-4">
+                            <button class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 4 -->
+<div class="modal fade" id="productModal4" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wireless Mouse Pro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/products/mouse.png') }}" 
+                             class="img-fluid rounded" 
+                             alt="Wireless Mouse Pro">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">MWK 25,000</h4>
+                        <h6 class="text-muted mb-3">Specifications:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Wireless 2.4GHz</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>1600 DPI</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Ergonomic Design</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>12 Months Battery</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Plug & Play</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>2 Year Warranty</li>
+                        </ul>
+                        <div class="mt-4">
+                            <button class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 </main>
 
@@ -747,6 +1441,11 @@
                         </a>
                     </li>
                     <li class="mb-2">
+                        <a href="#products" class="footer-link">
+                            <i class="fas fa-chevron-right small me-2"></i>Products
+                        </a>
+                    </li>
+                    <li class="mb-2">
                         <a href="{{ url_for('category_page', category='laptops') }}" class="footer-link">
                             <i class="fas fa-chevron-right small me-2"></i>Laptops
                         </a>
@@ -754,11 +1453,6 @@
                     <li class="mb-2">
                         <a href="{{ url_for('category_page', category='consoles') }}" class="footer-link">
                             <i class="fas fa-chevron-right small me-2"></i>Consoles
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">
-                            <i class="fas fa-chevron-right small me-2"></i>Accessories
                         </a>
                     </li>
                 </ul>
@@ -1027,6 +1721,152 @@ document.addEventListener('DOMContentLoaded', function() {
         if (section !== document.querySelector('.hero-section')) {
             section.style.marginTop = '';
         }
+    });
+    
+    // Product Card Interactions
+    document.querySelectorAll('.btn-add-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product-id');
+            const button = this;
+            
+            // Add loading state
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            button.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Success state
+                button.innerHTML = '<i class="fas fa-check"></i> Added!';
+                button.style.background = '#10b981';
+                
+                // Update cart count
+                const cartBadge = document.querySelector('.cart-badge');
+                if (cartBadge) {
+                    const currentCount = parseInt(cartBadge.textContent) || 0;
+                    cartBadge.textContent = currentCount + 1;
+                    cartBadge.style.display = 'flex';
+                } else {
+                    // Create cart badge if it doesn't exist
+                    const cartIcon = document.querySelector('.fa-shopping-cart').parentElement;
+                    if (cartIcon) {
+                        const newBadge = document.createElement('span');
+                        newBadge.className = 'cart-badge';
+                        newBadge.textContent = '1';
+                        cartIcon.appendChild(newBadge);
+                    }
+                }
+                
+                // Show success toast
+                showToast('Product added to cart successfully!', 'success');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    button.style.background = '';
+                }, 2000);
+            }, 1000);
+        });
+    });
+    
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // Add CSS for toast
+    const toastStyles = document.createElement('style');
+    toastStyles.textContent = `
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+            max-width: 350px;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+        .toast-success {
+            border-left: 4px solid #10b981;
+        }
+        .toast-error {
+            border-left: 4px solid #ef4444;
+        }
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast-content i {
+            font-size: 1.2rem;
+        }
+        .toast-success .toast-content i {
+            color: #10b981;
+        }
+        .toast-error .toast-content i {
+            color: #ef4444;
+        }
+    `;
+    document.head.appendChild(toastStyles);
+    
+    // Category filter buttons
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (!this.href.includes('#') && !e.ctrlKey) {
+                e.preventDefault();
+                // Remove active class from all buttons
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show loading state on products grid
+                const productsGrid = document.querySelector('.products-grid');
+                if (productsGrid) {
+                    productsGrid.style.opacity = '0.5';
+                    productsGrid.style.pointerEvents = 'none';
+                    
+                    // Simulate loading
+                    setTimeout(() => {
+                        productsGrid.style.opacity = '1';
+                        productsGrid.style.pointerEvents = 'auto';
+                        
+                        // In a real app, you would fetch products from the server here
+                        // For now, just scroll to products section
+                        document.getElementById('products').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }, 500);
+                }
+            }
+        });
     });
 });
 </script>
