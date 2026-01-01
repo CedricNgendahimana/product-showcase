@@ -1,1043 +1,287 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{ product.name }} - Computer Aid MW
-{% endblock %}
+{% block title %}{{ product.name }} - Computer Aid MW{% endblock %}
 
 {% block content %}
 <section class="product-detail-section py-4 py-lg-5">
     <div class="container">
-        <!-- BREADCRUMB WITH ANIMATION -->
+
+        <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb" class="mb-3 animate-fade-down">
-            <ol class="breadcrumb small breadcrumb-custom">
+            <ol class="breadcrumb small">
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('home') }}" class="breadcrumb-link">
-                        <i class="fas fa-home me-1"></i>Home
+                    <a href="{{ url_for('home') }}">
+                        <i class="fas fa-home"></i>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('category_page', category=product.category) }}" class="breadcrumb-link">
-                        <i class="{{ categories[product.category].icon }} me-1"></i>
+                    <a href="{{ url_for('category_page', category=product.category) }}">
                         {{ categories[product.category].name }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active text-truncate" aria-current="page">
-                    <i class="fas fa-tag me-1"></i>{{ product.name|truncate(30) }}
+                <li class="breadcrumb-item active text-truncate">
+                    {{ product.name }}
                 </li>
             </ol>
         </nav>
 
         <div class="row g-4 g-lg-5 align-items-start">
-            <!-- IMAGE GALLERY -->
-            <div class="col-lg-6 animate-slide-left">
-                <div class="product-gallery">
-                    <!-- MAIN IMAGE -->
-                    <div class="main-image-wrapper mb-3">
-                        <div class="image-container">
-                            <img src="{{ product.image_url }}"
-                                 alt="{{ product.name }}"
-                                 class="img-fluid rounded shadow-lg main-product-image"
-                                 id="mainProductImage"
-                                 loading="lazy"
-                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/f5f5f5/666?text=No+Image'">
-                            <!-- ZOOM OVERLAY -->
-                            <div class="image-zoom-overlay" id="zoomOverlay"></div>
-                        </div>
-                        
-                        <!-- IMAGE ACTIONS -->
-                        <div class="image-actions d-flex justify-content-center gap-2 mt-3">
-                            <button class="btn btn-sm btn-outline-primary" onclick="zoomImage(1.2)">
-                                <i class="fas fa-search-plus"></i> Zoom
-                            </button>
-                            <button class="btn btn-sm btn-outline-primary" onclick="rotateImage()">
-                                <i class="fas fa-sync-alt"></i> Rotate
-                            </button>
-                            <button class="btn btn-sm btn-outline-primary" onclick="shareProduct()">
-                                <i class="fas fa-share-alt"></i> Share
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- PRODUCT THUMBNAILS (if multiple images existed) -->
-                    <div class="thumbnail-container d-flex justify-content-center gap-2">
-                        <div class="thumbnail active" onclick="changeMainImage('{{ product.image_url }}')">
-                            <img src="{{ product.image_url }}" 
-                                 alt="Main view" 
-                                 class="img-thumbnail"
-                                 onerror="this.src='https://via.placeholder.com/80x80/f5f5f5/666?text=No+Image'">
-                        </div>
-                        <!-- More thumbnails could be added here -->
-                    </div>
+            <!-- IMAGE -->
+            <div class="col-lg-6 animate-slide-left">
+                <div class="product-detail-image-wrapper text-center">
+                    <img src="{{ product.image_url }}"
+                         alt="{{ product.name }}"
+                         class="img-fluid rounded shadow-sm product-detail-image"
+                         loading="lazy"
+                         style="max-height: 420px; width: 100%; object-fit: contain;"
+                         onerror="this.src='https://via.placeholder.com/600x400/f5f5f5/666?text=No+Image'">
                 </div>
             </div>
 
-            <!-- PRODUCT INFO -->
+            <!-- INFO -->
             <div class="col-lg-6 animate-slide-right">
                 <div class="product-detail-info">
-                    <!-- CATEGORY & STATUS -->
-                    <div class="d-flex justify-content-between align-items-center mb-3 animate-fade-in">
-                        <span class="badge category-badge">
-                            <i class="{{ categories[product.category].icon }} me-1"></i>
-                            {{ categories[product.category].name }}
-                        </span>
-                        
-                        <!-- STOCK STATUS -->
-                        <span class="badge stock-badge" id="stockStatus">
-                            <i class="fas fa-check-circle me-1"></i>
-                            In Stock
-                        </span>
-                    </div>
 
-                    <!-- PRODUCT NAME -->
-                    <h1 class="product-detail-name mb-3 animate-fade-in-delay">
+                    <!-- CATEGORY -->
+                    <span class="badge bg-secondary mb-2 animate-fade-in">
+                        {{ categories[product.category].name }}
+                    </span>
+
+                    <!-- NAME -->
+                    <h1 class="product-detail-name h3 h2-lg mt-2 animate-fade-in-delay">
                         {{ product.name }}
                     </h1>
 
-                    <!-- PRICE & SAVINGS -->
-                    <div class="price-section mb-4 animate-fade-in-delay-2">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <div class="product-detail-price h2 fw-bold">
-                                MWK <span id="productPrice">{{ "{:,.0f}".format(product.price) }}</span>
-                            </div>
-                            <!-- SAVE BADGE (if sale price existed) -->
-                            <div class="save-badge d-none">
-                                <span class="badge bg-success">
-                                    <i class="fas fa-tag me-1"></i> Save 15%
-                                </span>
-                            </div>
-                        </div>
-                        <div class="text-muted small">
-                            <i class="fas fa-info-circle me-1"></i> Price includes all taxes
-                        </div>
+                    <!-- PRICE -->
+                    <div class="product-detail-price fs-4 fw-bold text-primary my-3 animate-fade-in-delay-2">
+                        MWK {{ "{:,.0f}".format(product.price) }}
                     </div>
 
-                    <!-- PRODUCT SPECIFICATIONS -->
-                    <div class="product-specifications card border-0 shadow-sm mb-4 animate-fade-in-delay-3">
-                        <div class="card-header bg-transparent border-bottom">
-                            <h5 class="mb-0 fw-semibold">
-                                <i class="fas fa-list-alt me-2"></i>
-                                Product Specifications
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="specifications-list">
-                                {% if product.description %}
-                                    {% set spec_lines = product.description.split('\n') %}
-                                    {% for line in spec_lines %}
-                                        {% if line.strip() %}
-                                        <div class="spec-item d-flex align-items-start mb-2 animate-fade-up" 
-                                             style="animation-delay: {{ loop.index * 0.05 }}s">
-                                            <i class="fas fa-check text-success mt-1 me-3 fa-sm"></i>
-                                            <span class="flex-grow-1">{{ line.strip() }}</span>
-                                        </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="text-center text-muted py-3">
-                                        <i class="fas fa-info-circle fa-2x mb-2"></i>
-                                        <p class="mb-0">No specifications available</p>
-                                    </div>
+                    <!-- SPECS -->
+                    <div class="product-detail-description mt-4 animate-fade-in-delay-3">
+                        <h5 class="mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Specifications
+                        </h5>
+
+                        <ul class="list-group list-group-flush small">
+                            {% for line in product.description.splitlines() %}
+                                {% if line.strip() %}
+                                <li class="list-group-item px-0 animate-fade-up">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    {{ line }}
+                                </li>
                                 {% endif %}
-                            </div>
-                        </div>
+                            {% endfor %}
+                        </ul>
                     </div>
 
                     <!-- ACTION BUTTONS -->
-                    <div class="product-actions card border-0 shadow-sm mb-4 animate-fade-in-delay-4">
-                        <div class="card-body">
-                            <!-- QUANTITY SELECTOR -->
-                            <div class="quantity-selector mb-4">
-                                <label class="form-label fw-semibold d-flex align-items-center gap-2">
-                                    <i class="fas fa-box"></i>Quantity
-                                </label>
-                                <div class="d-flex align-items-center gap-2" style="max-width: 150px;">
-                                    <button class="btn btn-outline-secondary" 
-                                            onclick="updateQuantity(-1)"
-                                            style="width: 40px; height: 40px;">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input type="number" 
-                                           class="form-control text-center fw-bold" 
-                                           id="productQuantity" 
-                                           value="1" 
-                                           min="1" 
-                                           max="10"
-                                           style="height: 40px;">
-                                    <button class="btn btn-outline-secondary" 
-                                            onclick="updateQuantity(1)"
-                                            style="width: 40px; height: 40px;">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="product-actions mt-4 d-grid gap-3 animate-fade-in-delay-4">
 
-                            <!-- PRIMARY ACTIONS -->
-                            <div class="d-grid gap-3">
-                                {% if whatsapp_link %}
-                                <a href="{{ whatsapp_link }}"
-                                   target="_blank"
-                                   class="btn btn-success btn-lg shadow-sm whatsapp-btn"
-                                   id="whatsappButton">
-                                    <i class="fab fa-whatsapp me-2"></i>
-                                    Contact Seller on WhatsApp
-                                </a>
-                                {% endif %}
+                        {% if whatsapp_link %}
+                        <a href="{{ whatsapp_link }}"
+                           target="_blank"
+                           class="btn btn-success btn-lg shadow-sm">
+                            <i class="fab fa-whatsapp me-2"></i>
+                            Contact Seller on WhatsApp
+                        </a>
+                        {% endif %}
 
-                                <!-- ADD TO CART -->
-                                <form class="add-to-cart-form"
-                                      data-product-id="{{ product.id }}"
-                                      data-product-name="{{ product.name }}">
-                                    <button type="submit"
-                                            class="btn btn-primary btn-lg w-100 shadow-sm add-to-cart-btn">
-                                        <i class="fas fa-cart-plus me-2"></i>
-                                        Add to Cart
-                                    </button>
-                                </form>
+                        <!-- 🛒 ADD TO CART (WORKS WITH YOUR app.py) -->
+                        <form method="POST"
+                              action="{{ url_for('add_to_cart', product_id=product.id) }}">
+                            <button type="submit"
+                                    class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>
+                                Add to Cart
+                            </button>
+                        </form>
 
-                                <!-- SECONDARY ACTIONS -->
-                                <div class="d-flex gap-2 mt-3">
-                                    <a href="{{ url_for('category_page', category=product.category) }}"
-                                       class="btn btn-outline-secondary flex-grow-1">
-                                        <i class="fas fa-arrow-left me-2"></i>
-                                        Back to Category
-                                    </a>
-                                    <button class="btn btn-outline-primary wishlist-btn"
-                                            onclick="toggleWishlist('{{ product.id }}')"
-                                            id="wishlistButton"
-                                            style="width: 50px;">
-                                        <i class="far fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <a href="{{ url_for('category_page', category=product.category) }}"
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Back to {{ categories[product.category].name }}
+                        </a>
                     </div>
 
                     <!-- TRUST FEATURES -->
-                    <div class="trust-features card border-0 shadow-sm animate-fade-in-delay-5">
-                        <div class="card-body">
-                            <h6 class="mb-3 fw-semibold d-flex align-items-center">
-                                <i class="fas fa-shield-alt me-2"></i>
-                                Why Buy From Us?
-                            </h6>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="feature-item text-center p-3">
-                                        <div class="feature-icon mb-2">
-                                            <i class="fas fa-shield-alt fa-lg text-success"></i>
-                                        </div>
-                                        <div class="feature-text">
-                                            <strong class="d-block">Quality Guaranteed</strong>
-                                            <small class="text-muted">Tested & Verified</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feature-item text-center p-3">
-                                        <div class="feature-icon mb-2">
-                                            <i class="fas fa-truck fa-lg text-primary"></i>
-                                        </div>
-                                        <div class="feature-text">
-                                            <strong class="d-block">Fast Delivery</strong>
-                                            <small class="text-muted">Across Malawi</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feature-item text-center p-3">
-                                        <div class="feature-icon mb-2">
-                                            <i class="fas fa-headset fa-lg text-warning"></i>
-                                        </div>
-                                        <div class="feature-text">
-                                            <strong class="d-block">24/7 Support</strong>
-                                            <small class="text-muted">Always Available</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="product-features mt-4 d-flex flex-wrap gap-3 small animate-fade-in-delay-5">
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-shield-alt text-success"></i>
+                            <span>Quality Guaranteed</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-truck text-primary"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-headset text-warning"></i>
+                            <span>24/7 Support</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- RELATED PRODUCTS -->
-        {% if related_products and related_products|length > 0 %}
-        <div class="related-products mt-5 pt-5 border-top">
-            <div class="section-header mb-4">
-                <h3 class="section-title">
-                    <i class="fas fa-th-large me-2"></i>Related Products
-                </h3>
-                <p class="section-subtitle">You might also like these products</p>
-            </div>
-            <div class="row g-4">
-                {% for related in related_products[:4] %}
-                <div class="col-sm-6 col-md-4 col-lg-3">
-                    <a href="{{ url_for('product_detail', id=related.id) }}"
-                       class="product-card-link text-decoration-none">
-                        <div class="product-card h-100 fade-in-up" style="--delay: {{ loop.index0 * 0.1 }}s">
-                            <div class="product-image-wrapper">
-                                <img src="{{ related.image_url }}"
-                                     alt="{{ related.name }}"
-                                     class="product-image"
-                                     loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
-                                <div class="product-overlay">
-                                    <div class="product-overlay-text">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product-info">
-                                <h6 class="product-name mb-1">{{ related.name|truncate(40) }}</h6>
-                                <div class="product-price small">
-                                    MWK {{ "{:,.0f}".format(related.price) }}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
-        {% endif %}
+    </div>
+</section>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - Computer Aid MW{% endblock %}
+
+{% block content %}
+<section class="product-detail-section py-4 py-lg-5">
+    <div class="container">
+
+        <!-- BREADCRUMB -->
+        <nav aria-label="breadcrumb" class="mb-3 animate-fade-down">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('home') }}">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('category_page', category=product.category) }}">
+                        {{ categories[product.category].name }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active text-truncate">
+                    {{ product.name }}
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row g-4 g-lg-5 align-items-start">
+
+            <!-- IMAGE -->
+            <div class="col-lg-6 animate-slide-left">
+                <div class="product-detail-image-wrapper text-center">
+                    <img src="{{ product.image_url }}"
+                         alt="{{ product.name }}"
+                         class="img-fluid rounded shadow-sm product-detail-image"
+                         loading="lazy"
+                         style="max-height: 420px; width: 100%; object-fit: contain;"
+                         onerror="this.src='https://via.placeholder.com/600x400/f5f5f5/666?text=No+Image'">
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div class="col-lg-6 animate-slide-right">
+                <div class="product-detail-info">
+
+                    <!-- CATEGORY -->
+                    <span class="badge bg-secondary mb-2 animate-fade-in">
+                        {{ categories[product.category].name }}
+                    </span>
+
+                    <!-- NAME -->
+                    <h1 class="product-detail-name h3 h2-lg mt-2 animate-fade-in-delay">
+                        {{ product.name }}
+                    </h1>
+
+                    <!-- PRICE -->
+                    <div class="product-detail-price fs-4 fw-bold text-primary my-3 animate-fade-in-delay-2">
+                        MWK {{ "{:,.0f}".format(product.price) }}
+                    </div>
+
+                    <!-- SPECS -->
+                    <div class="product-detail-description mt-4 animate-fade-in-delay-3">
+                        <h5 class="mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Specifications
+                        </h5>
+
+                        <ul class="list-group list-group-flush small">
+                            {% for line in product.description.splitlines() %}
+                                {% if line.strip() %}
+                                <li class="list-group-item px-0 animate-fade-up">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    {{ line }}
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="product-actions mt-4 d-grid gap-3 animate-fade-in-delay-4">
+
+                        {% if whatsapp_link %}
+                        <a href="{{ whatsapp_link }}"
+                           target="_blank"
+                           class="btn btn-success btn-lg shadow-sm">
+                            <i class="fab fa-whatsapp me-2"></i>
+                            Contact Seller on WhatsApp
+                        </a>
+                        {% endif %}
+
+                        <!-- 🛒 ADD TO CART (AJAX, NO PAGE RELOAD) -->
+                        <form class="add-to-cart-form"
+                              data-product-id="{{ product.id }}">
+                            <button type="submit"
+                                    class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>
+                                Add to Cart
+                            </button>
+                        </form>
+
+                        <a href="{{ url_for('category_page', category=product.category) }}"
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Back to {{ categories[product.category].name }}
+                        </a>
+                    </div>
+
+                    <!-- TRUST FEATURES -->
+                    <div class="product-features mt-4 d-flex flex-wrap gap-3 small animate-fade-in-delay-5">
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-shield-alt text-success"></i>
+                            <span>Quality Guaranteed</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-truck text-primary"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center gap-2">
+                            <i class="fas fa-headset text-warning"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<style>
-    /* ===== PRODUCT DETAIL PAGE STYLES ===== */
-    
-    /* Breadcrumb */
-    .breadcrumb-custom {
-        background: var(--bg-light);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        box-shadow: var(--shadow-sm);
-        border-left: 3px solid var(--primary-color);
-    }
-    
-    .breadcrumb-item a {
-        color: var(--text-muted);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-    }
-    
-    .breadcrumb-item a:hover {
-        color: var(--primary-color);
-    }
-    
-    .breadcrumb-item.active {
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-    
-    /* Product Gallery */
-    .product-gallery {
-        position: sticky;
-        top: 100px;
-    }
-    
-    .main-image-wrapper {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-        padding: 1rem;
-    }
-    
-    .image-container {
-        position: relative;
-        overflow: hidden;
-        border-radius: 8px;
-        background: var(--bg-light);
-    }
-    
-    .main-product-image {
-        width: 100%;
-        height: auto;
-        max-height: 450px;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-        cursor: zoom-in;
-        padding: 1rem;
-    }
-    
-    .main-product-image:hover {
-        transform: scale(1.05);
-    }
-    
-    .image-zoom-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0);
-        cursor: zoom-in;
-        transition: background 0.3s ease;
-    }
-    
-    .image-zoom-overlay.active {
-        background: rgba(0,0,0,0.5);
-        cursor: zoom-out;
-    }
-    
-    .image-actions {
-        opacity: 1;
-        transform: none;
-    }
-    
-    .image-actions .btn {
-        border-radius: 6px;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.875rem;
-    }
-    
-    /* Thumbnails */
-    .thumbnail-container {
-        margin-top: 1rem;
-    }
-    
-    .thumbnail {
-        width: 70px;
-        height: 70px;
-        border: 2px solid transparent;
-        border-radius: 6px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .thumbnail:hover {
-        border-color: var(--primary-color);
-    }
-    
-    .thumbnail.active {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
-    }
-    
-    .thumbnail img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    /* Product Info */
-    .category-badge {
-        background: rgba(var(--primary-color-rgb), 0.1);
-        color: var(--primary-color);
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-    
-    .stock-badge {
-        background: rgba(37, 211, 102, 0.1);
-        color: var(--success-color);
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-    
-    .product-detail-name {
-        font-weight: 700;
-        line-height: 1.3;
-        color: var(--secondary-color);
-        font-size: 1.75rem;
-    }
-    
-    /* Price Section */
-    .price-section {
-        background: var(--bg-light);
-        padding: 1.25rem;
-        border-radius: 8px;
-        border-left: 3px solid var(--primary-color);
-    }
-    
-    .product-detail-price {
-        color: var(--primary-color);
-    }
-    
-    .save-badge .badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-    }
-    
-    /* Specifications */
-    .product-specifications {
-        border: 1px solid rgba(0,0,0,0.1);
-    }
-    
-    .product-specifications .card-header {
-        background: var(--bg-light);
-        padding: 1rem 1.25rem;
-    }
-    
-    .product-specifications .card-body {
-        padding: 1.25rem;
-    }
-    
-    .specifications-list {
-        max-height: 250px;
-        overflow-y: auto;
-        padding-right: 10px;
-    }
-    
-    .specifications-list::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    .specifications-list::-webkit-scrollbar-track {
-        background: var(--bg-light);
-        border-radius: 10px;
-    }
-    
-    .specifications-list::-webkit-scrollbar-thumb {
-        background: var(--primary-color);
-        border-radius: 10px;
-    }
-    
-    .spec-item {
-        padding: 0.5rem;
-        background: var(--bg-light);
-        border-radius: 6px;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s ease;
-        border-left: 2px solid transparent;
-    }
-    
-    .spec-item:hover {
-        background: white;
-        border-left-color: var(--primary-color);
-        box-shadow: var(--shadow-sm);
-    }
-    
-    /* Action Buttons */
-    .product-actions {
-        border: 1px solid rgba(0,0,0,0.1);
-    }
-    
-    .product-actions .card-body {
-        padding: 1.5rem;
-    }
-    
-    .quantity-selector input {
-        font-weight: 600;
-        font-size: 1rem;
-        border: 1px solid #dee2e6;
-    }
-    
-    .quantity-selector button {
-        border-radius: 6px;
-        transition: all 0.2s ease;
-    }
-    
-    .quantity-selector button:hover {
-        background: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-    }
-    
-    .whatsapp-btn, .add-to-cart-btn {
-        padding: 0.875rem;
-        font-weight: 600;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        border: none;
-    }
-    
-    .whatsapp-btn {
-        background: var(--success-color);
-        color: white;
-    }
-    
-    .whatsapp-btn:hover {
-        background: #1da851;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-    }
-    
-    .add-to-cart-btn {
-        background: var(--primary-color);
-        color: white;
-    }
-    
-    .add-to-cart-btn:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-    }
-    
-    .wishlist-btn {
-        border-radius: 6px;
-        transition: all 0.3s ease;
-    }
-    
-    .wishlist-btn:hover {
-        background: var(--primary-color);
-        color: white;
-    }
-    
-    .wishlist-btn.active {
-        background: var(--primary-color);
-        color: white;
-    }
-    
-    /* Trust Features */
-    .trust-features {
-        background: var(--bg-light);
-    }
-    
-    .trust-features .card-body {
-        padding: 1.5rem;
-    }
-    
-    .feature-item {
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        background: white;
-    }
-    
-    .feature-item:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-sm);
-    }
-    
-    .feature-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(var(--primary-color-rgb), 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.5rem;
-    }
-    
-    /* Related Products */
-    .related-products {
-        border-top: 1px solid #e9ecef;
-    }
-    
-    .related-products .product-card {
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-    
-    .related-products .product-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-md);
-    }
-    
-    /* Animations */
-    .animate-fade-down {
-        animation: fadeDown 0.5s ease forwards;
-    }
-    
-    .animate-slide-left {
-        animation: slideLeft 0.6s ease forwards;
-    }
-    
-    .animate-slide-right {
-        animation: slideRight 0.6s ease forwards;
-    }
-    
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease forwards;
-    }
-    
-    .animate-fade-in-delay {
-        animation: fadeIn 0.5s ease 0.1s forwards;
-    }
-    
-    .animate-fade-in-delay-2 {
-        animation: fadeIn 0.5s ease 0.2s forwards;
-    }
-    
-    .animate-fade-in-delay-3 {
-        animation: fadeIn 0.5s ease 0.3s forwards;
-    }
-    
-    .animate-fade-in-delay-4 {
-        animation: fadeIn 0.5s ease 0.4s forwards;
-    }
-    
-    .animate-fade-in-delay-5 {
-        animation: fadeIn 0.5s ease 0.5s forwards;
-    }
-    
-    .animate-fade-up {
-        opacity: 0;
-        transform: translateY(10px);
-        animation: fadeUp 0.5s ease forwards;
-    }
-    
-    @keyframes fadeDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slideLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    @keyframes slideRight {
-        from {
-            opacity: 0;
-            transform: translateX(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes fadeUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Loading State */
-    .loading {
-        opacity: 0.6;
-        pointer-events: none;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .product-gallery {
-            position: static;
-            margin-bottom: 2rem;
-        }
-        
-        .main-product-image {
-            max-height: 300px;
-        }
-        
-        .product-detail-name {
-            font-size: 1.5rem;
-        }
-        
-        .product-actions .card-body {
-            padding: 1rem;
-        }
-        
-        .thumbnail {
-            width: 60px;
-            height: 60px;
-        }
-        
-        .feature-item {
-            margin-bottom: 1rem;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .breadcrumb-custom {
-            padding: 0.5rem;
-            font-size: 0.8rem;
-        }
-        
-        .image-actions {
-            flex-wrap: wrap;
-        }
-        
-        .image-actions .btn {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-        }
-        
-        .whatsapp-btn, .add-to-cart-btn {
-            font-size: 0.9rem;
-            padding: 0.75rem;
-        }
-        
-        .specifications-list {
-            max-height: 200px;
-        }
-    }
-</style>
-
+<!-- AJAX ADD TO CART SCRIPT -->
 <script>
-// Add this CSS variable to your :root in main CSS file
-document.documentElement.style.setProperty('--primary-color-rgb', '26, 115, 232');
+document.querySelectorAll(".add-to-cart-form").forEach(form => {
+    form.addEventListener("submit", e => {
+        e.preventDefault();
 
-document.addEventListener('DOMContentLoaded', function() {
-    // ===== PRODUCT DETAIL PAGE ENHANCEMENTS =====
-    
-    // Image Zoom Functionality
-    const mainImage = document.getElementById('mainProductImage');
-    const zoomOverlay = document.getElementById('zoomOverlay');
-    let zoomLevel = 1;
-    let isZoomed = false;
-    
-    window.zoomImage = function(factor) {
-        if (!isZoomed) {
-            zoomLevel = factor;
-            mainImage.style.transform = `scale(${zoomLevel})`;
-            mainImage.style.transformOrigin = 'center';
-            mainImage.style.cursor = 'zoom-out';
-            zoomOverlay.classList.add('active');
-            isZoomed = true;
-        } else {
-            zoomLevel = 1;
-            mainImage.style.transform = 'scale(1)';
-            mainImage.style.cursor = 'zoom-in';
-            zoomOverlay.classList.remove('active');
-            isZoomed = false;
-        }
-    };
-    
-    // Click to zoom
-    mainImage.addEventListener('click', function() {
-        zoomImage(isZoomed ? 1 : 1.5);
-    });
-    
-    // Hover zoom
-    mainImage.addEventListener('mouseenter', function() {
-        if (!isZoomed) {
-            this.style.transform = 'scale(1.02)';
-        }
-    });
-    
-    mainImage.addEventListener('mouseleave', function() {
-        if (!isZoomed) {
-            this.style.transform = 'scale(1)';
-        }
-    });
-    
-    // Image Rotation
-    let rotation = 0;
-    window.rotateImage = function() {
-        rotation += 90;
-        mainImage.style.transform = `rotate(${rotation}deg) scale(${zoomLevel})`;
-    };
-    
-    // Quantity Selector
-    window.updateQuantity = function(change) {
-        const quantityInput = document.getElementById('productQuantity');
-        let currentValue = parseInt(quantityInput.value);
-        currentValue += change;
-        
-        if (currentValue < 1) currentValue = 1;
-        if (currentValue > 10) currentValue = 10;
-        
-        quantityInput.value = currentValue;
-        
-        // Animate the button
-        const button = event.target.closest('button');
-        if (button) {
-            button.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 150);
-        }
-    };
-    
-    // Quantity input validation
-    document.getElementById('productQuantity').addEventListener('change', function() {
-        let value = parseInt(this.value);
-        if (isNaN(value) || value < 1) this.value = 1;
-        if (value > 10) this.value = 10;
-    });
-    
-    // Enhanced Add to Cart
-    document.querySelectorAll(".add-to-cart-form").forEach(form => {
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
-            
-            const productId = this.dataset.productId;
-            const productName = this.dataset.productName;
-            const quantity = parseInt(document.getElementById('productQuantity').value);
-            const button = this.querySelector('.add-to-cart-btn');
-            const originalText = button.innerHTML;
-            
-            // Add loading state
-            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Adding...';
-            button.disabled = true;
-            button.classList.add('loading');
-            
-            // Send AJAX request
-            fetch(`/cart/add/${productId}`, {
-                method: "POST",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ quantity: quantity })
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-            })
-            .then(data => {
-                // Update cart badge
-                const badges = document.querySelectorAll(".cart-badge");
-                badges.forEach(badge => {
-                    badge.textContent = data.cart_count;
-                    badge.classList.add('animate__animated', 'animate__bounceIn');
-                    
-                    setTimeout(() => {
-                        badge.classList.remove('animate__animated', 'animate__bounceIn');
-                    }, 300);
-                });
-                
-                // Show success message
-                button.innerHTML = '<i class="fas fa-check me-2"></i> Added!';
-                button.classList.remove('loading');
-                
-                // Reset after 2 seconds
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }, 2000);
-            })
-            .catch(error => {
-                console.error("Add to cart error:", error);
-                button.innerHTML = '<i class="fas fa-times me-2"></i> Error';
-                button.classList.remove('loading');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }, 2000);
-            });
-        });
-    });
-    
-    // Wishlist Functionality
-    window.toggleWishlist = function(productId) {
-        const button = document.getElementById('wishlistButton');
-        const icon = button.querySelector('i');
-        
-        if (icon.classList.contains('far')) {
-            // Add to wishlist
-            icon.classList.remove('far');
-            icon.classList.add('fas', 'text-danger');
-            button.classList.add('active');
-            
-            // Animate heart
-            button.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 300);
-            
-            // Save to localStorage
-            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-            if (!wishlist.includes(productId)) {
-                wishlist.push(productId);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        const productId = form.dataset.productId;
+
+        fetch(`/cart/add/${productId}`, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
             }
-        } else {
-            // Remove from wishlist
-            icon.classList.remove('fas', 'text-danger');
-            icon.classList.add('far');
-            button.classList.remove('active');
-            
-            // Remove from localStorage
-            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-            wishlist = wishlist.filter(id => id !== productId);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        }
-    };
-    
-    // Check if product is in wishlist
-    const productId = "{{ product.id }}";
-    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    if (wishlist.includes(productId)) {
-        const button = document.getElementById('wishlistButton');
-        if (button) {
-            const icon = button.querySelector('i');
-            icon.classList.remove('far');
-            icon.classList.add('fas', 'text-danger');
-            button.classList.add('active');
-        }
-    }
-    
-    // Share Product
-    window.shareProduct = function() {
-        if (navigator.share) {
-            navigator.share({
-                title: document.title,
-                text: 'Check out this product on Computer Aid MW',
-                url: window.location.href,
-            })
-            .catch((error) => console.log('Error sharing:', error));
-        } else {
-            // Fallback: Copy to clipboard
-            navigator.clipboard.writeText(window.location.href)
-                .then(() => {
-                    alert('Product link copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-        }
-    };
-    
-    // Format price with commas
-    const priceElement = document.getElementById('productPrice');
-    if (priceElement) {
-        const priceText = priceElement.textContent;
-        const formattedPrice = priceText.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        priceElement.textContent = formattedPrice;
-    }
-    
-    // Smooth scroll for specifications
-    const specItems = document.querySelectorAll('.spec-item');
-    specItems.forEach(item => {
-        item.addEventListener('click', function() {
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data || !data.cart_count) return;
+
+            const badge = document.querySelector(".badge");
+            if (badge) {
+                badge.textContent = data.cart_count;
+            }
         });
     });
-    
-    // Initialize animations
-    setTimeout(() => {
-        document.querySelectorAll('.animate-fade-down').forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        });
-        
-        document.querySelectorAll('.animate-slide-left').forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateX(0)';
-        });
-        
-        document.querySelectorAll('.animate-slide-right').forEach(el => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateX(0)';
-        });
-    }, 100);
 });
 </script>
 
