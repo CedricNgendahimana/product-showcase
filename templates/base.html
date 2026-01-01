@@ -838,6 +838,73 @@
             font-size: 0.9rem;
             color: #6b7280;
         }
+
+        /* ===== FIX: ENSURE BOOTSTRAP GRID WORKS PROPERLY ===== */
+        /* Bootstrap grid fix - ONLY fix actually hidden elements */
+        .hidden {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Ensure Bootstrap rows work correctly */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        /* Fix container spacing */
+        .container, .container-fluid {
+            width: 100%;
+            padding-right: var(--bs-gutter-x, 0.75rem);
+            padding-left: var(--bs-gutter-x, 0.75rem);
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        /* Fix column spacing */
+        .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, 
+        .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+        .col-auto, .col-sm, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5,
+        .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
+        .col-md, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6,
+        .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12,
+        .col-lg, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6,
+        .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12,
+        .col-xl, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6,
+        .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12 {
+            position: relative;
+            width: 100%;
+            padding-right: var(--bs-gutter-x, 0.75rem);
+            padding-left: var(--bs-gutter-x, 0.75rem);
+        }
+        
+        /* Specific fixes for common layouts */
+        .footer .row {
+            display: flex !important;
+            flex-wrap: wrap !important;
+        }
+        
+        .hero-section .row {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+        }
+        
+        .products-grid {
+            display: flex !important;
+            flex-wrap: wrap !important;
+        }
+        
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+            .footer .col-lg-4,
+            .footer .col-md-6,
+            .hero-section .col-lg-6,
+            .hero-section .col-md-4 {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+        }
     </style>
 </head>
 
@@ -1325,6 +1392,7 @@
                     </div>
                 </div>
             </div>
+</div>
         </div>
     </div>
 </div>
@@ -1642,12 +1710,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Form validation for search - FIXED VERSION
+    // Form validation for search
     const searchForms = document.querySelectorAll('form[action*="search"]');
     searchForms.forEach(form => {
         form.addEventListener('submit', function(e) {
             const input = this.querySelector('input[name="q"]');
-            // Only prevent if search is empty, not if it's less than 2 characters
             if (input && input.value.trim().length === 0) {
                 e.preventDefault();
                 input.focus();
@@ -1660,47 +1727,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 2000);
                 return false;
             }
-            // Allow search for any non-empty query
             return true;
         });
     });
 
-    // CRITICAL FIX: Force all product content to be visible
+    // FIXED: Only fix actually hidden elements
     setTimeout(() => {
-        // Fix all product-related elements
-        const fixVisibility = () => {
-            const allProductElements = document.querySelectorAll(
-                '.product-card, .category-card, .row, .col, [class*="col-"], .container, main section'
-            );
-            
-            allProductElements.forEach(el => {
-                if (el) {
-                    const style = window.getComputedStyle(el);
-                    if (style.opacity === '0' || style.visibility === 'hidden' || style.display === 'none') {
-                        el.style.opacity = '1';
-                        el.style.visibility = 'visible';
-                        el.style.display = el.classList.contains('row') ? 'flex' : 'block';
-                    }
-                }
-            });
-            
-            // Specifically ensure product cards are visible
-            const productCards = document.querySelectorAll('.product-card');
-            productCards.forEach(card => {
-                card.style.opacity = '1';
-                card.style.visibility = 'visible';
-                card.style.display = 'block';
-            });
-        };
+        const hiddenElements = document.querySelectorAll(
+            '[style*="display: none"], [style*="visibility: hidden"]'
+        );
         
-        // Run immediately and after a short delay
-        fixVisibility();
-        setTimeout(fixVisibility, 100);
-        setTimeout(fixVisibility, 500);
-        
-        // Also fix any CSS animation classes that might be hiding content
-        document.querySelectorAll('[class*="animate-"]').forEach(el => {
-            el.style.opacity = '1';
+        hiddenElements.forEach(el => {
+            const style = window.getComputedStyle(el);
+            if (style.display === 'none') {
+                el.style.display = '';
+            }
+            if (style.visibility === 'hidden') {
+                el.style.visibility = '';
+            }
         });
     }, 100);
     
@@ -1710,7 +1754,6 @@ document.addEventListener('DOMContentLoaded', function() {
         navToggler.addEventListener('click', function() {
             const navbarCollapse = document.getElementById('navbarNav');
             if (navbarCollapse) {
-                // Ensure no margin is added when menu opens
                 navbarCollapse.style.marginTop = '0';
             }
         });
@@ -1859,7 +1902,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         productsGrid.style.pointerEvents = 'auto';
                         
                         // In a real app, you would fetch products from the server here
-                        // For now, just scroll to products section
                         document.getElementById('products').scrollIntoView({
                             behavior: 'smooth'
                         });
