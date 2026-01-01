@@ -3,732 +3,88 @@
 {% block title %}Your Cart | Computer Aid MW{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5 pt-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10 col-xl-8">
-            
-            <!-- Page Header -->
-            <div class="mb-5 text-center text-md-start">
-                <h1 class="mb-3">
-                    <i class="fas fa-shopping-cart me-2" style="color: var(--accent-orange);"></i>Your Shopping Cart
-                </h1>
-                <p class="text-muted">Review your selected items before checkout</p>
-            </div>
+<div class="container mt-5 mb-5">
 
-            {% if cart and cart|length > 0 %}
-            
-                <!-- Cart Items Table -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table align-middle mb-0 cart-table">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4 py-3" scope="col" style="width: 60%;">Product</th>
-                                        <th class="text-center py-3" scope="col">Price</th>
-                                        <th class="text-end pe-4 py-3" scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for product_id, item in cart.items() %}
-                                    <tr class="cart-item" data-product-id="{{ product_id }}">
-                                        <td class="ps-4">
-                                            <div class="d-flex align-items-center">
-                                                <!-- Product Image -->
-                                                <div class="position-relative me-3">
-                                                    <img
-                                                        src="{{ item.image }}"
-                                                        alt="{{ item.name }}"
-                                                        width="80"
-                                                        height="80"
-                                                        class="rounded product-img"
-                                                        style="object-fit: cover;"
-                                                        loading="lazy"
-                                                        onerror="this.src='https://via.placeholder.com/80?text=No+Image'"
-                                                    >
-                                                </div>
-                                                <div>
-                                                    <strong class="d-block mb-1">{{ item.name }}</strong>
-                                                    <small class="text-muted d-block">ID: {{ product_id[:8] }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
+    <h2 class="mb-4">
+        <i class="fas fa-shopping-cart me-2"></i>Your Cart
+    </h2>
 
-                                        <td class="text-center">
-                                            <span class="price-display fw-bold">
-                                                MWK {{ "{:,.0f}".format(item.price) }}
-                                            </span>
-                                        </td>
+    {% if cart and cart|length > 0 %}
 
-                                        <td class="text-end pe-4">
-                                            <!-- Remove from Cart Button -->
-                                            <form method="POST"
-                                                  action="{{ url_for('remove_from_cart', product_id=product_id) }}"
-                                                  class="d-inline remove-form">
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger remove-btn"
-                                                        aria-label="Remove {{ item.name }} from cart">
-                                                    <i class="fas fa-trash me-1"></i>
-                                                    Remove
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th class="text-end">Price</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                <!-- Summary Card -->
-                <div class="card border-0 shadow-lg mb-4" style="background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));">
-                    <div class="card-body text-white">
-                        <div class="row align-items-center">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <h5 class="mb-1"><i class="fas fa-receipt me-2"></i>Order Summary</h5>
-                                <p class="mb-0 opacity-75">{{ cart|length }} item{{ 's' if cart|length > 1 else '' }} in cart</p>
+                    {% for product_id, item in cart.items() %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                    src="{{ item.image }}"
+                                    alt="{{ item.name }}"
+                                    width="70"
+                                    height="70"
+                                    class="me-3 rounded"
+                                    style="object-fit: cover;"
+                                >
+                                <strong>{{ item.name }}</strong>
                             </div>
-                            <div class="col-md-6 text-md-end">
-                                <div class="d-flex flex-column flex-md-row justify-content-between justify-content-md-end align-items-center align-items-md-end">
-                                    <div class="me-md-4 mb-3 mb-md-0">
-                                        <p class="mb-1 small opacity-75">Total Amount</p>
-                                        <h3 class="mb-0">
-                                            <strong>MWK {{ "{:,.0f}".format(total) }}</strong>
-                                        </h3>
-                                    </div>
-                                    <!-- WhatsApp Checkout Button -->
-                                    <a href="{{ url_for('checkout') }}"
-                                       class="btn btn-success btn-lg checkout-btn px-4">
-                                        <i class="fab fa-whatsapp me-2"></i>
-                                        Checkout via WhatsApp
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </td>
 
-                <!-- Action Buttons -->
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mb-5">
-                    <a href="{{ url_for('home') }}" class="btn btn-outline-primary px-4">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Continue Shopping
-                    </a>
-                    
-                    <div class="d-flex gap-3">
-                        <!-- Clear Cart Button -->
-                        {% if cart and cart|length > 0 %}
-                        <form method="POST" action="{{ url_for('clear_cart') }}" class="d-inline">
-                            <button type="submit" 
-                                    class="btn btn-outline-danger clear-cart-btn"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#clearCartModal">
-                                <i class="fas fa-broom me-2"></i>
-                                Clear Cart
-                            </button>
-                        </form>
-                        {% endif %}
-                        
-                        <!-- Update Cart Button (if needed) -->
-                        <button class="btn btn-primary" id="updateCartBtn" disabled>
-                            <i class="fas fa-sync-alt me-2"></i>
-                            Update Cart
-                        </button>
-                    </div>
-                </div>
+                        <td class="text-end">
+                            MWK {{ "{:,.0f}".format(item.price) }}
+                        </td>
 
-            {% else %}
-            
-                <!-- Empty Cart State -->
-                <div class="text-center py-5 my-5">
-                    <div class="empty-cart-icon mb-4">
-                        <i class="fas fa-shopping-cart fa-4x" style="color: #e0e0e0;"></i>
-                    </div>
-                    <h4 class="mb-3">Your cart is empty</h4>
-                    <p class="text-muted mb-4">Looks like you haven't added any products to your cart yet.</p>
-                    <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg px-4">
-                        <i class="fas fa-store me-2"></i>
-                        Start Shopping
-                    </a>
-                </div>
+                        <td class="text-end">
+                            <!-- ❌ REMOVE FROM CART -->
+                            <form method="POST"
+                                  action="{{ url_for('remove_from_cart', product_id=product_id) }}">
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash me-1"></i>
+                                    Remove
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
 
-            {% endif %}
-
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
 
-<!-- Clear Cart Confirmation Modal -->
-<div class="modal fade" id="clearCartModal" tabindex="-1" aria-labelledby="clearCartModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="clearCartModalLabel">
-                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                    Clear Shopping Cart
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to remove all items from your shopping cart?</p>
-                <p class="text-muted small">This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="POST" action="{{ url_for('clear_cart') }}" id="confirmClearCartForm">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-broom me-2"></i>
-                        Yes, Clear Cart
-                    </button>
-                </form>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+            <h4 class="mb-0">
+                Total:
+                <strong>MWK {{ "{:,.0f}".format(total) }}</strong>
+            </h4>
+
+            <a href="{{ url_for('checkout') }}"
+               class="btn btn-success btn-lg">
+                <i class="fab fa-whatsapp me-2"></i>
+                Checkout via WhatsApp
+            </a>
         </div>
-    </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            Your cart is currently empty.
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-2"></i>
+            Continue Shopping
+        </a>
+
+    {% endif %}
+
 </div>
-
-<style>
-    /* ===== CART PAGE STYLES ===== */
-    
-    /* Main container adjustments */
-    .container.mt-5 {
-        padding-top: 2rem;
-        margin-top: 0 !important;
-    }
-    
-    /* Cart Table Styles */
-    .cart-table {
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    
-    .cart-table thead {
-        background-color: #f8f9fa;
-    }
-    
-    .cart-table th {
-        border: none;
-        padding: 1rem;
-        font-weight: 600;
-        color: var(--text-dark);
-        border-bottom: 2px solid #e9ecef;
-    }
-    
-    .cart-table tbody tr {
-        transition: all 0.3s ease;
-        border-bottom: 1px solid #f1f3f4;
-    }
-    
-    .cart-table tbody tr:last-child {
-        border-bottom: none;
-    }
-    
-    .cart-table tbody tr:hover {
-        background-color: rgba(255, 107, 53, 0.05);
-    }
-    
-    .cart-table td {
-        padding: 1.25rem 1rem;
-        vertical-align: middle;
-        border: none;
-    }
-    
-    /* Product Image Styles */
-    .product-img {
-        transition: all 0.3s ease;
-        border: 2px solid #f0f0f0;
-    }
-    
-    .cart-item:hover .product-img {
-        transform: scale(1.05);
-        border-color: var(--accent-orange);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
-    }
-    
-    /* Price Display */
-    .price-display {
-        font-size: 1.1rem;
-        color: var(--accent-orange) !important;
-    }
-    
-    /* Remove Button - Fixed to use orange instead of red */
-    .remove-btn {
-        transition: all 0.3s ease;
-        border-color: var(--accent-orange) !important;
-        color: var(--accent-orange) !important;
-        font-weight: 500;
-    }
-    
-    .remove-btn:hover {
-        background-color: var(--accent-orange) !important;
-        color: white !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
-    }
-    
-    /* Checkout Button */
-    .checkout-btn {
-        transition: all 0.3s ease;
-        font-weight: 600;
-        background-color: #25d366;
-        border: none;
-    }
-    
-    .checkout-btn:hover {
-        background-color: #1da851;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
-    }
-    
-    /* Empty Cart Animation */
-    .empty-cart-icon {
-        animation: bounce 2s ease-in-out infinite;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    /* Clear Cart Button */
-    .clear-cart-btn {
-        font-weight: 500;
-        border-color: var(--accent-orange) !important;
-        color: var(--accent-orange) !important;
-    }
-    
-    .clear-cart-btn:hover {
-        background-color: var(--accent-orange) !important;
-        color: white !important;
-    }
-    
-    /* ===== RESPONSIVE DESIGN ===== */
-    
-    /* Mobile (≤ 768px) */
-    @media (max-width: 768px) {
-        .container.mt-5 {
-            padding-top: 1rem;
-        }
-        
-        .cart-table {
-            display: block;
-            width: 100%;
-        }
-        
-        .cart-table thead {
-            display: none;
-        }
-        
-        .cart-table tbody,
-        .cart-table tr,
-        .cart-table td {
-            display: block;
-            width: 100%;
-        }
-        
-        .cart-table tr {
-            margin-bottom: 1.5rem;
-            padding: 1.25rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            border: 1px solid #f0f0f0;
-        }
-        
-        .cart-table td {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #f1f3f4;
-            text-align: left !important;
-        }
-        
-        .cart-table td:last-child {
-            border-bottom: none;
-            padding-top: 1rem;
-        }
-        
-        /* Add data labels for mobile */
-        .cart-table td:nth-child(1)::before {
-            content: "Product: ";
-            font-weight: 600;
-            color: var(--primary-blue);
-            margin-right: 0.5rem;
-        }
-        
-        .cart-table td:nth-child(2)::before {
-            content: "Price: ";
-            font-weight: 600;
-            color: var(--primary-blue);
-            margin-right: 0.5rem;
-        }
-        
-        .cart-table td:nth-child(3)::before {
-            content: "Action: ";
-            font-weight: 600;
-            color: var(--primary-blue);
-            margin-right: 0.5rem;
-        }
-        
-        .cart-table td {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .cart-table td::before {
-            flex-shrink: 0;
-        }
-        
-        /* Product image on mobile */
-        .cart-table td:nth-child(1) .d-flex {
-            flex-direction: column;
-            text-align: center;
-        }
-        
-        .cart-table td:nth-child(1) .d-flex .me-3 {
-            margin-right: 0 !important;
-            margin-bottom: 1rem;
-        }
-        
-        /* Action buttons on mobile */
-        .remove-btn {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-        
-        /* Summary card on mobile */
-        .card-body .row {
-            text-align: center;
-        }
-        
-        .checkout-btn {
-            width: 100%;
-            margin-top: 1rem;
-            padding: 1rem;
-        }
-        
-        /* Action buttons container */
-        .d-flex.flex-column.flex-md-row {
-            gap: 1rem;
-        }
-        
-        .d-flex.flex-column.flex-md-row .btn {
-            width: 100%;
-        }
-    }
-    
-    /* Tablet (769px - 991px) */
-    @media (min-width: 769px) and (max-width: 991px) {
-        .container {
-            max-width: 100%;
-            padding-left: 2rem;
-            padding-right: 2rem;
-        }
-        
-        .cart-table th,
-        .cart-table td {
-            padding: 0.75rem;
-        }
-        
-        .product-img {
-            width: 70px;
-            height: 70px;
-        }
-    }
-    
-    /* Desktop (≥ 992px) */
-    @media (min-width: 992px) {
-        .cart-table th,
-        .cart-table td {
-            padding: 1.25rem 1.5rem;
-        }
-    }
-    
-    /* Loading State */
-    .loading {
-        opacity: 0.6;
-        pointer-events: none;
-        position: relative;
-    }
-    
-    .loading::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-    }
-    
-    /* Success Animation */
-    @keyframes successPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-    
-    .success-pulse {
-        animation: successPulse 0.5s ease;
-    }
-    
-    /* Fade in animation */
-    .fade-in {
-        animation: fadeIn 0.5s ease forwards;
-    }
-    
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Cart item removal animation */
-    @keyframes slideOutLeft {
-        to {
-            opacity: 0;
-            transform: translateX(-100%);
-            height: 0;
-            padding: 0;
-            margin: 0;
-            border: none;
-        }
-    }
-    
-    .removing {
-        animation: slideOutLeft 0.3s ease forwards;
-        overflow: hidden;
-    }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ===== CART PAGE FUNCTIONALITY =====
-    
-    // Remove Item with Confirmation and Animation
-    const removeForms = document.querySelectorAll('.remove-form');
-    removeForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const button = this.querySelector('.remove-btn');
-            const cartItem = this.closest('.cart-item');
-            const productName = cartItem.querySelector('strong').textContent;
-            
-            // Show confirmation modal
-            if (confirm(`Remove "${productName}" from cart?`)) {
-                // Add loading state
-                button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Removing...';
-                button.disabled = true;
-                cartItem.classList.add('removing');
-                
-                // Show toast notification
-                showToast(`Removing ${productName}...`, 'info');
-                
-                // Submit form after animation
-                setTimeout(() => {
-                    this.submit();
-                }, 300);
-            }
-        });
-    });
-    
-    // Clear Cart Modal Handler
-    const clearCartBtn = document.querySelector('.clear-cart-btn');
-    const confirmClearCartForm = document.getElementById('confirmClearCartForm');
-    
-    if (clearCartBtn && confirmClearCartForm) {
-        confirmClearCartForm.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            
-            // Add loading state
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Clearing...';
-            submitBtn.disabled = true;
-            
-            // Show toast
-            showToast('Clearing your cart...', 'warning');
-        });
-    }
-    
-    // Checkout Button Enhancement
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', function(e) {
-            // Add click feedback
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-            
-            // Show loading if needed
-            const cartItems = document.querySelectorAll('.cart-item').length;
-            if (cartItems > 0) {
-                showToast('Opening WhatsApp checkout...', 'success');
-            }
-        });
-    }
-    
-    // Product Image Error Handling
-    const productImages = document.querySelectorAll('.product-img');
-    productImages.forEach(img => {
-        img.addEventListener('error', function() {
-            this.src = 'https://via.placeholder.com/80?text=No+Image';
-        });
-        
-        // Add fade in animation
-        if (img.complete) {
-            img.style.opacity = '1';
-        } else {
-            img.style.opacity = '0';
-            img.style.transition = 'opacity 0.3s ease';
-            img.addEventListener('load', function() {
-                this.style.opacity = '1';
-            });
-        }
-    });
-    
-    // Cart Item Hover Effects
-    const cartItems = document.querySelectorAll('.cart-item');
-    cartItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
-            this.style.transform = 'translateY(-2px)';
-            this.style.transition = 'all 0.3s ease';
-        });
-        
-        item.addEventListener('mouseleave', function() {
-            this.style.boxShadow = '';
-            this.style.transform = '';
-        });
-    });
-    
-    // Update Cart Count in Page Title
-    const itemCount = document.querySelectorAll('.cart-item').length;
-    if (itemCount > 0) {
-        document.title = `(${itemCount}) ${document.title.replace(/^\(\d+\) /, '')}`;
-    }
-    
-    // Keyboard Shortcuts
-    document.addEventListener('keydown', function(e) {
-        // Ctrl/Cmd + Enter to checkout
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && checkoutBtn) {
-            e.preventDefault();
-            checkoutBtn.click();
-        }
-        
-        // Escape to go back to shopping
-        if (e.key === 'Escape') {
-            const backBtn = document.querySelector('a[href*="home"]');
-            if (backBtn) {
-                window.location.href = backBtn.href;
-            }
-        }
-    });
-    
-    // Responsive Table Enhancement
-    function setupResponsiveTable() {
-        const isMobile = window.innerWidth <= 768;
-        const tableCells = document.querySelectorAll('.cart-table td');
-        
-        if (isMobile) {
-            tableCells.forEach(cell => {
-                if (!cell.hasAttribute('data-labeled')) {
-                    cell.setAttribute('data-labeled', 'true');
-                }
-            });
-        } else {
-            tableCells.forEach(cell => {
-                cell.removeAttribute('data-labeled');
-            });
-        }
-    }
-    
-    // Initial setup
-    setupResponsiveTable();
-    
-    // Update on resize
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(setupResponsiveTable, 150);
-    });
-    
-    // Total Amount Animation
-    const totalElement = document.querySelector('h3 strong');
-    if (totalElement) {
-        // Add subtle animation
-        setTimeout(() => {
-            totalElement.classList.add('success-pulse');
-            
-            setTimeout(() => {
-                totalElement.classList.remove('success-pulse');
-            }, 500);
-        }, 1000);
-    }
-    
-    // Toast Notification Function
-    function showToast(message, type = 'info') {
-        // Check if Bootstrap toast is available
-        if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-            // Create toast container if it doesn't exist
-            let toastContainer = document.getElementById('toast-container');
-            if (!toastContainer) {
-                toastContainer = document.createElement('div');
-                toastContainer.id = 'toast-container';
-                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
-                toastContainer.style.zIndex = '9999';
-                document.body.appendChild(toastContainer);
-            }
-            
-            // Create toast
-            const toastId = 'toast-' + Date.now();
-            const toastHtml = `
-                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header bg-${type} text-white">
-                        <strong class="me-auto">
-                            ${type === 'success' ? '✓ Success' : type === 'warning' ? '⚠ Warning' : type === 'error' ? '✗ Error' : 'ℹ Info'}
-                        </strong>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                </div>
-            `;
-            
-            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-            
-            // Show toast
-            const toastEl = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastEl);
-            toast.show();
-            
-            // Remove toast after it's hidden
-            toastEl.addEventListener('hidden.bs.toast', function() {
-                this.remove();
-            });
-        } else {
-            // Fallback to alert
-            alert(message);
-        }
-    }
-    
-    // Expose showToast globally for use in other scripts
-    window.showToast = showToast;
-    
-    // Page load animation
-    const mainContent = document.querySelector('.container.mt-5');
-    if (mainContent) {
-        mainContent.classList.add('fade-in');
-    }
-});
-</script>
-
 {% endblock %}

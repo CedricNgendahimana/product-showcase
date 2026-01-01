@@ -7,7 +7,6 @@
 
     <title>{% block title %}Computer Aid MW{% endblock %}</title>
 
-    <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <!-- CSS -->
@@ -16,110 +15,104 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
     <style>
-        /* ===== RESET & BASE ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { box-sizing: border-box; }
 
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f8f9fa;
+            background-color: #f8f9fa;
             color: #1f2937;
-            padding-top: 0 !important;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         main {
-            padding-top: 0;
-            margin-top: 0;
+            flex: 1;
         }
 
-        /* ===== NAVBAR ===== */
+        /* ================= NAVBAR ================= */
         .navbar {
             background: linear-gradient(135deg, #16213e, #0f172a);
             box-shadow: 0 4px 20px rgba(0,0,0,.15);
-            margin-bottom: 0 !important;
         }
 
         .navbar-brand img {
-            height: 44px;
+            height: 42px;
         }
 
-        /* Desktop nav links */
-        @media (min-width: 992px) {
-            .nav-link {
-                color: #fff !important;
-                font-weight: 500;
-                padding: .6rem 1rem;
-                border-radius: 8px;
-            }
-
-            .nav-link:hover {
-                background: rgba(255,255,255,.12);
-            }
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            padding: .5rem .9rem;
+            border-radius: 6px;
         }
 
-        /* ===== DESKTOP SEARCH SLIDE ===== */
-        @media (min-width: 992px) {
-            .search-wrapper {
-                position: relative;
-            }
-
-            .search-input {
-                position: absolute;
-                right: 48px;
-                top: 50%;
-                transform: translateY(-50%) scaleX(0);
-                transform-origin: right;
-                width: 260px;
-                opacity: 0;
-                transition: .3s ease;
-            }
-
-            .search-wrapper.active .search-input {
-                transform: translateY(-50%) scaleX(1);
-                opacity: 1;
-            }
-
-            .search-input input {
-                background: rgba(255,255,255,.1);
-                border: 1px solid rgba(255,255,255,.3);
-                color: #fff;
-            }
-
-            .search-input input::placeholder {
-                color: rgba(255,255,255,.7);
-            }
+        .nav-link:hover {
+            background: rgba(255,255,255,.12);
         }
 
-        /* ===== CART BADGE ===== */
+        /* ================= SEARCH ================= */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%) scaleX(0);
+            transform-origin: right;
+            width: 260px;
+            opacity: 0;
+            transition: all .25s ease;
+        }
+
+        .search-wrapper.active .search-input {
+            transform: translateY(-50%) scaleX(1);
+            opacity: 1;
+        }
+
+        .search-input input {
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.25);
+            color: #fff;
+        }
+
+        .search-input input::placeholder {
+            color: rgba(255,255,255,.6);
+        }
+
+        /* ================= CART BADGE ================= */
         .cart-badge {
             position: absolute;
             top: 0;
             right: 0;
-            transform: translate(50%,-50%);
+            transform: translate(50%, -50%);
             background: #e11d48;
             color: #fff;
             font-size: .7rem;
-            min-width: 20px;
-            height: 20px;
+            min-width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: flex;
-                align-items: center;
-                justify-content: center;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ===== MOBILE MENU ===== */
+        /* ================= MOBILE ================= */
         @media (max-width: 991px) {
             .navbar-collapse {
                 background: #0f172a;
                 padding: 1rem;
-                border-radius: 0 0 16px 16px;
+                border-radius: 0 0 14px 14px;
             }
 
             .mobile-item {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 12px 16px;
-                border-radius: 10px;
+                padding: 12px;
+                border-radius: 8px;
                 background: rgba(255,255,255,.08);
                 color: #fff;
                 text-decoration: none;
@@ -134,29 +127,22 @@
             }
 
             .mobile-search input {
-                background: rgba(255,255,255,.1);
+                background: rgba(255,255,255,.12);
                 border: 1px solid rgba(255,255,255,.25);
                 color: #fff;
             }
         }
 
-        /* ===== FLASH MESSAGES ===== */
-        .flash-container {
-            margin: 0;
-            padding: 0;
-        }
-
-        .flash-container .container {
-            padding-top: 0;
-            margin-top: 0;
-        }
-
-        /* ===== FOOTER ===== */
+        /* ================= FOOTER ================= */
         footer {
             background: #0f172a;
             color: #cbd5f5;
             padding: 3rem 0 1.5rem;
-            margin-top: auto;
+        }
+
+        footer h5 {
+            color: #fff;
+            font-weight: 600;
         }
 
         footer a {
@@ -168,51 +154,38 @@
             color: #fff;
         }
 
-        /* ===== BACK TO TOP BUTTON ===== */
+        footer .footer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= BACK TO TOP ================= */
         .btn-back-to-top {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 50px;
-            height: 50px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: #e11d48;
-            color: white;
+            color: #fff;
             border: none;
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
         }
 
         .btn-back-to-top:hover {
             background: #be123c;
-            transform: translateY(-3px);
-        }
-
-        /* ===== HERO SECTION OVERRIDES ===== */
-        /* This ensures hero section fills space after navbar */
-        .hero-section {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        /* Remove any padding/margin that might create white space */
-        .navbar + * {
-            margin-top: 0 !important;
-        }
-
-        .alert {
-            margin-bottom: 0;
         }
     </style>
 </head>
 
 <body>
 
-<!-- ===== NAVBAR ===== -->
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="{{ url_for('home') }}">
@@ -225,7 +198,6 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- DESKTOP MENU -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">Laptops</a></li>
@@ -234,9 +206,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='accessories') }}">Accessories</a></li>
             </ul>
 
-            <!-- DESKTOP SEARCH + CART -->
             <div class="d-none d-lg-flex align-items-center gap-3">
-
                 <div class="search-wrapper">
                     <button class="btn btn-outline-light" id="desktopSearchBtn">
                         <i class="fas fa-search"></i>
@@ -254,7 +224,6 @@
                 </a>
             </div>
 
-            <!-- MOBILE MENU -->
             <div class="d-lg-none mt-3">
                 <a href="{{ url_for('home') }}" class="mobile-item"><i class="fas fa-home"></i>Home</a>
                 <a href="{{ url_for('category_page', category='laptops') }}" class="mobile-item"><i class="fas fa-laptop"></i>Laptops</a>
@@ -267,8 +236,7 @@
                 </form>
 
                 <a href="{{ url_for('view_cart') }}" class="mobile-item mt-3">
-                    <i class="fas fa-shopping-cart"></i>
-                    Cart
+                    <i class="fas fa-shopping-cart"></i>Cart
                     {% if cart_count %}
                     <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
@@ -279,236 +247,77 @@
     </div>
 </nav>
 
-<!-- ===== FLASH MESSAGES ===== -->
-<div class="flash-container">
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }} m-0 border-0 rounded-0">{{ message }}</div>
-{% endfor %}
-{% endwith %}
-</div>
-
-<!-- ===== MAIN CONTENT ===== -->
+<!-- ================= CONTENT ================= -->
 <main>
-{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </main>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
+<!-- ================= FOOTER ================= -->
+<footer>
     <div class="container">
-        <div class="row">
-            <!-- Company Info -->
+        <div class="row text-start">
             <div class="col-md-4 mb-4">
-                <h5 class="text-white mb-3">Computer Aid MW</h5>
-                <p class="text-white-50 mb-4">
-                    Your trusted computer solutions provider in Malawi. Quality products with excellent customer support.
+                <h5>Computer Aid MW</h5>
+                <p class="text-white-50">
+                    Trusted computer products and services across Malawi.
                 </p>
-                <div class="social-links d-flex gap-3">
-                    <a href="#" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
             </div>
 
-            <!-- Quick Links -->
             <div class="col-md-4 mb-4">
-                <h5 class="text-white mb-3">Quick Links</h5>
+                <h5>Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="{{ url_for('home') }}" class="footer-link">
-                            <i class="fas fa-chevron-right small me-2"></i>Home
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{{ url_for('category_page', category='laptops') }}" class="footer-link">
-                            <i class="fas fa-chevron-right small me-2"></i>Laptops
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{{ url_for('category_page', category='consoles') }}" class="footer-link">
-                            <i class="fas fa-chevron-right small me-2"></i>Consoles
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">
-                            <i class="fas fa-chevron-right small me-2"></i>Accessories
-                        </a>
-                    </li>
+                    <li><a href="{{ url_for('home') }}" class="footer-link">Home</a></li>
+                    <li><a href="{{ url_for('category_page', category='laptops') }}" class="footer-link">Laptops</a></li>
+                    <li><a href="{{ url_for('category_page', category='consoles') }}" class="footer-link">Consoles</a></li>
+                    <li><a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">Accessories</a></li>
                 </ul>
             </div>
 
-            <!-- Services -->
             <div class="col-md-4 mb-4">
-                <h5 class="text-white mb-3">Our Services</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <span class="text-white-50">
-                            <i class="fas fa-wrench me-2"></i>Computer Repairs
-                        </span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="text-white-50">
-                            <i class="fas fa-laptop-medical me-2"></i>Hardware Upgrades
-                        </span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="text-white-50">
-                            <i class="fas fa-shield-alt me-2"></i>Virus Removal
-                        </span>
-                    </li>
-                </ul>
+                <h5>Contact</h5>
+                <p class="text-white-50 mb-1">Lilongwe, Malawi</p>
+                <p class="text-white-50 mb-1">+265 123 456 789</p>
+                <p class="text-white-50">info@computeraidmw.com</p>
             </div>
         </div>
 
-        <!-- Contact Info -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <h5 class="text-white mb-3">Contact Us</h5>
-                <div class="row">
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="fas fa-map-marker-alt mt-1 me-3"></i>
-                            <div>
-                                <span class="text-white-50 d-block">Lilongwe, Malawi</span>
-                                <small class="text-white-30">Capital City</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="fas fa-phone mt-1 me-3"></i>
-                            <div>
-                                <a href="tel:+265123456789" class="text-white-50 text-decoration-none">
-                                    +265 123 456 789
-                                </a>
-                                <small class="text-white-30 d-block">Mon-Fri, 8AM-6PM</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="fas fa-envelope mt-1 me-3"></i>
-                            <div>
-                                <a href="mailto:info@computeraidmw.com" class="text-white-50 text-decoration-none">
-                                    info@computeraidmw.com
-                                </a>
-                                <small class="text-white-30 d-block">Quick Response</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="fas fa-clock mt-1 me-3"></i>
-                            <div>
-                                <span class="text-white-50 d-block">Business Hours</span>
-                                <small class="text-white-30">Mon-Sat: 8:00 - 18:00</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <hr class="opacity-25">
 
-        <hr class="my-4 opacity-25">
-
-        <!-- Copyright -->
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <p class="text-white-50 small mb-0">
-                    &copy; 2025 Computer Aid MW. All rights reserved.
-                </p>
-            </div>
+        <div class="text-center">
+            <p class="text-white-50 small mb-0">
+                &copy; 2025 Computer Aid MW. All rights reserved.
+            </p>
         </div>
     </div>
 </footer>
 
-<!-- Back to Top Button -->
-<button class="btn-back-to-top" id="backToTop" aria-label="Back to top">
+<button class="btn-back-to-top" id="backToTop">
     <i class="fas fa-chevron-up"></i>
 </button>
 
-<!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Desktop Search Toggle
-    const desktopSearchBtn = document.getElementById('desktopSearchBtn');
-    const searchWrapper = document.querySelector('.search-wrapper');
-    
-    if (desktopSearchBtn && searchWrapper) {
-        desktopSearchBtn.addEventListener('click', e => {
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('desktopSearchBtn');
+    const wrapper = document.querySelector('.search-wrapper');
+
+    if (btn && wrapper) {
+        btn.addEventListener('click', e => {
             e.stopPropagation();
-            searchWrapper.classList.toggle('active');
-            const input = searchWrapper.querySelector('input');
-            if (searchWrapper.classList.contains('active') && input) {
-                input.focus();
-            }
+            wrapper.classList.toggle('active');
+            wrapper.querySelector('input')?.focus();
+        });
+        document.addEventListener('click', e => {
+            if (!wrapper.contains(e.target)) wrapper.classList.remove('active');
         });
     }
-    
-    // Close search when clicking outside
-    document.addEventListener('click', e => {
-        if (searchWrapper && !searchWrapper.contains(e.target)) {
-            searchWrapper.classList.remove('active');
-        }
+
+    const back = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        back.style.display = window.scrollY > 300 ? 'flex' : 'none';
     });
-    
-    // Back to Top Button
-    const backToTopBtn = document.getElementById('backToTop');
-    
-    if (backToTopBtn) {
-        window.addEventListener('scroll', function() {
-            if (window.pageYOffset > 300) {
-                backToTopBtn.style.display = 'flex';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
-        });
-        
-        backToTopBtn.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
-    
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-            bsAlert.close();
-        }, 5000);
-    });
-    
-    // Close mobile menu when clicking a link
-    document.querySelectorAll('.mobile-item[href]').forEach(item => {
-        item.addEventListener('click', function() {
-            const navbar = document.getElementById('navbarNav');
-            if (navbar && navbar.classList.contains('show')) {
-                const bsCollapse = bootstrap.Collapse.getInstance(navbar);
-                if (bsCollapse) {
-                    bsCollapse.hide();
-                }
-            }
-        });
-    });
-    
-    
-    const cartBadges = document.querySelectorAll('.cart-badge');
-    cartBadges.forEach(badge => {
-        if (parseInt(badge.textContent) > 0) {
-            badge.style.animation = 'none'; // Remove animation if not needed
-        }
-    });
+    back.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 });
 </script>
 
