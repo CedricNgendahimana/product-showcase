@@ -76,6 +76,238 @@
             color: #1e40af;
             border-left: 4px solid var(--primary-color);
         }
+        
+        /* Category page specific styles */
+        .category-hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 80px 0 60px;
+            margin-top: 0;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .category-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .breadcrumb-nav {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb-item a:hover {
+            color: var(--accent-color);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        /* Category sidebar styles */
+        .category-sidebar-section {
+            padding: 3rem 0;
+        }
+        
+        .sidebar-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .sidebar-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .category-sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-radius: var(--border-radius);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .category-sidebar-item:hover {
+            background: var(--white);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+            color: var(--accent-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .category-sidebar-item.active {
+            background: var(--accent-color);
+            color: var(--white);
+            border-color: var(--accent-color);
+        }
+        
+        .category-sidebar-item.active:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            color: var(--white);
+        }
+        
+        .category-sidebar-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+        
+        /* No products message */
+        .no-products-message {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .no-products-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Search wrapper styles */
+        .search-wrapper {
+            position: relative;
+        }
+        
+        .search-input {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            width: 300px;
+            display: none;
+            z-index: 1000;
+            margin-top: 0.5rem;
+        }
+        
+        .search-wrapper.active .search-input {
+            display: block;
+        }
+        
+        .search-input input {
+            border-radius: 25px;
+            padding-right: 2.5rem;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Mobile menu styles */
+        .mobile-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.05);
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            margin-bottom: 5px;
+        }
+        
+        .mobile-item:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .mobile-search {
+            margin-top: 1rem;
+        }
+        
+        .btn-back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+        
+        .btn-back-to-top:hover {
+            background: var(--accent-dark);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar-card {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .category-hero-section {
+                padding: 60px 0 40px;
+            }
+            
+            .search-input {
+                position: fixed;
+                top: 70px;
+                left: 20px;
+                right: 20px;
+                width: auto;
+            }
+        }
     </style>
 </head>
 
@@ -96,11 +328,11 @@
 
             <!-- DESKTOP MENU -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
-                <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">Laptops</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='consoles') }}">Consoles</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='phones') }}">Phones</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='accessories') }}">Accessories</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'category_page' and category == 'laptops' %}active{% endif %}" href="{{ url_for('category_page', category='laptops') }}">Laptops</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'category_page' and category == 'consoles' %}active{% endif %}" href="{{ url_for('category_page', category='consoles') }}">Consoles</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'category_page' and category == 'phones' %}active{% endif %}" href="{{ url_for('category_page', category='phones') }}">Phones</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'category_page' and category == 'accessories' %}active{% endif %}" href="{{ url_for('category_page', category='accessories') }}">Accessories</a></li>
             </ul>
 
             <!-- DESKTOP SEARCH + CART -->
@@ -131,7 +363,7 @@
                 <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile"></i>Phones</a>
                 <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item"><i class="fas fa-keyboard"></i>Accessories</a>
 
-                <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}" role="search">
+                <form class="mobile-search" method="GET" action="{{ url_for('search') }}" role="search">
                     <input type="search" name="q" class="form-control" placeholder="Search products..." aria-label="Search products">
                 </form>
 
@@ -152,7 +384,7 @@
 <div class="flash-container">
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% for category, message in messages %}
-<div class="alert alert-{{ category }} m-0 border-0 rounded-0 alert-dismissible fade show modern-alert" role="alert">
+<div class="alert alert-{{ category }} m-0 border-0 rounded-0 alert-dismissible fade show" role="alert">
     {{ message }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -163,258 +395,390 @@
 <!-- ===== MAIN CONTENT ===== -->
 <main>
 {% block content %}
-<!-- ===== HERO SECTION ===== -->
-<section class="hero-section">
-    <div class="container">
-        <div class="hero-content animate-fade-up">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="hero-title">Welcome to <span class="text-accent">Computer Aid MW</span></h1>
+    <!-- Check if we're on a category page -->
+    {% if request.endpoint == 'category_page' %}
+        <!-- ===== CATEGORY HERO SECTION ===== -->
+        <section class="category-hero-section">
+            <div class="container">
+                <div class="category-hero-content">
+                    <!-- Breadcrumb -->
+                    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ category|capitalize }}</li>
+                        </ol>
+                    </nav>
+                    
+                    <!-- Category Title -->
+                    <h1 class="hero-title">{{ category|capitalize }}</h1>
                     <p class="hero-subtitle">
-                        Your trusted source for premium computer products and accessories in Malawi
+                        Browse our selection of high-quality {{ category }} in Malawi
                     </p>
-                    <div class="d-flex flex-wrap gap-3 mb-4">
-                        <a href="#products" class="hero-btn animate-fade-up animate-delay-200">
-                            <i class="fas fa-laptop me-2"></i>Browse Products
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row text-center hero-stats animate-fade-up animate-delay-400">
+                    
+                    <!-- Category Stats -->
+                    <div class="row text-center hero-stats">
+                        {% set product_count = category_products|length if category_products else 0 %}
                         <div class="col-md-4 mb-4">
-                            <span class="stat-number">4</span>
-                            <span class="stat-label">Categories</span>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <span class="stat-number">7</span>
+                            <span class="stat-number">{{ product_count }}</span>
                             <span class="stat-label">Products</span>
                         </div>
                         <div class="col-md-4 mb-4">
                             <span class="stat-number">24</span>
                             <span class="stat-label">Hour Support</span>
                         </div>
+                        <div class="col-md-4 mb-4">
+                            <span class="stat-number">30</span>
+                            <span class="stat-label">Day Warranty</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="hero-wave">
-        <svg viewBox="0 0 500 150" preserveAspectRatio="none">
-            <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"></path>
-        </svg>
-    </div>
-</section>
+        </section>
 
-<!-- ===== CATEGORIES SECTION ===== -->
-<section class="categories-section section-padding bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title animate-fade-up">Shop by Category</h2>
-            <p class="section-subtitle animate-fade-up animate-delay-100">
-                Browse our wide range of computer products
-            </p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-200">
-                <a href="{{ url_for('category_page', category='laptops') }}" class="category-card-link">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        <h3 class="category-name">Laptops</h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-300">
-                <a href="{{ url_for('category_page', category='consoles') }}" class="category-card-link">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <h3 class="category-name">Consoles</h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-400">
-                <a href="{{ url_for('category_page', category='phones') }}" class="category-card-link">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h3 class="category-name">Phones</h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-500">
-                <a href="{{ url_for('category_page', category='accessories') }}" class="category-card-link">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="fas fa-keyboard"></i>
-                        </div>
-                        <h3 class="category-name">Accessories</h3>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== PRODUCTS SECTION ===== -->
-<section id="products" class="featured-section section-padding">
-    <div class="container">
-        <!-- Section Header -->
-        <div class="text-center mb-5">
-            <h2 class="section-title animate-fade-up">Featured Products</h2>
-            <p class="section-subtitle animate-fade-up animate-delay-100">
-                Explore our curated selection of high-quality computer products in Malawi
-            </p>
-        </div>
-
-        <!-- Category Filter -->
-        <div class="category-nav mb-5 animate-fade-up animate-delay-200">
-            <a href="{{ url_for('category_page', category='all') }}" 
-               class="btn btn-outline-primary">
-                All Products
-            </a>
-            <a href="{{ url_for('category_page', category='laptops') }}" 
-               class="btn btn-outline-primary">
-                <i class="fas fa-laptop me-1"></i> Laptops
-            </a>
-            <a href="{{ url_for('category_page', category='consoles') }}" 
-               class="btn btn-outline-primary">
-                <i class="fas fa-gamepad me-1"></i> Consoles
-            </a>
-            <a href="{{ url_for('category_page', category='phones') }}" 
-               class="btn btn-outline-primary">
-                <i class="fas fa-mobile-alt me-1"></i> Phones
-            </a>
-            <a href="{{ url_for('category_page', category='accessories') }}" 
-               class="btn btn-outline-primary">
-                <i class="fas fa-keyboard me-1"></i> Accessories
-            </a>
-        </div>
-
-        <!-- Products Grid -->
-        <div class="row g-4">
-            <!-- Product 1 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-300">
-                <a href="#" class="product-card-link">
-                    <div class="product-card">
-                        <div class="product-category-badge">Featured</div>
-                        <div class="product-image-wrapper">
-                            <img src="{{ url_for('static', filename='images/products/laptop1.png') }}" 
-                                 alt="GAMING PC Pro" 
-                                 class="product-image">
-                            <div class="product-overlay">
-                                <span class="product-overlay-text">View Details</span>
+        <!-- ===== CATEGORY PRODUCTS SECTION ===== -->
+        <section class="category-sidebar-section">
+            <div class="container">
+                <div class="row">
+                    <!-- Sidebar with categories -->
+                    <div class="col-lg-3 mb-5 mb-lg-0">
+                        <div class="sidebar-card">
+                            <h5 class="sidebar-title">Browse Categories</h5>
+                            <p class="sidebar-subtitle mb-4">Select a category to view products</p>
+                            
+                            <div class="category-list">
+                                <a href="{{ url_for('category_page', category='laptops') }}" 
+                                   class="category-sidebar-item {% if category == 'laptops' %}active{% endif %}">
+                                    <i class="fas fa-laptop me-3"></i>
+                                    <span>Laptops</span>
+                                </a>
+                                
+                                <a href="{{ url_for('category_page', category='consoles') }}" 
+                                   class="category-sidebar-item {% if category == 'consoles' %}active{% endif %}">
+                                    <i class="fas fa-gamepad me-3"></i>
+                                    <span>Gaming Consoles</span>
+                                </a>
+                                
+                                <a href="{{ url_for('category_page', category='phones') }}" 
+                                   class="category-sidebar-item {% if category == 'phones' %}active{% endif %}">
+                                    <i class="fas fa-mobile-alt me-3"></i>
+                                    <span>Phones</span>
+                                </a>
+                                
+                                <a href="{{ url_for('category_page', category='accessories') }}" 
+                                   class="category-sidebar-item {% if category == 'accessories' %}active{% endif %}">
+                                    <i class="fas fa-keyboard me-3"></i>
+                                    <span>Accessories</span>
+                                </a>
                             </div>
                         </div>
-                        <div class="product-info">
-                            <h3 class="product-name">GAMING PC Pro</h3>
-                            <p class="product-description">
-                                High-performance gaming laptop with 16GB RAM, 128GB SSD, and dedicated graphics
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="col-lg-9">
+                        {% if category_products %}
+                        <div class="row g-4">
+                            {% for product in category_products %}
+                            <div class="col-xl-4 col-md-6">
+                                <a href="{{ url_for('product_detail', product_id=product.id) if product.id else '#' }}" class="product-card-link">
+                                    <div class="product-card">
+                                        {% if product.featured or product.badge %}
+                                        <div class="product-category-badge">{{ product.badge or 'Featured' }}</div>
+                                        {% endif %}
+                                        
+                                        <div class="product-image-wrapper">
+                                            <img src="{{ url_for('static', filename='images/products/' ~ product.image) if product.image else url_for('static', filename='images/products/default.png') }}" 
+                                                 alt="{{ product.name }}" 
+                                                 class="product-image">
+                                            <div class="product-overlay">
+                                                <span class="product-overlay-text">View Details</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="product-info">
+                                            <h3 class="product-name">{{ product.name }}</h3>
+                                            <p class="product-description">
+                                                {{ product.description|default('High-quality product with excellent features')|truncate(100) }}
+                                            </p>
+                                            <div class="product-footer">
+                                                <span class="product-price">MWK {{ "{:,.0f}".format(product.price|default(0)) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="no-products-message">
+                            <div class="no-products-icon">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <h3 class="text-muted mb-3">No products found in this category</h3>
+                            <p class="text-muted mb-4">Check back soon for new arrivals!</p>
+                            <a href="{{ url_for('home') }}" class="btn btn-primary">
+                                <i class="fas fa-home me-2"></i>Return to Home
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    {% else %}
+        <!-- ===== HOME PAGE CONTENT ===== -->
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content animate-fade-up">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h1 class="hero-title">Welcome to <span class="text-accent">Computer Aid MW</span></h1>
+                            <p class="hero-subtitle">
+                                Your trusted source for premium computer products and accessories in Malawi
                             </p>
-                            <div class="product-footer">
-                                <span class="product-price">MWK 650,000</span>
+                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                <a href="#products" class="hero-btn animate-fade-up animate-delay-200">
+                                    <i class="fas fa-laptop me-2"></i>Browse Products
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row text-center hero-stats animate-fade-up animate-delay-400">
+                                <div class="col-md-4 mb-4">
+                                    <span class="stat-number">4</span>
+                                    <span class="stat-label">Categories</span>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <span class="stat-number">7</span>
+                                    <span class="stat-label">Products</span>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <span class="stat-number">24</span>
+                                    <span class="stat-label">Hour Support</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
+            <div class="hero-wave">
+                <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                    <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"></path>
+                </svg>
+            </div>
+        </section>
 
-            <!-- Product 2 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-400">
-                <a href="#" class="product-card-link">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="{{ url_for('static', filename='images/products/laptop2.png') }}" 
-                                 alt="Business Laptop Elite" 
-                                 class="product-image">
-                            <div class="product-overlay">
-                                <span class="product-overlay-text">View Details</span>
+        <!-- ===== CATEGORIES SECTION ===== -->
+        <section class="categories-section section-padding bg-light">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title animate-fade-up">Shop by Category</h2>
+                    <p class="section-subtitle animate-fade-up animate-delay-100">
+                        Browse our wide range of computer products
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-200">
+                        <a href="{{ url_for('category_page', category='laptops') }}" class="category-card-link">
+                            <div class="category-card">
+                                <div class="category-icon">
+                                    <i class="fas fa-laptop"></i>
+                                </div>
+                                <h3 class="category-name">Laptops</h3>
                             </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Business Laptop Elite</h3>
-                            <p class="product-description">
-                                Professional laptop with 8GB RAM, 512GB SSD, and Intel i5 processor
-                            </p>
-                            <div class="product-footer">
-                                <span class="product-price">MWK 450,000</span>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-500">
-                <a href="#" class="product-card-link">
-                    <div class="product-card">
-                        <div class="product-category-badge">Hot Deal</div>
-                        <div class="product-image-wrapper">
-                            <img src="{{ url_for('static', filename='images/products/ps5.png') }}" 
-                                 alt="PlayStation 5" 
-                                 class="product-image">
-                            <div class="product-overlay">
-                                <span class="product-overlay-text">View Details</span>
+                    <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-300">
+                        <a href="{{ url_for('category_page', category='consoles') }}" class="category-card-link">
+                            <div class="category-card">
+                                <div class="category-icon">
+                                    <i class="fas fa-gamepad"></i>
+                                </div>
+                                <h3 class="category-name">Consoles</h3>
                             </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">PlayStation 5</h3>
-                            <p class="product-description">
-                                Next-gen gaming console with 825GB SSD and 4K gaming support
-                            </p>
-                            <div class="product-footer">
-                                <span class="product-price">MWK 850,000</span>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-600">
-                <a href="#" class="product-card-link">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="{{ url_for('static', filename='images/products/mouse.png') }}" 
-                                 alt="Wireless Mouse Pro" 
-                                 class="product-image">
-                            <div class="product-overlay">
-                                <span class="product-overlay-text">View Details</span>
+                    <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-400">
+                        <a href="{{ url_for('category_page', category='phones') }}" class="category-card-link">
+                            <div class="category-card">
+                                <div class="category-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h3 class="category-name">Phones</h3>
                             </div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Wireless Mouse Pro</h3>
-                            <p class="product-description">
-                                Ergonomic wireless mouse with 1600 DPI and 12-month battery life
-                            </p>
-                            <div class="product-footer">
-                                <span class="product-price">MWK 25,000</span>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
+                    <div class="col-lg-3 col-md-6 animate-fade-up animate-delay-500">
+                        <a href="{{ url_for('category_page', category='accessories') }}" class="category-card-link">
+                            <div class="category-card">
+                                <div class="category-icon">
+                                    <i class="fas fa-keyboard"></i>
+                                </div>
+                                <h3 class="category-name">Accessories</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<!-- ===== CTA SECTION ===== -->
-<section class="cta-section section-padding">
-    <div class="container">
-        <div class="cta-card animate-scale-in">
-            <h3>Need Help Choosing?</h3>
-            <p class="mb-4">Our experts are ready to help you find the perfect product for your needs.</p>
-            <a href="https://wa.me/265123456789" target="_blank" class="cta-btn">
-                <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
-            </a>
-        </div>
-    </div>
-</section>
+        <!-- ===== PRODUCTS SECTION ===== -->
+        <section id="products" class="featured-section section-padding">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="text-center mb-5">
+                    <h2 class="section-title animate-fade-up">Featured Products</h2>
+                    <p class="section-subtitle animate-fade-up animate-delay-100">
+                        Explore our curated selection of high-quality computer products in Malawi
+                    </p>
+                </div>
 
+                <!-- Category Filter -->
+                <div class="category-nav mb-5 animate-fade-up animate-delay-200">
+                    <a href="{{ url_for('category_page', category='all') }}" 
+                       class="btn btn-outline-primary">
+                        All Products
+                    </a>
+                    <a href="{{ url_for('category_page', category='laptops') }}" 
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-laptop me-1"></i> Laptops
+                    </a>
+                    <a href="{{ url_for('category_page', category='consoles') }}" 
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-gamepad me-1"></i> Consoles
+                    </a>
+                    <a href="{{ url_for('category_page', category='phones') }}" 
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-mobile-alt me-1"></i> Phones
+                    </a>
+                    <a href="{{ url_for('category_page', category='accessories') }}" 
+                       class="btn btn-outline-primary">
+                        <i class="fas fa-keyboard me-1"></i> Accessories
+                    </a>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="row g-4">
+                    <!-- Product 1 -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-300">
+                        <a href="#" class="product-card-link">
+                            <div class="product-card">
+                                <div class="product-category-badge">Featured</div>
+                                <div class="product-image-wrapper">
+                                    <img src="{{ url_for('static', filename='images/products/laptop1.png') }}" 
+                                         alt="GAMING PC Pro" 
+                                         class="product-image">
+                                    <div class="product-overlay">
+                                        <span class="product-overlay-text">View Details</span>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">GAMING PC Pro</h3>
+                                    <p class="product-description">
+                                        High-performance gaming laptop with 16GB RAM, 128GB SSD, and dedicated graphics
+                                    </p>
+                                    <div class="product-footer">
+                                        <span class="product-price">MWK 650,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-400">
+                        <a href="#" class="product-card-link">
+                            <div class="product-card">
+                                <div class="product-image-wrapper">
+                                    <img src="{{ url_for('static', filename='images/products/laptop2.png') }}" 
+                                         alt="Business Laptop Elite" 
+                                         class="product-image">
+                                    <div class="product-overlay">
+                                        <span class="product-overlay-text">View Details</span>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">Business Laptop Elite</h3>
+                                    <p class="product-description">
+                                        Professional laptop with 8GB RAM, 512GB SSD, and Intel i5 processor
+                                    </p>
+                                    <div class="product-footer">
+                                        <span class="product-price">MWK 450,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-500">
+                        <a href="#" class="product-card-link">
+                            <div class="product-card">
+                                <div class="product-category-badge">Hot Deal</div>
+                                <div class="product-image-wrapper">
+                                    <img src="{{ url_for('static', filename='images/products/ps5.png') }}" 
+                                         alt="PlayStation 5" 
+                                         class="product-image">
+                                    <div class="product-overlay">
+                                        <span class="product-overlay-text">View Details</span>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">PlayStation 5</h3>
+                                    <p class="product-description">
+                                        Next-gen gaming console with 825GB SSD and 4K gaming support
+                                    </p>
+                                    <div class="product-footer">
+                                        <span class="product-price">MWK 850,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 animate-fade-up animate-delay-600">
+                        <a href="#" class="product-card-link">
+                            <div class="product-card">
+                                <div class="product-image-wrapper">
+                                    <img src="{{ url_for('static', filename='images/products/mouse.png') }}" 
+                                         alt="Wireless Mouse Pro" 
+                                         class="product-image">
+                                    <div class="product-overlay">
+                                        <span class="product-overlay-text">View Details</span>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">Wireless Mouse Pro</h3>
+                                    <p class="product-description">
+                                        Ergonomic wireless mouse with 1600 DPI and 12-month battery life
+                                    </p>
+                                    <div class="product-footer">
+                                        <span class="product-price">MWK 25,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CTA SECTION ===== -->
+        <section class="cta-section section-padding">
+            <div class="container">
+                <div class="cta-card animate-scale-in">
+                    <h3>Need Help Choosing?</h3>
+                    <p class="mb-4">Our experts are ready to help you find the perfect product for your needs.</p>
+                    <a href="https://wa.me/265123456789" target="_blank" class="cta-btn">
+                        <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}
 </main>
 
