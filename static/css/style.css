@@ -1207,3 +1207,23 @@ body {
 .hero-section h1 {
     color: var(--primary-color) !important;
 }
+
+/* === CTA / ABOUT PAGE TEXT COLOR FIX === */
+
+/* Main CTA heading */
+.cta-section h2,
+.cta-section h3,
+.cta-section .section-title {
+    color: var(--primary-color) !important;
+}
+
+/* CTA subtitle / description */
+.cta-section p,
+.cta-section .section-subtitle {
+    color: var(--secondary-color) !important;
+}
+
+/* CTA links / buttons text */
+.cta-section a {
+    color: var(--primary-color);
+}
