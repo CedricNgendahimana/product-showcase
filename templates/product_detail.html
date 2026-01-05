@@ -27,16 +27,32 @@
 
         <div class="row g-4 g-lg-5 align-items-start">
 
-            <!-- IMAGE -->
+            <!-- IMAGE GALLERY -->
             <div class="col-lg-6">
-                <div class="text-center">
-                    <img src="{{ product.image_url }}"
+
+                <!-- MAIN IMAGE -->
+                <div class="text-center mb-3">
+                    <img id="mainProductImage"
+                         src="{{ images[0] }}"
                          alt="{{ product.name }}"
                          class="img-fluid rounded shadow-sm"
                          style="max-height: 420px; width: 100%; object-fit: contain;"
                          loading="lazy"
                          onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
                 </div>
+
+                <!-- THUMBNAILS -->
+                {% if images|length > 1 %}
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    {% for img in images %}
+                    <img src="{{ img }}"
+                         class="img-thumbnail"
+                         style="width: 80px; height: 80px; object-fit: contain; cursor: pointer;"
+                         loading="lazy"
+                         onclick="document.getElementById('mainProductImage').src='{{ img }}'">
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
             <!-- INFO -->

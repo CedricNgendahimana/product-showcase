@@ -5,6 +5,7 @@ SAFE ON REDEPLOY – IMAGES NEVER LOST
 """
 
 import os
+import json  # ✅ ADDED: for storing multiple images as JSON
 import cloudinary
 import cloudinary.uploader
 from flask import (
@@ -110,7 +111,10 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False, default="accessories")
-    image_url = db.Column(db.Text, nullable=False)
+
+    image_url = db.Column(db.Text, nullable=False)      # main image (existing)
+    image_urls = db.Column(db.Text, nullable=True)      # ✅ ADDED: JSON list of images
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # =========================
@@ -162,7 +166,6 @@ def home():
     return render_template("home.html", products=products, categories=CATEGORIES)
 
 
-# ✅ ABOUT PAGE ROUTE (ADDED)
 @app.route("/about")
 def about():
     return render_template("about.html", categories=CATEGORIES)
@@ -186,9 +189,7 @@ def category_page(category):
         categories=CATEGORIES,
     )
 
-# =========================
-# ✅ FIXED SEARCH (NAME + DESCRIPTION)
-# =========================
+
 @app.route("/search")
 def search():
     query = request.args.get("q", "").strip()
@@ -213,6 +214,11 @@ def search():
 def product_detail(id):
     product = Product.query.get_or_404(id)
 
+    # ✅ ADDED: load multiple images safely
+    images = [product.image_url]
+    if product.image_urls:
+        images = json.loads(product.image_urls)
+
     whatsapp_link = None
     if WHATSAPP_NUMBER:
         message = (
@@ -224,6 +230,7 @@ def product_detail(id):
     return render_template(
         "product_detail.html",
         product=product,
+        images=images,  # ✅ ADDED
         whatsapp_link=whatsapp_link,
         categories=CATEGORIES,
     )
@@ -338,23 +345,27 @@ def admin_dashboard():
 @login_required
 def admin_add_product():
     if request.method == "POST":
-        file = request.files.get("image")
-        if not file:
-            flash("Image is required", "danger")
+        files = request.files.getlist("images")  # ✅ CHANGED
+        if not files:
+            flash("At least one image is required", "danger")
             return redirect(request.url)
 
-        upload = cloudinary.uploader.upload(
-            file,
-            folder="computer_aid_products",
-            transformation={"quality": "auto", "fetch_format": "auto"},
-        )
+        image_urls = []
+        for file in files:
+            upload = cloudinary.uploader.upload(
+                file,
+                folder="computer_aid_products",
+                transformation={"quality": "auto", "fetch_format": "auto"},
+            )
+            image_urls.append(upload["secure_url"])
 
         product = Product(
             name=request.form.get("name"),
             price=float(request.form.get("price")),
             description=request.form.get("description"),
             category=request.form.get("category", "accessories"),
-            image_url=upload["secure_url"],
+            image_url=image_urls[0],
+            image_urls=json.dumps(image_urls),
         )
 
         db.session.add(product)
@@ -381,14 +392,19 @@ def admin_edit_product(id):
         product.description = request.form.get("description")
         product.category = request.form.get("category", "accessories")
 
-        file = request.files.get("image")
-        if file:
-            upload = cloudinary.uploader.upload(
-                file,
-                folder="computer_aid_products",
-                transformation={"quality": "auto", "fetch_format": "auto"},
-            )
-            product.image_url = upload["secure_url"]
+        files = request.files.getlist("images")
+        if files and files[0].filename:
+            image_urls = []
+            for file in files:
+                upload = cloudinary.uploader.upload(
+                    file,
+                    folder="computer_aid_products",
+                    transformation={"quality": "auto", "fetch_format": "auto"},
+                )
+                image_urls.append(upload["secure_url"])
+
+            product.image_url = image_urls[0]
+            product.image_urls = json.dumps(image_urls)
 
         db.session.commit()
         flash("Product updated successfully!", "success")

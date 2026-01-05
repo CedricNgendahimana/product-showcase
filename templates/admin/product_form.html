@@ -85,38 +85,38 @@
                                       placeholder="Enter detailed product description">{{ product.description if product else '' }}</textarea>
                         </div>
 
-                        <!-- IMAGE -->
+                        <!-- IMAGES (MULTIPLE) -->
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="fas fa-image me-2"></i>Product Image
+                                <i class="fas fa-images me-2"></i>Product Images
                             </label>
 
                             {% if product and product.image_url %}
                             <div class="mb-3 animate-fade-in">
-                                <p class="text-muted small mb-2">Current image:</p>
-                                <img src="{{ product.image_url }}"
-                                     alt="Current Image"
-                                     class="img-thumbnail"
-                                     style="max-height: 160px;">
+                                <p class="text-muted small mb-2">Current images:</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <img src="{{ product.image_url }}"
+                                         class="img-thumbnail"
+                                         style="max-height: 120px;">
+                                </div>
                             </div>
                             {% endif %}
 
                             <input type="file"
                                    class="form-control form-control-lg"
-                                   name="image"
+                                   name="images"
                                    accept="image/*"
-                                   onchange="previewImage(event)">
+                                   multiple
+                                   onchange="previewImages(event)">
 
                             <small class="text-muted">
-                                PNG, JPG, JPEG, WEBP • Max 16MB
+                                You can upload multiple images • PNG, JPG, JPEG, WEBP • Max 16MB each
                             </small>
 
                             <!-- PREVIEW -->
                             <div class="mt-3 d-none" id="imagePreviewWrapper">
-                                <p class="text-muted small mb-2">New image preview:</p>
-                                <img id="imagePreview"
-                                     class="img-thumbnail"
-                                     style="max-height: 160px;">
+                                <p class="text-muted small mb-2">New image previews:</p>
+                                <div class="d-flex flex-wrap gap-2" id="imagePreviewContainer"></div>
                             </div>
                         </div>
 
@@ -141,13 +141,24 @@
     </div>
 </section>
 
-<!-- IMAGE PREVIEW SCRIPT -->
+<!-- IMAGE PREVIEW SCRIPT (MULTIPLE) -->
 <script>
-function previewImage(event) {
-    const preview = document.getElementById('imagePreview');
+function previewImages(event) {
     const wrapper = document.getElementById('imagePreviewWrapper');
-    preview.src = URL.createObjectURL(event.target.files[0]);
-    wrapper.classList.remove('d-none');
+    const container = document.getElementById('imagePreviewContainer');
+    container.innerHTML = '';
+
+    for (const file of event.target.files) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'img-thumbnail';
+        img.style.maxHeight = '120px';
+        container.appendChild(img);
+    }
+
+    if (event.target.files.length > 0) {
+        wrapper.classList.remove('d-none');
+    }
 }
 </script>
 {% endblock %}
