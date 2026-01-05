@@ -5,13 +5,13 @@ SAFE ON REDEPLOY – IMAGES NEVER LOST
 """
 
 import os
-import json  
+import json
 import cloudinary
 import cloudinary.uploader
 
+from urllib.parse import quote
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON
-
 
 from flask import (
     Flask,
@@ -24,7 +24,6 @@ from flask import (
     jsonify,
 )
 from flask_sqlalchemy import SQLAlchemy
-
 from flask_login import (
     LoginManager,
     UserMixin,
@@ -34,11 +33,6 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from urllib.parse import quote
-from sqlalchemy import func   
-from sqlalchemy.dialects.postgresql import JSON
-
-# ✅ FIX: REQUIRED FOR SAFE SEARCH
 
 # =========================
 # APP CONFIG
@@ -121,10 +115,10 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False, default="accessories")
 
-image_url = db.Column(db.Text, nullable=False)
-image_urls = db.Column(JSON, nullable=True)
- # ✅ ADDED: JSON list of images
-created_at = db.Column(db.DateTime, server_default=db.func.now())
+    image_url = db.Column(db.Text, nullable=False)
+    image_urls = db.Column(JSON, nullable=True)
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # =========================
 # HELPERS
@@ -186,9 +180,8 @@ def category_page(category):
         flash("Category not found", "danger")
         return redirect(url_for("home"))
 
-    products = Product.query.filter_by(category=category).order_by(
-        Product.created_at.desc()
-    ).all()
+    products = Product.query.filter_by(category=category)\
+        .order_by(Product.created_at.desc()).all()
 
     return render_template(
         "category.html",
@@ -202,7 +195,6 @@ def category_page(category):
 @app.route("/search")
 def search():
     query = request.args.get("q", "").strip()
-
     if not query:
         return redirect(url_for("home"))
 
@@ -223,23 +215,19 @@ def search():
 def product_detail(id):
     product = Product.query.get_or_404(id)
 
-    # ✅ ADDED: load multiple images safely
     images = [product.image_url]
     if product.image_urls:
-        images = json.loads(product.image_urls)
+        images = product.image_urls if isinstance(product.image_urls, list) else json.loads(product.image_urls)
 
     whatsapp_link = None
     if WHATSAPP_NUMBER:
-        message = (
-            f"Hello! I'm interested in {product.name} "
-            f"(MWK {product.price:,.0f}). Is it available?"
-        )
+        message = f"Hello! I'm interested in {product.name} (MWK {product.price:,.0f}). Is it available?"
         whatsapp_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={quote(message)}"
 
     return render_template(
         "product_detail.html",
         product=product,
-        images=images,  # ✅ ADDED
+        images=images,
         whatsapp_link=whatsapp_link,
         categories=CATEGORIES,
     )
@@ -251,12 +239,7 @@ def product_detail(id):
 def view_cart():
     cart = get_cart()
     total = sum(item["price"] for item in cart.values())
-    return render_template(
-        "cart.html",
-        cart=cart,
-        total=total,
-        categories=CATEGORIES,
-    )
+    return render_template("cart.html", cart=cart, total=total, categories=CATEGORIES)
 
 
 @app.route("/cart/add/<int:product_id>", methods=["POST"])
@@ -271,10 +254,6 @@ def add_to_cart(product_id):
     }
 
     save_cart(cart)
-
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-        return jsonify(status="ok", cart_count=len(cart))
-
     flash("Product added to cart", "success")
     return redirect(request.referrer or url_for("home"))
 
@@ -302,8 +281,8 @@ def checkout():
         total += item["price"]
 
     message += f"\nTotal: MWK {total:,.0f}"
-
     session.pop("cart", None)
+
     return redirect(f"https://wa.me/{WHATSAPP_NUMBER}?text={quote(message)}")
 
 # =========================
@@ -315,10 +294,7 @@ def admin_login():
         return redirect(url_for("admin_dashboard"))
 
     if request.method == "POST":
-        admin = Admin.query.filter_by(
-            username=request.form.get("username")
-        ).first()
-
+        admin = Admin.query.filter_by(username=request.form.get("username")).first()
         if admin and admin.check_password(request.form.get("password")):
             login_user(admin)
             flash("Welcome back!", "success")
@@ -343,19 +319,15 @@ def admin_logout():
 @login_required
 def admin_dashboard():
     products = Product.query.order_by(Product.created_at.desc()).all()
-    return render_template(
-        "admin/dashboard.html",
-        products=products,
-        categories=CATEGORIES,
-    )
+    return render_template("admin/dashboard.html", products=products, categories=CATEGORIES)
 
 
 @app.route("/admin/product/add", methods=["GET", "POST"])
 @login_required
 def admin_add_product():
     if request.method == "POST":
-        files = request.files.getlist("images")  # ✅ CHANGED
-        if not files:
+        files = request.files.getlist("images")
+        if not files or not files[0].filename:
             flash("At least one image is required", "danger")
             return redirect(request.url)
 
@@ -374,7 +346,7 @@ def admin_add_product():
             description=request.form.get("description"),
             category=request.form.get("category", "accessories"),
             image_url=image_urls[0],
-            image_urls=json.dumps(image_urls),
+            image_urls=image_urls,
         )
 
         db.session.add(product)
@@ -382,12 +354,7 @@ def admin_add_product():
         flash("Product added successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=None,
-        action="Add",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
 
 
 @app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
@@ -413,18 +380,13 @@ def admin_edit_product(id):
                 image_urls.append(upload["secure_url"])
 
             product.image_url = image_urls[0]
-            product.image_urls = json.dumps(image_urls)
+            product.image_urls = image_urls
 
         db.session.commit()
         flash("Product updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template(
-        "admin/product_form.html",
-        product=product,
-        action="Edit",
-        categories=CATEGORIES,
-    )
+    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
 
 
 @app.route("/admin/product/delete/<int:id>", methods=["POST"])
