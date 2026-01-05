@@ -1185,3 +1185,25 @@ body {
         transform: translateY(0);
     }
 }
+
+.product-overlay {
+    pointer-events: none;
+    z-index: 1;
+}
+
+.product-card-link {
+    position: relative;
+    z-index: 2;
+    display: block;
+    cursor: pointer;
+}
+
+.product-card {
+    will-change: transform;
+}
+
+/* === ABOUT PAGE HERO TITLE COLOR FIX === */
+.hero-section .hero-title,
+.hero-section h1 {
+    color: var(--primary-color) !important;
+}
