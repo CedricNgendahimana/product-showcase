@@ -162,6 +162,12 @@ def home():
     return render_template("home.html", products=products, categories=CATEGORIES)
 
 
+# ✅ ABOUT PAGE ROUTE (ADDED)
+@app.route("/about")
+def about():
+    return render_template("about.html", categories=CATEGORIES)
+
+
 @app.route("/category/<category>")
 def category_page(category):
     if category not in CATEGORIES:

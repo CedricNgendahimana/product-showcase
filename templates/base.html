@@ -232,6 +232,8 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='consoles') }}">Consoles</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='phones') }}">Phones</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('category_page', category='accessories') }}">Accessories</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
+
             </ul>
 
             <!-- DESKTOP SEARCH + CART -->
@@ -261,6 +263,7 @@
                 <a href="{{ url_for('category_page', category='consoles') }}" class="mobile-item"><i class="fas fa-gamepad"></i>Consoles</a>
                 <a href="{{ url_for('category_page', category='phones') }}" class="mobile-item"><i class="fas fa-mobile"></i>Phones</a>
                 <a href="{{ url_for('category_page', category='accessories') }}" class="mobile-item"><i class="fas fa-keyboard"></i>Accessories</a>
+            <a href="{{ url_for('about') }}" class="mobile-item"> <i class="fas fa-info-circle"></i>About Us</a>
 
                 <form class="mobile-search mt-3" method="GET" action="{{ url_for('search') }}">
                     <input type="search" name="q" class="form-control" placeholder="Search products...">
@@ -338,6 +341,11 @@
                     <li class="mb-2">
                         <a href="{{ url_for('category_page', category='accessories') }}" class="footer-link">
                             <i class="fas fa-chevron-right small me-2"></i>Accessories
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                    <a href="{{ url_for('about') }}" class="footer-link">
+                            <i class="fas fa-chevron-right small me-2"></i>About Us
                         </a>
                     </li>
                 </ul>
