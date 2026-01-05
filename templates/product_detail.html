@@ -33,7 +33,7 @@
                 <!-- MAIN IMAGE -->
                 <div class="text-center mb-3">
                     <img id="mainProductImage"
-                         src="{{ images[0] }}"
+                         src="{{ images[0] if images and images|length > 0 else 'https://via.placeholder.com/600x400?text=No+Image' }}"
                          alt="{{ product.name }}"
                          class="img-fluid rounded shadow-sm"
                          style="max-height: 420px; width: 100%; object-fit: contain;"
@@ -42,14 +42,14 @@
                 </div>
 
                 <!-- THUMBNAILS -->
-                {% if images|length > 1 %}
+                {% if images and images|length > 1 %}
                 <div class="d-flex flex-wrap justify-content-center gap-2">
                     {% for img in images %}
-                    <img src="{{ img }}"
-                         class="img-thumbnail"
-                         style="width: 80px; height: 80px; object-fit: contain; cursor: pointer;"
-                         loading="lazy"
-                         onclick="document.getElementById('mainProductImage').src='{{ img }}'">
+                        <img src="{{ img }}"
+                             class="img-thumbnail"
+                             style="width: 80px; height: 80px; object-fit: contain; cursor: pointer;"
+                             loading="lazy"
+                             onclick="document.getElementById('mainProductImage').src='{{ img }}'">
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -120,9 +120,18 @@
 
                 <!-- TRUST -->
                 <div class="mt-4 d-flex flex-wrap gap-3 small">
-                    <div><i class="fas fa-shield-alt text-success me-1"></i> Quality Guaranteed</div>
-                    <div><i class="fas fa-truck text-primary me-1"></i> Fast Delivery</div>
-                    <div><i class="fas fa-headset text-warning me-1"></i> 24/7 Support</div>
+                    <div>
+                        <i class="fas fa-shield-alt text-success me-1"></i>
+                        Quality Guaranteed
+                    </div>
+                    <div>
+                        <i class="fas fa-truck text-primary me-1"></i>
+                        Fast Delivery
+                    </div>
+                    <div>
+                        <i class="fas fa-headset text-warning me-1"></i>
+                        24/7 Support
+                    </div>
                 </div>
 
             </div>

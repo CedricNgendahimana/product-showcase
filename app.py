@@ -5,9 +5,14 @@ SAFE ON REDEPLOY – IMAGES NEVER LOST
 """
 
 import os
-import json  # ✅ ADDED: for storing multiple images as JSON
+import json  
 import cloudinary
 import cloudinary.uploader
+
+from sqlalchemy import func
+from sqlalchemy.dialects.postgresql import JSON
+
+
 from flask import (
     Flask,
     render_template,
@@ -19,6 +24,7 @@ from flask import (
     jsonify,
 )
 from flask_sqlalchemy import SQLAlchemy
+
 from flask_login import (
     LoginManager,
     UserMixin,
@@ -29,7 +35,10 @@ from flask_login import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import quote
-from sqlalchemy import func   # ✅ FIX: REQUIRED FOR SAFE SEARCH
+from sqlalchemy import func   
+from sqlalchemy.dialects.postgresql import JSON
+
+# ✅ FIX: REQUIRED FOR SAFE SEARCH
 
 # =========================
 # APP CONFIG
@@ -112,10 +121,10 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False, default="accessories")
 
-    image_url = db.Column(db.Text, nullable=False)      # main image (existing)
-    image_urls = db.Column(db.Text, nullable=True)      # ✅ ADDED: JSON list of images
-
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+image_url = db.Column(db.Text, nullable=False)
+image_urls = db.Column(JSON, nullable=True)
+ # ✅ ADDED: JSON list of images
+created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 # =========================
 # HELPERS

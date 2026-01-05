@@ -91,13 +91,23 @@
                                 <i class="fas fa-images me-2"></i>Product Images
                             </label>
 
-                            {% if product and product.image_url %}
+                            {% if product %}
                             <div class="mb-3 animate-fade-in">
                                 <p class="text-muted small mb-2">Current images:</p>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <img src="{{ product.image_url }}"
-                                         class="img-thumbnail"
-                                         style="max-height: 120px;">
+
+                                    {% if product.image_urls %}
+                                        {% for img in product.image_urls %}
+                                            <img src="{{ img }}"
+                                                 class="img-thumbnail"
+                                                 style="max-height: 120px;">
+                                        {% endfor %}
+                                    {% elif product.image_url %}
+                                        <img src="{{ product.image_url }}"
+                                             class="img-thumbnail"
+                                             style="max-height: 120px;">
+                                    {% endif %}
+
                                 </div>
                             </div>
                             {% endif %}
@@ -141,11 +151,12 @@
     </div>
 </section>
 
-<!-- IMAGE PREVIEW SCRIPT (MULTIPLE) -->
+<!-- IMAGE PREVIEW SCRIPT -->
 <script>
 function previewImages(event) {
     const wrapper = document.getElementById('imagePreviewWrapper');
     const container = document.getElementById('imagePreviewContainer');
+
     container.innerHTML = '';
 
     for (const file of event.target.files) {
