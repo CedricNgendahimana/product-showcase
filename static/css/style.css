@@ -1208,22 +1208,31 @@ body {
     color: var(--primary-color) !important;
 }
 
-/* === CTA / ABOUT PAGE TEXT COLOR FIX === */
 
-/* Main CTA heading */
-.cta-section h2,
-.cta-section h3,
-.cta-section .section-title {
-    color: var(--primary-color) !important;
-}
 
-/* CTA subtitle / description */
-.cta-section p,
-.cta-section .section-subtitle {
+/* =========================
+   ABOUT PAGE TEXT FIX
+========================= */
+
+/* Hero title & subtitle */
+.about-hero h1,
+.about-hero p {
     color: var(--secondary-color) !important;
 }
 
-/* CTA links / buttons text */
-.cta-section a {
-    color: var(--primary-color);
+/* CTA title & text */
+.about-cta h2,
+.about-cta p {
+    color: var(--secondary-color) !important;
+}
+
+/* Optional: make CTA button pop */
+.about-cta .btn {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+}
+
+.about-cta .btn:hover {
+    background: var(--primary-dark);
 }
