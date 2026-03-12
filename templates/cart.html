@@ -23,7 +23,7 @@
                 <tbody>
 
                     {% for product_id, item in cart.items() %}
-                    <tr>
+                    <tr id="cart-row-{{ product_id }}">
                         <td>
                             <div class="d-flex align-items-center">
                                 <img
@@ -45,6 +45,8 @@
                         <td class="text-end">
                             <!-- ❌ REMOVE FROM CART -->
                             <form method="POST"
+                                  class="ajax-remove-form"
+                                  data-row-id="cart-row-{{ product_id }}"
                                   action="{{ url_for('remove_from_cart', product_id=product_id) }}">
                                 <button type="submit"
                                         class="btn btn-sm btn-outline-danger">
@@ -63,7 +65,7 @@
         <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
             <h4 class="mb-0">
                 Total:
-                <strong>MWK {{ "{:,.0f}".format(total) }}</strong>
+                <strong id="cart-total">MWK {{ "{:,.0f}".format(total) }}</strong>
             </h4>
 
             <a href="{{ url_for('checkout') }}"
