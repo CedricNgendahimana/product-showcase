@@ -2,7 +2,6 @@
 Computer Aid MW - E-Commerce Product Showcase
 Flask + PostgreSQL (Render) + Cloudinary
 SAFE ON REDEPLOY – IMAGES NEVER LOST
-SECURED + PRODUCTION SAFE
 """
 
 import os
@@ -34,44 +33,25 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from markupsafe import escape
 
 # =========================
 # APP CONFIG
 # =========================
 app = Flask(__name__)
-
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.urandom(32)
-
-app.config.update(
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=bool(os.environ.get("RENDER")),  # True in production
-)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 # =========================
-# DATABASE CONFIG
+# DATABASE (RENDER POSTGRES)
 # =========================
 DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("❌ DATABASE_URL is not set")
 
-if DATABASE_URL:
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-else:
-    # Windows-safe SQLite fallback
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    instance_path = os.path.join(BASE_DIR, "instance")
-
-    if not os.path.exists(instance_path):
-        os.makedirs(instance_path)
-
-    db_path = os.path.join(instance_path, "products.db")
-    DATABASE_URL = f"sqlite:///{db_path.replace('\\', '/')}"
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db = SQLAlchemy(app)
 
 # =========================
 # CLOUDINARY CONFIG
@@ -101,8 +81,10 @@ CATEGORIES = {
 }
 
 # =========================
-# LOGIN MANAGER
+# EXTENSIONS
 # =========================
+db = SQLAlchemy(app)
+
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
 login_manager.login_message_category = "info"
@@ -212,8 +194,7 @@ def category_page(category):
 
 @app.route("/search")
 def search():
-    query = escape(request.args.get("q", "").strip())
-
+    query = request.args.get("q", "").strip()
     if not query:
         return redirect(url_for("home"))
 
@@ -236,10 +217,7 @@ def product_detail(id):
 
     images = [product.image_url]
     if product.image_urls:
-        try:
-            images = product.image_urls if isinstance(product.image_urls, list) else json.loads(product.image_urls)
-        except Exception:
-            images = [product.image_url]
+        images = product.image_urls if isinstance(product.image_urls, list) else json.loads(product.image_urls)
 
     whatsapp_link = None
     if WHATSAPP_NUMBER:
@@ -260,7 +238,7 @@ def product_detail(id):
 @app.route("/cart")
 def view_cart():
     cart = get_cart()
-    total = sum(float(item["price"]) for item in cart.values())
+    total = sum(item["price"] for item in cart.values())
     return render_template("cart.html", cart=cart, total=total, categories=CATEGORIES)
 
 
@@ -271,15 +249,11 @@ def add_to_cart(product_id):
 
     cart[str(product_id)] = {
         "name": product.name,
-        "price": float(product.price),
+        "price": product.price,
         "image": product.image_url,
     }
 
     save_cart(cart)
-
-    if request.headers.get("Accept") == "application/json":
-        return jsonify({"status": "success", "cart_count": len(cart)})
-
     flash("Product added to cart", "success")
     return redirect(request.referrer or url_for("home"))
 
@@ -289,13 +263,27 @@ def remove_from_cart(product_id):
     cart = get_cart()
     cart.pop(str(product_id), None)
     save_cart(cart)
-
-    if request.headers.get("Accept") == "application/json":
-        total = sum(float(item["price"]) for item in cart.values())
-        return jsonify({"status": "success", "cart_count": len(cart), "total": total})
-
     flash("Product removed from cart", "info")
     return redirect(url_for("view_cart"))
+
+
+@app.route("/cart/checkout")
+def checkout():
+    cart = get_cart()
+    if not cart or not WHATSAPP_NUMBER:
+        return redirect(url_for("home"))
+
+    message = "Hello! I would like to order:\n\n"
+    total = 0
+
+    for item in cart.values():
+        message += f"- {item['name']} (MWK {item['price']:,.0f})\n"
+        total += item["price"]
+
+    message += f"\nTotal: MWK {total:,.0f}"
+    session.pop("cart", None)
+
+    return redirect(f"https://wa.me/{WHATSAPP_NUMBER}?text={quote(message)}")
 
 # =========================
 # ADMIN AUTH
@@ -306,16 +294,8 @@ def admin_login():
         return redirect(url_for("admin_dashboard"))
 
     if request.method == "POST":
-        username = escape(request.form.get("username", "").strip())
-        password = request.form.get("password", "")
-
-        if not username or not password:
-            flash("All fields are required", "danger")
-            return redirect(request.url)
-
-        admin = Admin.query.filter_by(username=username).first()
-
-        if admin and admin.check_password(password):
+        admin = Admin.query.filter_by(username=request.form.get("username")).first()
+        if admin and admin.check_password(request.form.get("password")):
             login_user(admin)
             flash("Welcome back!", "success")
             return redirect(url_for("admin_dashboard"))
@@ -323,6 +303,14 @@ def admin_login():
         flash("Invalid username or password", "danger")
 
     return render_template("admin/login.html")
+
+
+@app.route("/admin/logout")
+@login_required
+def admin_logout():
+    logout_user()
+    flash("Logged out successfully.", "info")
+    return redirect(url_for("home"))
 
 # =========================
 # ADMIN DASHBOARD
@@ -333,9 +321,89 @@ def admin_dashboard():
     products = Product.query.order_by(Product.created_at.desc()).all()
     return render_template("admin/dashboard.html", products=products, categories=CATEGORIES)
 
+
+@app.route("/admin/product/add", methods=["GET", "POST"])
+@login_required
+def admin_add_product():
+    if request.method == "POST":
+        files = request.files.getlist("images")
+        if not files or not files[0].filename:
+            flash("At least one image is required", "danger")
+            return redirect(request.url)
+
+        image_urls = []
+        for file in files:
+            upload = cloudinary.uploader.upload(
+                file,
+                folder="computer_aid_products",
+                transformation={"quality": "auto", "fetch_format": "auto"},
+            )
+            image_urls.append(upload["secure_url"])
+
+        product = Product(
+            name=request.form.get("name"),
+            price=float(request.form.get("price")),
+            description=request.form.get("description"),
+            category=request.form.get("category", "accessories"),
+            image_url=image_urls[0],
+            image_urls=image_urls,
+        )
+
+        db.session.add(product)
+        db.session.commit()
+        flash("Product added successfully!", "success")
+        return redirect(url_for("admin_dashboard"))
+
+    return render_template("admin/product_form.html", product=None, action="Add", categories=CATEGORIES)
+
+
+@app.route("/admin/product/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def admin_edit_product(id):
+    product = Product.query.get_or_404(id)
+
+    if request.method == "POST":
+        product.name = request.form.get("name")
+        product.price = float(request.form.get("price"))
+        product.description = request.form.get("description")
+        product.category = request.form.get("category", "accessories")
+
+        files = request.files.getlist("images")
+        if files and files[0].filename:
+            image_urls = []
+            for file in files:
+                upload = cloudinary.uploader.upload(
+                    file,
+                    folder="computer_aid_products",
+                    transformation={"quality": "auto", "fetch_format": "auto"},
+                )
+                image_urls.append(upload["secure_url"])
+
+            product.image_url = image_urls[0]
+            product.image_urls = image_urls
+
+        db.session.commit()
+        flash("Product updated successfully!", "success")
+        return redirect(url_for("admin_dashboard"))
+
+    return render_template("admin/product_form.html", product=product, action="Edit", categories=CATEGORIES)
+
+
+@app.route("/admin/product/delete/<int:id>", methods=["POST"])
+@login_required
+def admin_delete_product(id):
+    product = Product.query.get_or_404(id)
+    db.session.delete(product)
+    db.session.commit()
+    flash("Product deleted successfully!", "success")
+    return redirect(url_for("admin_dashboard"))
+
 # =========================
-# RUN SERVER
+# NO CACHE
 # =========================
-if __name__ == "__main__":
-    print("Starting Flask server...")
-    app.run(debug=True)
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
