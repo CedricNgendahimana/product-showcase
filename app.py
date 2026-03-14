@@ -15,7 +15,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Hello from Flask on Vercel!"
+    return "Computer Aid Malawi E-Commerce Backend Running"
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}
 
 
 from urllib.parse import quote
