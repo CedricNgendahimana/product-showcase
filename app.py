@@ -9,6 +9,19 @@ import json
 import cloudinary
 import cloudinary.uploader
 
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Computer Aid Malawi E-Commerce Backend Running"
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
+
 from urllib.parse import quote
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON
@@ -32,6 +45,10 @@ from flask_login import (
     logout_user,
     current_user,
 )
+
+
+
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # =========================
