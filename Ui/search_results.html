@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Computer Aid MW{% endblock %}
+
+{% block content %}
+<section class="py-4 py-lg-5">
+    <div class="container">
+
+        <!-- TITLE -->
+        <div class="mb-4 animate-fade-down">
+            <h4>
+                Search results for
+                <span class="text-primary">"{{ query }}"</span>
+            </h4>
+        </div>
+
+        {% if products %}
+
+        <!-- RESULTS GRID -->
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-md-4 col-lg-3 animate-fade-up">
+
+                <div class="card h-100 shadow-sm product-card">
+
+                    <img src="{{ product.image_url }}"
+                         class="card-img-top"
+                         alt="{{ product.name }}"
+                         loading="lazy"
+                         style="height:220px;object-fit:contain;"
+                         onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h6 class="card-title text-truncate">
+                            {{ product.name }}
+                        </h6>
+
+                        <p class="fw-bold text-primary mb-3">
+                            MWK {{ "{:,.0f}".format(product.price) }}
+                        </p>
+
+                        <div class="mt-auto d-grid gap-2">
+
+                            <!-- VIEW -->
+                            <a href="{{ url_for('product_detail', id=product.id) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+
+                            <!-- ADD TO CART (AJAX) -->
+                            <form class="add-to-cart-form"
+                                  data-product-id="{{ product.id }}">
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-success w-100">
+                                    <i class="fas fa-cart-plus me-1"></i>
+                                    Add to Cart
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+
+        <!-- NO RESULTS -->
+        <div class="alert alert-warning mt-4">
+            <i class="fas fa-search me-2"></i>
+            No products found matching
+            <strong>"{{ query }}"</strong>.
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">
+            <i class="fas fa-arrow-left me-2"></i>
+            Back to Products
+        </a>
+
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- AJAX ADD TO CART -->
+<script>
+document.querySelectorAll(".add-to-cart-form").forEach(form => {
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+
+        const productId = form.dataset.productId;
+
+        fetch(`/cart/add/${productId}`, {
+            method: "POST",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data || !data.cart_count) return;
+
+            const badge = document.querySelector(".badge");
+            if (badge) {
+                badge.textContent = data.cart_count;
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
