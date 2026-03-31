@@ -3,88 +3,87 @@
 {% block title %}Your Cart | Computer Aid MW{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
+<div class="container py-5">
 
-    <h2 class="mb-4">
-        <i class="fas fa-shopping-cart me-2"></i>Your Cart
+    <h2 class="mb-4 fw-bold cart-page-title animate-fade-down">
+        <i class="fas fa-shopping-cart me-2 text-primary"></i>Your Cart
     </h2>
 
     {% if cart and cart|length > 0 %}
 
-        <div class="table-responsive">
+        <div class="table-responsive animate-fade-up">
             <table class="table align-middle">
-                <thead>
+                <thead class="table-light">
                     <tr>
-                        <th>Product</th>
-                        <th class="text-end">Price</th>
-                        <th class="text-end">Action</th>
+                        <th class="py-3">Product</th>
+                        <th class="text-end py-3">Price</th>
+                        <th class="text-end py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     {% for product_id, item in cart.items() %}
-                    <tr id="cart-row-{{ product_id }}">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img
-                                    src="{{ item.image }}"
-                                    alt="{{ item.name }}"
-                                    width="70"
-                                    height="70"
-                                    class="me-3 rounded"
-                                    style="object-fit: cover;"
-                                >
+                    <tr id="cart-row-{{ product_id }}" style="transition: opacity 0.3s ease, transform 0.3s ease;">
+                        <td class="py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="{{ item.image }}"
+                                     alt="{{ item.name }}"
+                                     width="72"
+                                     height="72"
+                                     class="rounded"
+                                     style="object-fit:cover; box-shadow: var(--shadow-sm);">
                                 <strong>{{ item.name }}</strong>
                             </div>
                         </td>
 
-                        <td class="text-end">
-                            MWK {{ "{:,.0f}".format(item.price) }}
+                        <td class="text-end py-3">
+                            <span class="fw-bold text-primary">MWK {{ "{:,.0f}".format(item.price) }}</span>
                         </td>
 
-                        <td class="text-end">
-                            <!-- ❌ REMOVE FROM CART -->
+                        <td class="text-end py-3">
                             <form method="POST"
                                   class="ajax-remove-form"
                                   data-row-id="cart-row-{{ product_id }}"
                                   action="{{ url_for('remove_from_cart', product_id=product_id) }}">
                                 <button type="submit"
-                                        class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash me-1"></i>
-                                    Remove
+                                        class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                    <i class="fas fa-trash me-1"></i>Remove
                                 </button>
                             </form>
                         </td>
                     </tr>
                     {% endfor %}
-
                 </tbody>
             </table>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-            <h4 class="mb-0">
-                Total:
-                <strong id="cart-total">MWK {{ "{:,.0f}".format(total) }}</strong>
-            </h4>
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3 animate-fade-in-delay">
+            <div>
+                <span class="text-muted small d-block mb-1">Order Total</span>
+                <h4 class="mb-0 fw-bold">
+                    <span id="cart-total">MWK {{ "{:,.0f}".format(total) }}</span>
+                </h4>
+            </div>
 
-            <a href="{{ url_for('checkout') }}"
-               class="btn btn-success btn-lg">
-                <i class="fab fa-whatsapp me-2"></i>
-                Checkout via WhatsApp
-            </a>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+                <a href="{{ url_for('checkout') }}" class="btn btn-success btn-lg px-4 rounded-pill">
+                    <i class="fab fa-whatsapp me-2"></i>Checkout via WhatsApp
+                </a>
+            </div>
         </div>
 
     {% else %}
 
-        <div class="alert alert-info">
-            Your cart is currently empty.
+        <div class="text-center py-5 animate-fade-up">
+            <i class="fas fa-shopping-cart fa-4x cart-empty-icon d-block mb-4"></i>
+            <h4 class="text-muted mb-2">Your cart is empty</h4>
+            <p class="text-muted mb-4">Add some products to get started!</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary px-5 rounded-pill">
+                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+            </a>
         </div>
-
-        <a href="{{ url_for('home') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left me-2"></i>
-            Continue Shopping
-        </a>
 
     {% endif %}
 

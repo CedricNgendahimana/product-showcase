@@ -7,19 +7,19 @@
     <div class="container">
 
         <!-- BREADCRUMB -->
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb small">
+        <nav aria-label="breadcrumb" class="mb-4 animate-fade-down">
+            <ol class="breadcrumb small mb-0">
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('home') }}">
-                        <i class="fas fa-home"></i>
+                    <a href="{{ url_for('home') }}" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Home
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('category_page', category=product.category) }}">
+                    <a href="{{ url_for('category_page', category=product.category) }}" class="text-decoration-none">
                         {{ categories[product.category].name }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active text-truncate">
+                <li class="breadcrumb-item active text-truncate" style="max-width:200px;">
                     {{ product.name }}
                 </li>
             </ol>
@@ -28,61 +28,61 @@
         <div class="row g-4 g-lg-5 align-items-start">
 
             <!-- IMAGE GALLERY -->
-            <div class="col-lg-6">
+            <div class="col-lg-6 animate-slide-left">
 
                 <!-- MAIN IMAGE -->
-                <div class="text-center mb-3">
+                <div class="text-center mb-3 bg-white rounded p-3 shadow-sm">
                     <img id="mainProductImage"
                          src="{{ images[0] if images and images|length > 0 else 'https://via.placeholder.com/600x400?text=No+Image' }}"
                          alt="{{ product.name }}"
-                         class="img-fluid rounded shadow-sm"
-                         style="max-height: 420px; width: 100%; object-fit: contain;"
+                         class="img-fluid rounded product-detail-image"
+                         style="max-height:420px; width:100%; object-fit:contain;"
                          loading="lazy"
                          onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
                 </div>
 
                 <!-- THUMBNAILS -->
                 {% if images and images|length > 1 %}
-                <div class="d-flex flex-wrap justify-content-center gap-2">
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
                     {% for img in images %}
-                        <img src="{{ img }}"
-                             class="img-thumbnail"
-                             style="width: 80px; height: 80px; object-fit: contain; cursor: pointer;"
-                             loading="lazy"
-                             onclick="document.getElementById('mainProductImage').src='{{ img }}'">
+                    <img src="{{ img }}"
+                         class="img-thumbnail"
+                         style="width:80px; height:80px; object-fit:contain; cursor:pointer; transition:all 0.25s ease;"
+                         loading="lazy"
+                         onclick="switchImage(this, '{{ img }}')"
+                         alt="Product image {{ loop.index }}">
                     {% endfor %}
                 </div>
                 {% endif %}
             </div>
 
             <!-- INFO -->
-            <div class="col-lg-6">
+            <div class="col-lg-6 animate-slide-right">
 
-                <span class="badge bg-secondary mb-2">
+                <span class="badge bg-secondary mb-3 px-3 py-2">
+                    <i class="{{ categories[product.category].icon }} me-1"></i>
                     {{ categories[product.category].name }}
                 </span>
 
-                <h1 class="h3 mt-2">
+                <h1 class="h3 fw-bold mt-1 mb-3 product-detail-name">
                     {{ product.name }}
                 </h1>
 
-                <div class="fs-4 fw-bold text-primary my-3">
+                <div class="fs-4 fw-bold text-primary mb-4 product-detail-price">
                     MWK {{ "{:,.0f}".format(product.price) }}
                 </div>
 
-                <!-- DESCRIPTION -->
-                <div class="mt-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Specifications
+                <!-- SPECIFICATIONS -->
+                <div class="mb-4">
+                    <h5 class="mb-3 fw-semibold">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>Specifications
                     </h5>
 
-                    <ul class="list-group list-group-flush small">
+                    <ul class="list-group list-group-flush">
                         {% for line in product.description.splitlines() %}
                             {% if line.strip() %}
-                            <li class="list-group-item px-0">
-                                <i class="fas fa-check text-success me-2"></i>
-                                {{ line }}
+                            <li class="list-group-item px-0 py-2 border-bottom border-light">
+                                <i class="fas fa-check text-success me-2"></i>{{ line }}
                             </li>
                             {% endif %}
                         {% endfor %}
@@ -90,14 +90,13 @@
                 </div>
 
                 <!-- ACTIONS -->
-                <div class="mt-4 d-grid gap-3">
+                <div class="d-grid gap-3 mt-4">
 
                     {% if whatsapp_link %}
                     <a href="{{ whatsapp_link }}"
-                       target="_blank"
-                       class="btn btn-success btn-lg">
-                        <i class="fab fa-whatsapp me-2"></i>
-                        Contact Seller on WhatsApp
+                       target="_blank" rel="noopener"
+                       class="btn btn-success btn-lg rounded-pill">
+                        <i class="fab fa-whatsapp me-2"></i>Contact Seller on WhatsApp
                     </a>
                     {% endif %}
 
@@ -105,38 +104,53 @@
                           class="ajax-cart-form"
                           action="{{ url_for('add_to_cart', product_id=product.id) }}">
                         <button type="submit"
-                                class="btn btn-outline-primary btn-lg w-100">
-                            <i class="fas fa-cart-plus me-2"></i>
-                            Add to Cart
+                                class="btn btn-outline-primary btn-lg w-100 rounded-pill">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
                         </button>
                     </form>
 
                     <a href="{{ url_for('category_page', category=product.category) }}"
-                       class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Back to {{ categories[product.category].name }}
+                       class="btn btn-outline-secondary rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i>Back to {{ categories[product.category].name }}
                     </a>
 
                 </div>
 
-                <!-- TRUST -->
-                <div class="mt-4 d-flex flex-wrap gap-3 small">
-                    <div>
-                        <i class="fas fa-shield-alt text-success me-1"></i>
-                        Quality Guaranteed
-                    </div>
-                    <div>
-                        <i class="fas fa-truck text-primary me-1"></i>
-                        Fast Delivery
-                    </div>
-                    <div>
-                        <i class="fas fa-headset text-warning me-1"></i>
-                        24/7 Support
-                    </div>
+                <!-- TRUST BADGES -->
+                <div class="mt-4 pt-3 border-top d-flex flex-wrap gap-3 small">
+                    <span class="feature-item">
+                        <i class="fas fa-shield-alt text-success me-1"></i>Quality Guaranteed
+                    </span>
+                    <span class="feature-item">
+                        <i class="fas fa-truck text-primary me-1"></i>Fast Delivery
+                    </span>
+                    <span class="feature-item">
+                        <i class="fas fa-headset text-warning me-1"></i>24/7 Support
+                    </span>
                 </div>
 
             </div>
         </div>
     </div>
 </section>
+
+{% block scripts %}
+<script>
+function switchImage(thumb, src) {
+    const main = document.getElementById('mainProductImage');
+    main.style.opacity = '0';
+    main.style.transform = 'scale(0.97)';
+    main.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+    setTimeout(() => {
+        main.src = src;
+        main.style.opacity = '1';
+        main.style.transform = 'scale(1)';
+    }, 200);
+    // Highlight active thumb
+    document.querySelectorAll('.img-thumbnail').forEach(t => t.style.outline = '');
+    thumb.style.outline = '2px solid #e94c2b';
+}
+</script>
+{% endblock %}
+
 {% endblock %}
