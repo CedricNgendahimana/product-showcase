@@ -1,483 +1,51 @@
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Computer Aid MW - Modern Tech Store">
-
-    <title>{% block title %}Computer Aid MW{% endblock %}</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <!-- Main Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <style>
-        :root {
-            --bg-primary: #070b14;
-            --bg-secondary: #0f172a;
-            --bg-card: rgba(15, 23, 42, 0.72);
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --border: rgba(255,255,255,0.08);
-            --shadow: 0 20px 45px rgba(0,0,0,0.35);
-            --radius: 24px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(59,130,246,.18), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(168,85,247,.12), transparent 30%),
-                var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        /* =========================
-           NAVBAR
-        ========================== */
-
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            backdrop-filter: blur(18px);
-            background: rgba(7,11,20,.72);
-            border-bottom: 1px solid rgba(255,255,255,.05);
-            padding: 1rem 0;
-        }
-
-        .navbar-brand {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: white !important;
-            letter-spacing: -.03em;
-        }
-
-        .navbar-brand span {
-            color: var(--accent);
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,.8) !important;
-            font-weight: 500;
-            padding: .75rem 1rem !important;
-            border-radius: 14px;
-            transition: .25s ease;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: rgba(255,255,255,.06);
-            color: white !important;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .nav-btn {
-            width: 46px;
-            height: 46px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(255,255,255,.04);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: .25s ease;
-            position: relative;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255,255,255,.1);
-            transform: translateY(-2px);
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #ef4444;
-            color: white;
-            font-size: .72rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* =========================
-           SEARCH
-        ========================== */
-
-        .search-wrapper {
-            position: relative;
-        }
-
-        .search-input {
-            position: absolute;
-            right: 60px;
-            top: 50%;
-            transform: translateY(-50%) scaleX(0);
-            transform-origin: right;
-            opacity: 0;
-            transition: .25s ease;
-            width: 280px;
-        }
-
-        .search-wrapper.active .search-input {
-            opacity: 1;
-            transform: translateY(-50%) scaleX(1);
-        }
-
-        .search-input input {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.08);
-            color: white;
-            border-radius: 14px;
-            padding: .8rem 1rem;
-        }
-
-        .search-input input::placeholder {
-            color: rgba(255,255,255,.45);
-        }
-
-        /* =========================
-           MAIN CONTENT
-        ========================== */
-
-        main {
-            min-height: 80vh;
-            padding-top: 2rem;
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(18px);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            border-radius: var(--radius);
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
-
-        footer {
-            margin-top: 5rem;
-            padding: 5rem 0 2rem;
-            border-top: 1px solid rgba(255,255,255,.06);
-            background: rgba(255,255,255,.02);
-        }
-
-        .footer-title {
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .footer-link {
-            color: var(--text-secondary);
-            display: inline-block;
-            margin-bottom: .7rem;
-            transition: .2s ease;
-        }
-
-        .footer-link:hover {
-            color: white;
-            transform: translateX(3px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: rgba(255,255,255,.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: .25s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        /* =========================
-           BACK TO TOP
-        ========================== */
-
-        .btn-back-to-top {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            border: none;
-            background: var(--accent);
-            color: white;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(37,99,235,.35);
-            z-index: 999;
-            transition: .25s ease;
-        }
-
-        .btn-back-to-top:hover {
-            transform: translateY(-3px);
-            background: var(--accent-hover);
-        }
-
-        /* =========================
-           MOBILE
-        ========================== */
-
-        @media (max-width: 991px) {
-            .navbar-collapse {
-                margin-top: 1rem;
-                padding: 1rem;
-                border-radius: 24px;
-                background: rgba(15,23,42,.95);
-                border: 1px solid rgba(255,255,255,.06);
-            }
-
-            .search-input {
-                display: none;
-            }
-
-            .nav-actions {
-                margin-top: 1rem;
-                justify-content: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Computer Aid MW{% endblock %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
+<nav class="navbar navbar-expand-lg custom-nav">
+<div class="container">
+<a class="navbar-brand" href="{{ url_for('home') }}">
+<div class="logo-box">C</div>
+Computer Aid MW
+</a>
 
-        <a class="navbar-brand" href="{{ url_for('home') }}">
-            Computer <span>Aid MW</span>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='laptops') }}">Laptops</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='phones') }}">Phones</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('category_page', category='consoles') }}">Gaming</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('about') }}">About</a>
-                </li>
-            </ul>
-
-            <div class="nav-actions">
-
-                <div class="search-wrapper">
-                    <button class="nav-btn" id="desktopSearchBtn">
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                    <form class="search-input" method="GET" action="{{ url_for('search') }}">
-                        <input type="search" name="q" class="form-control" placeholder="Search products...">
-                    </form>
-                </div>
-
-                <a href="{{ url_for('view_cart') }}" class="nav-btn">
-                    <i class="fas fa-shopping-cart"></i>
-
-                    {% if cart_count > 0 %}
-                    <span class="cart-badge">{{ cart_count }}</span>
-                    {% endif %}
-                </a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!-- FLASH MESSAGES -->
-<div class="container mt-3">
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} glass-card border-0 text-white">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-</div>
-
-<!-- MAIN CONTENT -->
-<main>
-    {% block content %}{% endblock %}
-</main>
-
-<!-- FOOTER -->
-<footer>
-    <div class="container">
-        <div class="row g-5">
-
-            <div class="col-lg-4">
-                <h4 class="footer-title">Computer Aid MW</h4>
-                <p class="text-secondary">
-                    Modern technology store delivering premium laptops,
-                    gaming devices, smartphones and accessories.
-                </p>
-
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <h5 class="footer-title">Quick Links</h5>
-
-                <a class="footer-link d-block" href="{{ url_for('home') }}">Home</a>
-                <a class="footer-link d-block" href="{{ url_for('about') }}">About</a>
-                <a class="footer-link d-block" href="{{ url_for('view_cart') }}">Cart</a>
-            </div>
-
-            <div class="col-lg-4">
-                <h5 class="footer-title">Contact</h5>
-
-                <p class="text-secondary mb-2">
-                    <i class="fas fa-location-dot me-2"></i>
-                    Lilongwe, Malawi
-                </p>
-
-                <p class="text-secondary mb-2">
-                    <i class="fas fa-phone me-2"></i>
-                    +265 888 302 771
-                </p>
-
-                <p class="text-secondary">
-                    <i class="fas fa-envelope me-2"></i>
-                    computeraidmw@gmail.com
-                </p>
-            </div>
-        </div>
-
-        <hr class="border-secondary my-5 opacity-25">
-
-        <div class="text-center text-secondary small">
-            © 2026 Computer Aid MW. All rights reserved.
-        </div>
-    </div>
-</footer>
-
-<!-- BACK TO TOP -->
-<button class="btn-back-to-top" id="backToTop">
-    <i class="fas fa-chevron-up"></i>
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+<span class="navbar-toggler-icon"></span>
 </button>
 
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<div class="collapse navbar-collapse" id="navMenu">
+<ul class="navbar-nav mx-auto">
+<li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ url_for('view_cart') }}">Cart</a></li>
+</ul>
 
-<script>
-    // Back To Top
-    const backToTop = document.getElementById('backToTop');
+<div class="nav-icons">
+<i class="fas fa-search"></i>
+<i class="fas fa-shopping-cart"></i>
+</div>
+</div>
+</div>
+</nav>
 
-    window.addEventListener('scroll', () => {
-        if(window.scrollY > 300){
-            backToTop.style.display = 'flex';
-        } else {
-            backToTop.style.display = 'none';
-        }
-    });
+{% block content %}{% endblock %}
 
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Desktop Search Toggle
-    const searchBtn = document.getElementById('desktopSearchBtn');
-    const searchWrapper = document.querySelector('.search-wrapper');
-
-    if(searchBtn){
-        searchBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            searchWrapper.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if(!searchWrapper.contains(e.target)){
-                searchWrapper.classList.remove('active');
-            }
-        });
-    }
-</script>
-
-{% block scripts %}{% endblock %}
+<footer class="footer">
+<div class="container text-center">
+<h3>Computer Aid MW</h3>
+<p>Premium technology products and accessories.</p>
+<p>Email: support@computeraidmw.com</p>
+<p>Phone: +265 999 000 000</p>
+</div>
+</footer>
 
 </body>
 </html>
-```
