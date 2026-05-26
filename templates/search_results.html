@@ -1,25 +1,278 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Computer Aid MW</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% block title %}Search Results | Computer Aid MW{% endblock %}
 
-<header><h2>Search Results</h2></header>
+{% block content %}
 
-<div class='container'>
-  <input class='search' placeholder='Search products...' />
-  <div class='grid'>
-    <div class='card'><h3>HP EliteBook</h3><p>Business laptop</p></div>
-    <div class='card'><h3>Lenovo Legion</h3><p>Gaming laptop</p></div>
-  </div>
-</div>
+<section class="search-results-section py-5">
 
-<footer>Computer Aid MW</footer>
+    <div class="container">
 
-</body>
-</html>
+        <!-- HEADER -->
+        <div class="text-center mb-5">
+
+            <span class="section-tag">
+                Search Results
+            </span>
+
+            <h1 class="section-title mt-3">
+                Results For
+                <span class="text-primary">
+                    "{{ query }}"
+                </span>
+            </h1>
+
+            <p class="section-description">
+                We found {{ products|length }} product(s)
+                matching your search.
+            </p>
+
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="search-results-bar glass-card mb-5">
+
+            <form
+                action="{{ url_for('search') }}"
+                method="GET"
+                class="d-flex align-items-center"
+            >
+
+                <i class="fas fa-search me-3"></i>
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="Search products..."
+                    class="search-results-input"
+                >
+
+                <button type="submit"
+                        class="btn btn-primary-custom">
+
+                    Search
+
+                </button>
+
+            </form>
+
+        </div>
+
+        {% if products %}
+
+        <!-- PRODUCTS -->
+        <div class="row g-4">
+
+            {% for product in products %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="product-card glass-card h-100">
+
+                    <!-- IMAGE -->
+                    <div class="product-image-wrapper">
+
+                        {% if product.image %}
+                        <img
+                            src="{{ url_for('static', filename='uploads/' ~ product.image) }}"
+                            alt="{{ product.name }}"
+                            class="product-image"
+                        >
+                        {% else %}
+                        <img
+                            src="{{ url_for('static', filename='images/placeholder.png') }}"
+                            alt="{{ product.name }}"
+                            class="product-image"
+                        >
+                        {% endif %}
+
+                        <!-- OVERLAY -->
+                        <div class="product-overlay">
+
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                               class="overlay-btn">
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="product-content">
+
+                        <span class="product-category">
+                            {{ product.category }}
+                        </span>
+
+                        <h4 class="product-title">
+                            {{ product.name }}
+                        </h4>
+
+                        <p class="product-description">
+
+                            {% if product.description %}
+                                {{ product.description[:120] }}...
+                            {% else %}
+                                Premium technology product available now.
+                            {% endif %}
+
+                        </p>
+
+                        <div class="product-footer">
+
+                            <div class="product-price">
+                                MWK {{ "{:,.0f}".format(product.price) }}
+                            </div>
+
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                               class="btn-product">
+
+                                View Product
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY -->
+        <div class="glass-card empty-results text-center">
+
+            <div class="empty-results-icon">
+
+                <i class="fas fa-search"></i>
+
+            </div>
+
+            <h2 class="mt-4 mb-3">
+                No Results Found
+            </h2>
+
+            <p class="mb-4">
+                Try searching with another keyword or browse categories.
+            </p>
+
+            <a href="{{ url_for('home') }}"
+               class="btn btn-primary-custom">
+
+                Back Home
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<style>
+
+.search-results-bar{
+    padding:1rem 1.2rem;
+    border-radius:28px;
+}
+
+.search-results-bar form{
+    gap:1rem;
+}
+
+.search-results-bar i{
+    color:#60a5fa;
+    font-size:1.1rem;
+}
+
+.search-results-input{
+    flex:1;
+
+    background:none;
+    border:none;
+    outline:none;
+
+    color:white;
+    font-size:1rem;
+}
+
+.search-results-input::placeholder{
+    color:rgba(255,255,255,.45);
+}
+
+.empty-results{
+    padding:5rem 2rem;
+    border-radius:40px;
+}
+
+.empty-results-icon{
+    width:120px;
+    height:120px;
+
+    margin:auto;
+
+    border-radius:30px;
+
+    background:rgba(59,130,246,.12);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.empty-results-icon i{
+    font-size:3rem;
+    color:#60a5fa;
+}
+
+@media(max-width:768px){
+
+    .search-results-bar form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+}
+
+</style>
+
+<script>
+
+    // Reveal animation
+    const cards = document.querySelectorAll('.product-card');
+
+    const observer = new IntersectionObserver((entries) => {
+
+        entries.forEach((entry) => {
+
+            if(entry.isIntersecting){
+                entry.target.classList.add('show');
+            }
+
+        });
+
+    }, { threshold:0.1 });
+
+    cards.forEach((card) => {
+        observer.observe(card);
+    });
+
+</script>
+
+{% endblock %}

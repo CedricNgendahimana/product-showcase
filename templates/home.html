@@ -1,43 +1,353 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Computer Aid MW</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% block title %}Home | Computer Aid MW{% endblock %}
 
-<header><h2>Computer Aid MW</h2><nav>
-<a href='home.html'>Home</a><a href='category.html'>Categories</a>
-<a href='cart.html'>Cart</a></nav></header>
+{% block content %}
 
-<section class='hero'>
-  <h1>Modern Computer Store UI</h1>
-  <p>Converted from your Figma-inspired React design into clean static HTML pages.</p>
-  <a class='btn' href='category.html'>Browse Products</a>
+<!-- HERO SECTION -->
+<section class="hero-section position-relative overflow-hidden">
+
+    <div class="hero-blur hero-blur-1"></div>
+    <div class="hero-blur hero-blur-2"></div>
+
+    <div class="container">
+
+        <div class="row align-items-center min-vh-100 py-5">
+
+            <!-- LEFT CONTENT -->
+            <div class="col-lg-6">
+
+                <span class="hero-badge mb-4 d-inline-flex align-items-center">
+                    <i class="fas fa-bolt me-2"></i>
+                    Premium Tech Store
+                </span>
+
+                <h1 class="hero-title mb-4">
+                    Discover Modern
+                    <span>Technology</span>
+                    For Your Lifestyle
+                </h1>
+
+                <p class="hero-subtitle mb-5">
+                    Explore premium laptops, gaming consoles, smartphones,
+                    accessories and cutting-edge gadgets built for performance.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+
+                    <a href="#featured-products" class="btn btn-primary-custom">
+                        Shop Now
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-custom">
+                        Learn More
+                    </a>
+
+                </div>
+
+                <!-- STATS -->
+                <div class="hero-stats mt-5">
+
+                    <div class="stat-item">
+                        <h3>10K+</h3>
+                        <p>Customers</p>
+                    </div>
+
+                    <div class="stat-item">
+                        <h3>500+</h3>
+                        <p>Products</p>
+                    </div>
+
+                    <div class="stat-item">
+                        <h3>99%</h3>
+                        <p>Satisfaction</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT CONTENT -->
+            <div class="col-lg-6 mt-5 mt-lg-0">
+
+                <div class="hero-image-wrapper">
+
+                    <div class="floating-card card-1 glass-card">
+                        <i class="fas fa-laptop"></i>
+                        <span>Premium Laptops</span>
+                    </div>
+
+                    <div class="floating-card card-2 glass-card">
+                        <i class="fas fa-headphones"></i>
+                        <span>Accessories</span>
+                    </div>
+
+                    <div class="hero-main-card glass-card">
+
+                        <img
+                            src="{{ url_for('static', filename='images/hero-laptop.png') }}"
+                            alt="Laptop"
+                            class="img-fluid hero-product-image"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
 
-<section class='grid'>
-  <div class='card'>
-    <img src='https://picsum.photos/400/240?1'>
-    <h3>Laptops</h3>
-    <p>Gaming and business laptops.</p>
-  </div>
-  <div class='card'>
-    <img src='https://picsum.photos/400/240?2'>
-    <h3>Accessories</h3>
-    <p>Premium computer accessories.</p>
-  </div>
-  <div class='card'>
-    <img src='https://picsum.photos/400/240?3'>
-    <h3>Monitors</h3>
-    <p>High resolution displays.</p>
-  </div>
+<!-- CATEGORIES -->
+<section class="categories-section py-5">
+
+    <div class="container">
+
+        <div class="section-header text-center mb-5">
+
+            <span class="section-tag">Categories</span>
+
+            <h2 class="section-title">
+                Browse Popular Categories
+            </h2>
+
+            <p class="section-description">
+                Find the latest technology products across multiple categories.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- CATEGORY -->
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{{ url_for('category_page', category='laptops') }}"
+                   class="category-card glass-card d-block">
+
+                    <div class="category-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+
+                    <h4>Laptops</h4>
+
+                    <p>High-performance machines for work and gaming.</p>
+
+                </a>
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{{ url_for('category_page', category='phones') }}"
+                   class="category-card glass-card d-block">
+
+                    <div class="category-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+
+                    <h4>Smartphones</h4>
+
+                    <p>Latest flagship phones with premium features.</p>
+
+                </a>
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{{ url_for('category_page', category='gaming') }}"
+                   class="category-card glass-card d-block">
+
+                    <div class="category-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+
+                    <h4>Gaming</h4>
+
+                    <p>Consoles and accessories built for gamers.</p>
+
+                </a>
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{{ url_for('category_page', category='accessories') }}"
+                   class="category-card glass-card d-block">
+
+                    <div class="category-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+
+                    <h4>Accessories</h4>
+
+                    <p>Enhance your setup with premium peripherals.</p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
 
-<footer>Computer Aid MW UI Conversion</footer>
+<!-- FEATURED PRODUCTS -->
+<section class="featured-products py-5" id="featured-products">
 
-</body>
-</html>
+    <div class="container">
+
+        <div class="section-header text-center mb-5">
+
+            <span class="section-tag">Featured Products</span>
+
+            <h2 class="section-title">
+                Trending Products
+            </h2>
+
+        </div>
+
+        <div class="row g-4">
+
+            {% for product in products %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="product-card glass-card h-100">
+
+                    <div class="product-image-wrapper">
+
+                        {% if product.image %}
+                        <img
+                            src="{{ url_for('static', filename='uploads/' ~ product.image) }}"
+                            alt="{{ product.name }}"
+                            class="img-fluid product-image"
+                        >
+                        {% else %}
+                        <img
+                            src="{{ url_for('static', filename='images/placeholder.png') }}"
+                            alt="{{ product.name }}"
+                            class="img-fluid product-image"
+                        >
+                        {% endif %}
+
+                        <div class="product-overlay">
+
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                               class="overlay-btn">
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <div class="product-content">
+
+                        <span class="product-category">
+                            {{ product.category }}
+                        </span>
+
+                        <h4 class="product-title">
+                            {{ product.name }}
+                        </h4>
+
+                        <p class="product-description">
+                            {{ product.description[:100] }}...
+                        </p>
+
+                        <div class="product-footer">
+
+                            <div class="product-price">
+                                MWK {{ "{:,.0f}".format(product.price) }}
+                            </div>
+
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                               class="btn-product">
+
+                                View Product
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta-section py-5">
+
+    <div class="container">
+
+        <div class="cta-card glass-card text-center">
+
+            <span class="section-tag mb-3">
+                Ready To Upgrade?
+            </span>
+
+            <h2 class="cta-title mb-4">
+                Build Your Dream Setup Today
+            </h2>
+
+            <p class="cta-description mb-4">
+                Shop the latest technology products and transform your workspace.
+            </p>
+
+            <a href="{{ url_for('category_page', category='laptops') }}"
+               class="btn btn-primary-custom">
+
+                Explore Products
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Reveal animations
+    const revealItems = document.querySelectorAll(
+        '.product-card, .category-card, .cta-card'
+    );
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealItems.forEach((item) => {
+        observer.observe(item);
+    });
+</script>
+{% endblock %}

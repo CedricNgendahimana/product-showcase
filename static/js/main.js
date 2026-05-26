@@ -1,346 +1,371 @@
-document.addEventListener('DOMContentLoaded', function () {
+// ======================================================
+// COMPUTER AID MW — MAIN JS
+// ======================================================
 
-    /* ========================================
-       1. INTERSECTION OBSERVER — scroll reveal
-    ======================================== */
-    const revealItems = document.querySelectorAll(
-        '.product-card, .stat-card, .cta-card, .category-card, .feature-card'
-    );
+// NAVBAR SCROLL EFFECT
+const navbar = document.querySelector('.navbar');
 
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry, i) => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target;
-                        // Stagger siblings slightly
-                        setTimeout(() => {
-                            el.style.opacity = '1';
-                            el.style.transform = 'translateY(0)';
-                        }, i * 60);
-                        observer.unobserve(el);
-                    }
-                });
-            },
-            { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
-        );
+window.addEventListener('scroll', () => {
 
-        revealItems.forEach((el) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(24px)';
-            el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
-            observer.observe(el);
-        });
-    } else {
-        // Fallback: just make visible
-        revealItems.forEach((el) => {
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-        });
+    if(window.scrollY > 40){
+
+        navbar.classList.add('navbar-scrolled');
+
+    }else{
+
+        navbar.classList.remove('navbar-scrolled');
+
     }
 
-    /* ========================================
-       2. SMOOTH ANCHOR SCROLL
-    ======================================== */
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
+});
 
-    /* ========================================
-       3. IMAGE UPLOAD VALIDATION
-    ======================================== */
-    const imageInput = document.getElementById('image');
-    if (imageInput) {
-        imageInput.addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            if (file.size > 16 * 1024 * 1024) {
-                alert('File size must be less than 16MB');
-                this.value = '';
-                return;
-            }
-            const valid = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
-            if (!valid.includes(file.type)) {
-                alert('Please select a valid image file (PNG, JPG, GIF, or WEBP)');
-                this.value = '';
-            }
-        });
-    }
+// ======================================================
+// SCROLL REVEAL ANIMATION
+// ======================================================
 
-    /* ========================================
-       4. AUTO-DISMISS ALERTS (5 s)
-    ======================================== */
-    document.querySelectorAll('.alert').forEach((alert) => {
-        setTimeout(() => {
-            try {
-                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                bsAlert.close();
-            } catch (_) {
-                alert.remove();
-            }
-        }, 5000);
-    });
+const revealElements = document.querySelectorAll(
+    '.product-card, .category-card, .dashboard-card, .about-feature, .cta-card'
+);
 
-    /* ========================================
-       5. DESKTOP SEARCH TOGGLE
-    ======================================== */
-    const desktopSearchBtn = document.getElementById('desktopSearchBtn');
-    const searchWrapper   = document.querySelector('.search-wrapper');
+const revealObserver = new IntersectionObserver((entries) => {
 
-    if (desktopSearchBtn && searchWrapper) {
-        desktopSearchBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            searchWrapper.classList.toggle('active');
-            const inp = searchWrapper.querySelector('input');
-            if (searchWrapper.classList.contains('active') && inp) inp.focus();
-        });
+    entries.forEach((entry) => {
 
-        document.addEventListener('click', (e) => {
-            if (!searchWrapper.contains(e.target)) {
-                searchWrapper.classList.remove('active');
-            }
-        });
-    }
+        if(entry.isIntersecting){
 
-    /* ========================================
-       6. BACK TO TOP BUTTON
-    ======================================== */
-    const backToTopBtn = document.getElementById('backToTop');
-    if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            backToTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
-        }, { passive: true });
+            entry.target.classList.add('show');
 
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    /* ========================================
-       7. CLOSE MOBILE MENU ON LINK CLICK
-    ======================================== */
-    document.querySelectorAll('.mobile-item[href]').forEach((item) => {
-        item.addEventListener('click', () => {
-            const navbar = document.getElementById('navbarNav');
-            if (navbar && navbar.classList.contains('show')) {
-                const bsCollapse = bootstrap.Collapse.getInstance(navbar);
-                if (bsCollapse) bsCollapse.hide();
-            }
-        });
-    });
-
-    /* ========================================
-       8. ADD-TO-CART ANIMATION HELPERS
-    ======================================== */
-
-    /**
-     * Show a bottom-center toast notification.
-     */
-    function showCartToast(message) {
-        let toast = document.getElementById('cart-success-toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'cart-success-toast';
-            toast.innerHTML = `
-                <div class="toast-icon"><i class="fas fa-check"></i></div>
-                <span id="cart-toast-msg">${message}</span>
-            `;
-            document.body.appendChild(toast);
-        } else {
-            document.getElementById('cart-toast-msg').textContent = message;
         }
 
-        // Reset & show
-        toast.classList.remove('show');
-        void toast.offsetWidth; // force reflow
-        toast.classList.add('show');
-
-        clearTimeout(toast._hideTimer);
-        toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2800);
-    }
-
-    /**
-     * Pop the cart badge with a bounce animation and update its count.
-     */
-    function updateCartBadge(count) {
-        document.querySelectorAll('.cart-badge').forEach((badge) => {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'flex' : 'none';
-            badge.classList.remove('cart-badge-pop');
-            void badge.offsetWidth;
-            badge.classList.add('cart-badge-pop');
-            badge.addEventListener('animationend', () => badge.classList.remove('cart-badge-pop'), { once: true });
-        });
-    }
-
-    /**
-     * Animate a floating "+1 Added!" label from the button up towards the cart.
-     */
-    function spawnFloatLabel(btn) {
-        const rect = btn.getBoundingClientRect();
-        const label = document.createElement('div');
-        label.className = 'cart-add-float';
-        label.textContent = '+ Added to Cart';
-        label.style.left = (rect.left + rect.width / 2 - 70) + 'px';
-        label.style.top  = (rect.top + window.scrollY - 10) + 'px';
-        document.body.appendChild(label);
-        label.addEventListener('animationend', () => label.remove());
-    }
-
-    /* ========================================
-       9. AJAX ADD-TO-CART (product detail page)
-    ======================================== */
-    document.querySelectorAll('.ajax-cart-form').forEach((form) => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = form.querySelector('button[type="submit"]');
-            const originalHtml = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding…';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: { Accept: 'application/json' }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    updateCartBadge(data.cart_count);
-                    showCartToast(data.message || 'Item added to cart!');
-                    spawnFloatLabel(btn);
-
-                    btn.innerHTML = '<i class="fas fa-check me-2"></i>Added!';
-                    btn.classList.add('btn-success');
-                    btn.classList.remove('btn-outline-primary');
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.disabled = false;
-                        btn.classList.remove('btn-success');
-                        btn.classList.add('btn-outline-primary');
-                    }, 2200);
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (err) {
-                btn.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Try again';
-                setTimeout(() => {
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }, 2000);
-            }
-        });
     });
 
-    /* ========================================
-       10. AJAX ADD-TO-CART (search results — inline forms)
-    ======================================== */
-    document.querySelectorAll('.add-to-cart-form').forEach((form) => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const productId = form.dataset.productId;
-            const btn = form.querySelector('button[type="submit"]');
-            const originalHtml = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch(`/cart/add/${productId}`, {
-                    method: 'POST',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    updateCartBadge(data.cart_count);
-                    showCartToast(data.message || 'Item added to cart!');
-                    spawnFloatLabel(btn);
-
-                    btn.innerHTML = '<i class="fas fa-check me-1"></i>Added!';
-                    btn.classList.add('btn-success');
-                    btn.classList.remove('btn-outline-success');
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.disabled = false;
-                        btn.classList.remove('btn-success');
-                        btn.classList.add('btn-outline-success');
-                    }, 2200);
-                } else {
-                    throw new Error('Error');
-                }
-            } catch {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        });
-    });
-
-    /* ========================================
-       11. AJAX REMOVE FROM CART
-    ======================================== */
-    document.querySelectorAll('.ajax-remove-form').forEach((form) => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = form.querySelector('button[type="submit"]');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: { Accept: 'application/json' }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Animate row out
-                    const rowId = form.getAttribute('data-row-id');
-                    const row   = document.getElementById(rowId);
-                    if (row) {
-                        row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                        row.style.opacity    = '0';
-                        row.style.transform  = 'translateX(-20px)';
-                        setTimeout(() => row.remove(), 320);
-                    }
-
-                    updateCartBadge(data.cart_count);
-
-                    const totalEl = document.getElementById('cart-total');
-                    if (totalEl) totalEl.textContent = 'MWK ' + data.total.toLocaleString();
-
-                    if (data.cart_count === 0) {
-                        setTimeout(() => location.reload(), 400);
-                    }
-                }
-            } catch (_) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-trash me-1"></i>Remove';
-            }
-        });
-    });
-
-    /* ========================================
-       12. LEGACY TOAST (Bootstrap) — kept for flash messages
-    ======================================== */
-    function showLegacyToast(message) {
-        const toastEl = document.getElementById('liveToast');
-        if (!toastEl) return;
-        const msgEl = document.getElementById('toastMessage');
-        if (msgEl) msgEl.textContent = message;
-        new bootstrap.Toast(toastEl).show();
-    }
-
-    window.showLegacyToast = showLegacyToast; // expose if needed
+}, {
+    threshold: 0.1
 });
+
+revealElements.forEach((element) => {
+
+    revealObserver.observe(element);
+
+});
+
+// ======================================================
+// ACTIVE NAV LINK
+// ======================================================
+
+const currentLocation = location.pathname;
+
+const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+navLinks.forEach((link) => {
+
+    if(link.getAttribute('href') === currentLocation){
+
+        link.classList.add('active');
+
+    }
+
+});
+
+// ======================================================
+// PRODUCT IMAGE HOVER EFFECT
+// ======================================================
+
+const productCards = document.querySelectorAll('.product-card');
+
+productCards.forEach((card) => {
+
+    card.addEventListener('mousemove', (e) => {
+
+        const rect = card.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / 25) * -1;
+        const rotateY = (x - centerX) / 25;
+
+        card.style.transform = `
+            perspective(1000px)
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+            translateY(-8px)
+        `;
+
+    });
+
+    card.addEventListener('mouseleave', () => {
+
+        card.style.transform = '';
+
+    });
+
+});
+
+// ======================================================
+// BUTTON RIPPLE EFFECT
+// ======================================================
+
+const buttons = document.querySelectorAll(
+    '.btn-primary-custom, .btn-outline-custom, .btn-product'
+);
+
+buttons.forEach((button) => {
+
+    button.addEventListener('click', function(e){
+
+        const ripple = document.createElement('span');
+
+        ripple.classList.add('ripple-effect');
+
+        const rect = this.getBoundingClientRect();
+
+        ripple.style.left = `${e.clientX - rect.left}px`;
+        ripple.style.top = `${e.clientY - rect.top}px`;
+
+        this.appendChild(ripple);
+
+        setTimeout(() => {
+
+            ripple.remove();
+
+        }, 600);
+
+    });
+
+});
+
+// ======================================================
+// COUNTER ANIMATION
+// ======================================================
+
+const counters = document.querySelectorAll('.counter');
+
+const counterObserver = new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+        if(entry.isIntersecting){
+
+            const counter = entry.target;
+
+            const target = +counter.dataset.target;
+
+            let current = 0;
+
+            const increment = target / 60;
+
+            const updateCounter = () => {
+
+                if(current < target){
+
+                    current += increment;
+
+                    counter.innerText = Math.ceil(current);
+
+                    requestAnimationFrame(updateCounter);
+
+                }else{
+
+                    counter.innerText = target;
+
+                }
+
+            };
+
+            updateCounter();
+
+        }
+
+    });
+
+}, {
+    threshold: 0.5
+});
+
+counters.forEach((counter) => {
+
+    counterObserver.observe(counter);
+
+});
+
+// ======================================================
+// SEARCH INPUT GLOW EFFECT
+// ======================================================
+
+const searchInputs = document.querySelectorAll(
+    '.search-results-input, .search-box input'
+);
+
+searchInputs.forEach((input) => {
+
+    input.addEventListener('focus', () => {
+
+        input.parentElement.classList.add('focused');
+
+    });
+
+    input.addEventListener('blur', () => {
+
+        input.parentElement.classList.remove('focused');
+
+    });
+
+});
+
+// ======================================================
+// MOBILE MENU ANIMATION
+// ======================================================
+
+const navbarToggler = document.querySelector('.navbar-toggler');
+
+if(navbarToggler){
+
+    navbarToggler.addEventListener('click', () => {
+
+        navbarToggler.classList.toggle('open');
+
+    });
+
+}
+
+// ======================================================
+// LAZY IMAGE FADE-IN
+// ======================================================
+
+const images = document.querySelectorAll('img');
+
+images.forEach((img) => {
+
+    img.addEventListener('load', () => {
+
+        img.classList.add('loaded');
+
+    });
+
+});
+
+// ======================================================
+// FLOATING ANIMATION RANDOMIZER
+// ======================================================
+
+const floatingCards = document.querySelectorAll('.floating-card');
+
+floatingCards.forEach((card, index) => {
+
+    card.style.animationDelay = `${index * 0.5}s`;
+
+});
+
+// ======================================================
+// PARALLAX HERO EFFECT
+// ======================================================
+
+const heroBlur1 = document.querySelector('.hero-blur-1');
+const heroBlur2 = document.querySelector('.hero-blur-2');
+
+window.addEventListener('mousemove', (e) => {
+
+    const x = e.clientX / window.innerWidth;
+    const y = e.clientY / window.innerHeight;
+
+    if(heroBlur1){
+
+        heroBlur1.style.transform = `
+            translate(${x * 30}px, ${y * 30}px)
+        `;
+
+    }
+
+    if(heroBlur2){
+
+        heroBlur2.style.transform = `
+            translate(${-x * 30}px, ${-y * 30}px)
+        `;
+
+    }
+
+});
+
+// ======================================================
+// RIPPLE STYLE INJECTION
+// ======================================================
+
+const rippleStyle = document.createElement('style');
+
+rippleStyle.innerHTML = `
+
+.btn-primary-custom,
+.btn-outline-custom,
+.btn-product{
+    position:relative;
+    overflow:hidden;
+}
+
+.ripple-effect{
+    position:absolute;
+
+    width:12px;
+    height:12px;
+
+    background:rgba(255,255,255,.45);
+
+    border-radius:50%;
+
+    transform:translate(-50%, -50%);
+    animation:ripple .6s linear;
+}
+
+@keyframes ripple{
+
+    from{
+        opacity:1;
+        transform:translate(-50%, -50%) scale(1);
+    }
+
+    to{
+        opacity:0;
+        transform:translate(-50%, -50%) scale(20);
+    }
+
+}
+
+.navbar-scrolled{
+    background:rgba(7,11,20,.92)!important;
+    backdrop-filter:blur(18px);
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+img{
+    opacity:0;
+    transition:opacity .5s ease;
+}
+
+img.loaded{
+    opacity:1;
+}
+
+.focused{
+    border-color:#3b82f6!important;
+    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+
+`;
+
+document.head.appendChild(rippleStyle);
+
+// ======================================================
+// CONSOLE BRANDING
+// ======================================================
+
+console.log(
+    '%cComputer Aid MW UI Loaded',
+    `
+    color:#60a5fa;
+    font-size:16px;
+    font-weight:bold;
+    `
+);
