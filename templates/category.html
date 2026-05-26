@@ -1,25 +1,43 @@
+
 {% extends "base.html" %}
 {% block content %}
-<section class="page-section">
-<div class="container">
-<div class="section-header">
-<h1>{{ category }}</h1>
-<p>Explore premium products</p>
+
+<section class="hero" style="padding:70px 0;background:linear-gradient(135deg,#f25b33,#d93d24)">
+<div class="container text-center">
+<h1 style="font-size:58px">{{ category }}</h1>
+<p>Browse our collection of premium laptops</p>
 </div>
+</section>
+
+<section class="section">
+<div class="container">
 
 <div class="row g-4">
+
 {% for product in products %}
-<div class="col-md-4">
+<div class="col-md-3">
+
 <div class="product-card">
+
 <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" class="product-image">
-<h4>{{ product.name }}</h4>
-<p>MWK {{ product.price }}</p>
-<a href="{{ url_for('product_detail', id=product.id) }}" class="hero-btn small-btn">View Product</a>
+
+<h5>{{ product.name }}</h5>
+
+<p class="price">MWK {{ product.price }}</p>
+
+<button class="main-btn cart-btn">
+<i class="fas fa-cart-plus"></i>
+Add To Cart
+</button>
+
 </div>
+
 </div>
 {% endfor %}
+
 </div>
 
 </div>
 </section>
+
 {% endblock %}

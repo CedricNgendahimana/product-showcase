@@ -1,11 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>{% block title %}Computer Aid MW{% endblock %}</title>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -17,21 +20,12 @@
 Computer Aid MW
 </a>
 
-<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
-<span class="navbar-toggler-icon"></span>
-</button>
-
-<div class="collapse navbar-collapse" id="navMenu">
+<div class="collapse navbar-collapse show">
 <ul class="navbar-nav mx-auto">
 <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ url_for('view_cart') }}">Cart</a></li>
 </ul>
-
-<div class="nav-icons">
-<i class="fas fa-search"></i>
-<i class="fas fa-shopping-cart"></i>
-</div>
 </div>
 </div>
 </nav>
@@ -39,13 +33,44 @@ Computer Aid MW
 {% block content %}{% endblock %}
 
 <footer class="footer">
-<div class="container text-center">
-<h3>Computer Aid MW</h3>
+<div class="container">
+<div class="footer-grid">
+
+<div>
+<h5>Computer Aid MW</h5>
 <p>Premium technology products and accessories.</p>
-<p>Email: support@computeraidmw.com</p>
-<p>Phone: +265 999 000 000</p>
+</div>
+
+<div>
+<h5>Quick Links</h5>
+<a href="#">Home</a>
+<a href="#">Laptops</a>
+<a href="#">Accessories</a>
+</div>
+
+<div>
+<h5>Our Services</h5>
+<a href="#">Computer Repairs</a>
+<a href="#">Hardware Upgrades</a>
+<a href="#">Web Support</a>
+</div>
+
+<div>
+<h5>Contact Us</h5>
+<a href="#">Lilongwe, Malawi</a>
+<a href="#">+265 999 000 000</a>
+<a href="#">support@computeraidmw.com</a>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+© 2026 Computer Aid MW. All rights reserved.
+</div>
+
 </div>
 </footer>
 
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
