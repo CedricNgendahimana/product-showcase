@@ -1,298 +1,45 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Admin Login | Computer Aid MW{% endblock %}
+{% block title %}Admin Login - Computer Aid MW{% endblock %}
 
 {% block content %}
-
-<section class="admin-login-section">
-
-    <!-- BACKGROUND GLOW -->
-    <div class="admin-glow admin-glow-1"></div>
-    <div class="admin-glow admin-glow-2"></div>
-
+<section class="admin-login-section py-5">
     <div class="container">
-
-        <div class="row justify-content-center align-items-center min-vh-100">
-
-            <div class="col-lg-5 col-md-8">
-
-                <div class="admin-login-card glass-card">
-
-                    <!-- LOGO -->
-                    <div class="text-center mb-5">
-
-                        <div class="admin-logo">
-
-                            <i class="fas fa-user-shield"></i>
-
-                        </div>
-
-                        <span class="section-tag mt-4">
-                            Secure Dashboard Access
-                        </span>
-
-                        <h1 class="admin-title mt-4">
-                            Admin Portal
-                        </h1>
-
-                        <p class="admin-subtitle">
-                            Login to manage products,
-                            orders and store settings.
-                        </p>
-
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-card">
+                    <div class="login-header text-center">
+                        <i class="fas fa-user-shield fa-3x mb-3"></i>
+                        <h3>Admin Login</h3>
+                        <p class="text-muted">Enter your credentials to access the dashboard</p>
                     </div>
-
-                    <!-- FORM -->
-                    <form
-                        method="POST"
-                        action="{{ url_for('admin_login') }}"
-                    >
-
-                        <!-- USERNAME -->
+                    <form method="POST" action="{{ url_for('admin_login') }}">
                         <div class="mb-4">
-
-                            <label class="form-label">
-                                Username
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
                             </label>
-
-                            <div class="admin-input-wrapper">
-
-                                <i class="fas fa-user"></i>
-
-                                <input
-                                    type="text"
-                                    name="username"
-                                    class="form-control"
-                                    placeholder="Enter admin username"
-                                    required
-                                >
-
-                            </div>
-
+                            <input type="text" class="form-control form-control-lg" id="username" 
+                                   name="username" required placeholder="Enter username">
                         </div>
-
-                        <!-- PASSWORD -->
                         <div class="mb-4">
-
-                            <label class="form-label">
-                                Password
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
                             </label>
-
-                            <div class="admin-input-wrapper">
-
-                                <i class="fas fa-lock"></i>
-
-                                <input
-                                    type="password"
-                                    name="password"
-                                    class="form-control"
-                                    placeholder="Enter password"
-                                    required
-                                >
-
-                            </div>
-
+                            <input type="password" class="form-control form-control-lg" id="password" 
+                                   name="password" required placeholder="Enter password">
                         </div>
-
-                        <!-- OPTIONS -->
-                        <div class="admin-options mb-4">
-
-                            <label class="remember-admin">
-
-                                <input type="checkbox">
-
-                                <span>
-                                    Remember Me
-                                </span>
-
-                            </label>
-
-                            <a href="#"
-                               class="forgot-password-link">
-
-                                Forgot Password?
-
-                            </a>
-
-                        </div>
-
-                        <!-- BUTTON -->
-                        <button
-                            type="submit"
-                            class="btn btn-primary-custom w-100 admin-login-btn"
-                        >
-
-                            <i class="fas fa-right-to-bracket me-2"></i>
-
-                            Login To Dashboard
-
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
                         </button>
-
                     </form>
-
-                    <!-- FOOTER -->
-                    <div class="admin-footer text-center mt-5">
-
-                        <p>
-                            Protected system access for administrators only.
-                        </p>
-
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('home') }}" class="text-muted">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Store
+                        </a>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
-
-{% endblock %}
-
-{% block scripts %}
-
-<style>
-
-.admin-login-section{
-    position:relative;
-    overflow:hidden;
-}
-
-.admin-glow{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(120px);
-    z-index:-1;
-}
-
-.admin-glow-1{
-    width:420px;
-    height:420px;
-
-    background:rgba(59,130,246,.18);
-
-    top:-120px;
-    left:-120px;
-}
-
-.admin-glow-2{
-    width:350px;
-    height:350px;
-
-    background:rgba(168,85,247,.16);
-
-    bottom:-120px;
-    right:-120px;
-}
-
-.admin-login-card{
-    padding:3rem;
-    border-radius:42px;
-}
-
-.admin-logo{
-    width:100px;
-    height:100px;
-
-    margin:auto;
-
-    border-radius:30px;
-
-    background:rgba(59,130,246,.12);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.admin-logo i{
-    font-size:2.2rem;
-    color:#60a5fa;
-}
-
-.admin-title{
-    font-size:2.7rem;
-    font-weight:800;
-}
-
-.admin-subtitle{
-    margin-top:1rem;
-    line-height:1.8;
-}
-
-.admin-input-wrapper{
-    position:relative;
-}
-
-.admin-input-wrapper i{
-    position:absolute;
-
-    top:50%;
-    left:18px;
-
-    transform:translateY(-50%);
-
-    color:#60a5fa;
-}
-
-.admin-input-wrapper .form-control{
-    height:64px;
-    padding-left:55px;
-}
-
-.admin-options{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-}
-
-.remember-admin{
-    display:flex;
-    align-items:center;
-    gap:.7rem;
-
-    color:#cbd5e1;
-}
-
-.remember-admin input{
-    accent-color:#3b82f6;
-}
-
-.forgot-password-link{
-    color:#60a5fa;
-    font-size:.92rem;
-}
-
-.admin-login-btn{
-    height:62px;
-    font-size:1rem;
-}
-
-.admin-footer p{
-    color:#94a3b8;
-    font-size:.92rem;
-}
-
-@media(max-width:576px){
-
-    .admin-login-card{
-        padding:2rem;
-    }
-
-    .admin-title{
-        font-size:2rem;
-    }
-
-    .admin-options{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-}
-
-</style>
-
 {% endblock %}

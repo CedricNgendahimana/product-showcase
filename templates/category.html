@@ -1,43 +1,97 @@
+{% extends 'base.html' %}
 
-{% extends "base.html" %}
+{% block title %}{{ category_info.name }} - Computer Aid MW{% endblock %}
+
 {% block content %}
-
-<section class="hero" style="padding:70px 0;background:linear-gradient(135deg,#f25b33,#d93d24)">
-<div class="container text-center">
-<h1 style="font-size:58px">{{ category }}</h1>
-<p>Browse our collection of premium laptops</p>
-</div>
+<section class="category-hero-section">
+    <div class="container">
+        <div class="category-hero-content text-center">
+            <i class="{{ category_info.icon }} fa-3x mb-3"></i>
+            <h1 class="hero-title">{{ category_info.name }}</h1>
+            <p class="hero-subtitle">
+                Explore our collection of quality {{ category_info.name|lower }}
+            </p>
+        </div>
+    </div>
 </section>
 
-<section class="section">
-<div class="container">
+<section class="products-section py-5">
+    <div class="container">
 
-<div class="row g-4">
+        <!-- CATEGORY NAV -->
+        <div class="category-nav mb-4">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="fas fa-home me-1"></i>Home
+            </a>
+            {% for key, cat in categories.items() %}
+                {% if key == category %}
+                    <span class="btn btn-primary btn-sm me-2 disabled">
+                        {{ cat.name }}
+                    </span>
+                {% else %}
+                    <a href="{{ url_for('category_page', category=key) }}"
+                       class="btn btn-outline-secondary btn-sm me-2">
+                        {{ cat.name }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
 
-{% for product in products %}
-<div class="col-md-3">
+        {% if products %}
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <a href="{{ url_for('product_detail', id=product.id) }}"
+                   class="product-card-link text-decoration-none">
 
-<div class="product-card">
+                    <div class="product-card fade-in-up h-100">
+                        <div class="product-image-wrapper">
+                            <!-- ✅ CLOUDINARY IMAGE -->
+                            <img src="{{ product.image_url }}"
+                                 alt="{{ product.name }}"
+                                 class="product-image"
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
 
-<img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" class="product-image">
+                            <div class="product-overlay">
+                                <div class="product-overlay-text">
+                                    <i class="fas fa-arrow-right mb-2"></i><br>
+                                    View Product
+                                </div>
+                            </div>
+                        </div>
 
-<h5>{{ product.name }}</h5>
+                        <div class="product-info">
+                            <h5 class="product-name">{{ product.name }}</h5>
 
-<p class="price">MWK {{ product.price }}</p>
+                            <p class="product-description">
+                                {{ product.description[:80] }}
+                                {% if product.description|length > 80 %}...{% endif %}
+                            </p>
 
-<button class="main-btn cart-btn">
-<i class="fas fa-cart-plus"></i>
-Add To Cart
-</button>
+                            <div class="product-footer">
+                                <span class="product-price">
+                                    MWK {{ "{:,.0f}".format(product.price) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-</div>
-
-</div>
-{% endfor %}
-
-</div>
-
-</div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- EMPTY STATE -->
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h4>No products in this category yet</h4>
+            <p class="text-muted">Check back soon!</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+        {% endif %}
+    </div>
 </section>
-
 {% endblock %}

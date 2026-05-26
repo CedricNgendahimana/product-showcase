@@ -1,458 +1,173 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Admin Dashboard | Computer Aid MW{% endblock %}
+{% block title %}Admin Dashboard - Computer Aid MW{% endblock %}
 
 {% block content %}
+<section class="admin-dashboard-section py-4 py-lg-5">
+    <div class="container">
 
-<section class="dashboard-section py-5">
-
-    <div class="container-fluid px-lg-5">
-
-        <!-- TOP HEADER -->
-        <div class="dashboard-header glass-card mb-5">
-
-            <div class="d-flex flex-column flex-lg-row
-                        justify-content-between
-                        align-items-lg-center
-                        gap-4">
-
-                <div>
-
-                    <span class="section-tag">
-                        Admin Dashboard
-                    </span>
-
-                    <h1 class="dashboard-title mt-3">
-                        Welcome Back, Admin
-                    </h1>
-
-                    <p class="dashboard-subtitle">
-                        Manage products, analytics and inventory.
-                    </p>
-
-                </div>
-
-                <div class="dashboard-actions">
-
-                    <a href="{{ url_for('add_product') }}"
-                       class="btn btn-primary-custom">
-
-                        <i class="fas fa-plus me-2"></i>
-                        Add Product
-
-                    </a>
-
-                </div>
-
+        <!-- HEADER -->
+        <div class="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 animate-fade-down">
+            <div>
+                <h2 class="mb-1">
+                    <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                </h2>
+                <p class="text-muted mb-2 mb-md-0">
+                    Manage your products and inventory
+                </p>
             </div>
 
+            <a href="{{ url_for('admin_add_product') }}"
+               class="btn btn-primary btn-lg shadow-sm animate-fade-in">
+                <i class="fas fa-plus me-2"></i>Add Product
+            </a>
         </div>
 
         <!-- STATS -->
         <div class="row g-4 mb-5">
-
-            <!-- CARD -->
-            <div class="col-md-6 col-xl-3">
-
-                <div class="dashboard-card glass-card">
-
-                    <div class="dashboard-icon">
-
+            <div class="col-md-4 animate-fade-up">
+                <div class="stat-card shadow-sm">
+                    <div class="stat-icon bg-primary">
                         <i class="fas fa-box"></i>
-
                     </div>
-
-                    <div>
-
-                        <h3>{{ total_products }}</h3>
-
+                    <div class="stat-info">
+                        <h3>{{ products|length }}</h3>
                         <p>Total Products</p>
-
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- CARD -->
-            <div class="col-md-6 col-xl-3">
-
-                <div class="dashboard-card glass-card">
-
-                    <div class="dashboard-icon">
-
-                        <i class="fas fa-shopping-cart"></i>
-
+            <div class="col-md-4 animate-fade-up">
+                <div class="stat-card shadow-sm">
+                    <div class="stat-icon bg-success">
+                        <i class="fas fa-kwacha-sign"></i>
                     </div>
-
-                    <div>
-
-                        <h3>{{ total_orders }}</h3>
-
-                        <p>Total Orders</p>
-
+                    <div class="stat-info">
+                        <h3>
+                            MWK {{ "{:,.0f}".format(products|sum(attribute='price')) }}
+                        </h3>
+                        <p>Total Value</p>
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- CARD -->
-            <div class="col-md-6 col-xl-3">
-
-                <div class="dashboard-card glass-card">
-
-                    <div class="dashboard-icon">
-
-                        <i class="fas fa-users"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3>{{ total_customers }}</h3>
-
-                        <p>Customers</p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- CARD -->
-            <div class="col-md-6 col-xl-3">
-
-                <div class="dashboard-card glass-card">
-
-                    <div class="dashboard-icon">
-
+            <div class="col-md-4 animate-fade-up">
+                <div class="stat-card shadow-sm">
+                    <div class="stat-icon bg-info">
                         <i class="fas fa-chart-line"></i>
-
                     </div>
-
-                    <div>
-
-                        <h3>MWK {{ "{:,.0f}".format(total_revenue) }}</h3>
-
-                        <p>Revenue</p>
-
+                    <div class="stat-info">
+                        <h3>{{ categories|length }}</h3>
+                        <p>Categories</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
         <!-- PRODUCTS TABLE -->
-        <div class="dashboard-table glass-card">
-
-            <div class="table-header">
-
-                <div>
-
-                    <h3>Products</h3>
-
-                    <p>Manage all available products.</p>
-
-                </div>
-
+        <div class="products-table-card shadow-sm animate-fade-in">
+            <div class="table-header mb-3">
+                <h5>
+                    <i class="fas fa-list me-2"></i>All Products
+                </h5>
             </div>
 
+            {% if products %}
             <div class="table-responsive">
-
-                <table class="table align-middle">
-
-                    <thead>
-
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
                         <tr>
-
-                            <th>Product</th>
-                            <th>Category</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th class="d-none d-md-table-cell">Category</th>
                             <th>Price</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-
+                            <th class="d-none d-lg-table-cell">Description</th>
+                            <th class="text-end">Actions</th>
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         {% for product in products %}
+                        <tr class="animate-fade-up">
 
-                        <tr>
-
-                            <!-- PRODUCT -->
+                            <!-- IMAGE -->
                             <td>
+                                <img src="{{ product.image_url }}"
+                                     alt="{{ product.name }}"
+                                     class="table-product-img"
+                                     loading="lazy"
+                                     onerror="this.src='https://via.placeholder.com/60x60/f5f5f5/666?text=N/A'">
+                            </td>
 
-                                <div class="table-product">
-
-                                    {% if product.image %}
-                                    <img
-                                        src="{{ url_for('static', filename='uploads/' ~ product.image) }}"
-                                        alt="{{ product.name }}"
-                                    >
-                                    {% else %}
-                                    <img
-                                        src="{{ url_for('static', filename='images/placeholder.png') }}"
-                                        alt="{{ product.name }}"
-                                    >
-                                    {% endif %}
-
-                                    <div>
-
-                                        <h6>{{ product.name }}</h6>
-
-                                        <span>ID: {{ product.id }}</span>
-
-                                    </div>
-
-                                </div>
-
+                            <!-- NAME -->
+                            <td>
+                                <strong>{{ product.name }}</strong>
                             </td>
 
                             <!-- CATEGORY -->
-                            <td>
-
-                                <span class="table-category">
-                                    {{ product.category }}
+                            <td class="d-none d-md-table-cell">
+                                <span class="badge bg-info">
+                                    {{ categories[product.category].name }}
                                 </span>
-
                             </td>
 
                             <!-- PRICE -->
                             <td>
-
-                                MWK {{ "{:,.0f}".format(product.price) }}
-
+                                <span class="badge bg-success">
+                                    MWK {{ "{:,.0f}".format(product.price) }}
+                                </span>
                             </td>
 
-                            <!-- STATUS -->
-                            <td>
-
-                                <span class="status-badge">
-                                    Active
-                                </span>
-
+                            <!-- DESCRIPTION -->
+                            <td class="d-none d-lg-table-cell text-muted small">
+                                {{ product.description[:60] }}
+                                {% if product.description|length > 60 %}...{% endif %}
                             </td>
 
                             <!-- ACTIONS -->
-                            <td>
-
-                                <div class="table-actions">
-
-                                    <a href="{{ url_for('edit_product', product_id=product.id) }}"
-                                       class="action-btn edit-btn">
-
-                                        <i class="fas fa-pen"></i>
-
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('product_detail', id=product.id) }}"
+                                       class="btn btn-outline-info"
+                                       title="View">
+                                        <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <form
-                                        action="{{ url_for('delete_product', product_id=product.id) }}"
-                                        method="POST"
-                                    >
+                                    <a href="{{ url_for('admin_edit_product', id=product.id) }}"
+                                       class="btn btn-outline-primary"
+                                       title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
 
-                                        <button
-                                            type="submit"
-                                            class="action-btn delete-btn"
-                                        >
-
+                                    <form action="{{ url_for('admin_delete_product', id=product.id) }}"
+                                          method="POST"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete this product permanently?');">
+                                        <button type="submit"
+                                                class="btn btn-outline-danger"
+                                                title="Delete">
                                             <i class="fas fa-trash"></i>
-
                                         </button>
-
                                     </form>
-
                                 </div>
-
                             </td>
 
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
-
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                <h5>No products yet</h5>
+                <p class="text-muted">Start by adding your first product</p>
+                <a href="{{ url_for('admin_add_product') }}"
+                   class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-2"></i>Add First Product
+                </a>
+            </div>
+            {% endif %}
         </div>
-
     </div>
-
 </section>
-
-{% endblock %}
-
-{% block scripts %}
-
-<style>
-
-.dashboard-header{
-    padding:2.5rem;
-    border-radius:36px;
-}
-
-.dashboard-title{
-    font-size:clamp(2rem,4vw,3rem);
-    font-weight:800;
-}
-
-.dashboard-subtitle{
-    margin-top:.8rem;
-}
-
-.dashboard-card{
-    padding:2rem;
-
-    border-radius:30px;
-
-    display:flex;
-    align-items:center;
-    gap:1.5rem;
-
-    transition:.25s ease;
-}
-
-.dashboard-card:hover{
-    transform:translateY(-6px);
-}
-
-.dashboard-icon{
-    width:72px;
-    height:72px;
-
-    border-radius:22px;
-
-    background:rgba(59,130,246,.12);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.dashboard-icon i{
-    font-size:1.5rem;
-    color:#60a5fa;
-}
-
-.dashboard-card h3{
-    margin-bottom:.3rem;
-    font-size:1.7rem;
-}
-
-.dashboard-table{
-    padding:2rem;
-    border-radius:36px;
-}
-
-.table-header{
-    margin-bottom:2rem;
-}
-
-.table-product{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-}
-
-.table-product img{
-    width:70px;
-    height:70px;
-
-    object-fit:cover;
-
-    border-radius:18px;
-}
-
-.table-product h6{
-    margin-bottom:.3rem;
-}
-
-.table-product span{
-    color:#94a3b8;
-    font-size:.9rem;
-}
-
-.table-category{
-    padding:.5rem .9rem;
-
-    border-radius:999px;
-
-    background:rgba(59,130,246,.12);
-
-    color:#93c5fd;
-
-    font-size:.85rem;
-    font-weight:600;
-}
-
-.status-badge{
-    padding:.55rem 1rem;
-
-    border-radius:999px;
-
-    background:rgba(16,185,129,.12);
-
-    color:#6ee7b7;
-
-    font-size:.85rem;
-    font-weight:600;
-}
-
-.table-actions{
-    display:flex;
-    align-items:center;
-    gap:.8rem;
-}
-
-.action-btn{
-    width:44px;
-    height:44px;
-
-    border:none;
-
-    border-radius:14px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    transition:.25s ease;
-}
-
-.edit-btn{
-    background:rgba(59,130,246,.12);
-    color:#60a5fa;
-}
-
-.delete-btn{
-    background:rgba(239,68,68,.12);
-    color:#ef4444;
-}
-
-.edit-btn:hover{
-    background:#2563eb;
-    color:white;
-}
-
-.delete-btn:hover{
-    background:#ef4444;
-    color:white;
-}
-
-@media(max-width:991px){
-
-    .dashboard-header{
-        padding:2rem;
-    }
-
-}
-
-</style>
-
 {% endblock %}
