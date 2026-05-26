@@ -1,3 +1,98 @@
+
+<style>
+.admin-dashboard-section,
+.admin-login-section,
+.admin-form-section{
+    background:#f4f7fb;
+    min-height:100vh;
+}
+
+.login-card,
+.form-card,
+.products-table-card,
+.stat-card{
+    background:white;
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+}
+
+.login-card{
+    padding:50px 40px;
+}
+
+.login-header i{
+    color:#2563eb;
+}
+
+.stat-card{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    transition:.3s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-6px);
+}
+
+.stat-icon{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:28px;
+}
+
+.table-product-img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.btn-primary{
+    background:#2563eb!important;
+    border:none!important;
+    border-radius:14px!important;
+}
+
+.form-control,
+.form-select{
+    border-radius:14px!important;
+    padding:14px 18px!important;
+}
+
+.animate-fade-up{
+    animation:fadeUp .5s ease;
+}
+
+.animate-fade-down{
+    animation:fadeDown .5s ease;
+}
+
+.animate-fade-in{
+    animation:fadeIn .4s ease;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(25px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes fadeDown{
+    from{opacity:0;transform:translateY(-25px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+</style>
 {% extends 'base.html' %}
 
 {% block title %}Admin Login - Computer Aid MW{% endblock %}
