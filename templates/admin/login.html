@@ -1,45 +1,61 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Computer Aid MW</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="admin-body">
 
-{% block title %}Admin Login - Computer Aid MW{% endblock %}
+<div class="admin-login-page">
+    <div class="login-card">
 
-{% block content %}
-<section class="admin-login-section py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="login-card">
-                    <div class="login-header text-center">
-                        <i class="fas fa-user-shield fa-3x mb-3"></i>
-                        <h3>Admin Login</h3>
-                        <p class="text-muted">Enter your credentials to access the dashboard</p>
-                    </div>
-                    <form method="POST" action="{{ url_for('admin_login') }}">
-                        <div class="mb-4">
-                            <label for="username" class="form-label">
-                                <i class="fas fa-user me-2"></i>Username
-                            </label>
-                            <input type="text" class="form-control form-control-lg" id="username" 
-                                   name="username" required placeholder="Enter username">
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-2"></i>Password
-                            </label>
-                            <input type="password" class="form-control form-control-lg" id="password" 
-                                   name="password" required placeholder="Enter password">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
-                        </button>
-                    </form>
-                    <div class="text-center mt-4">
-                        <a href="{{ url_for('home') }}" class="text-muted">
-                            <i class="fas fa-arrow-left me-1"></i>Back to Store
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} rounded-3 mb-3">{{ message }}</div>
+        {% endfor %}
+        {% endwith %}
+
+        <div class="text-center mb-4">
+            <div class="login-icon"><i class="fas fa-user-shield"></i></div>
+            <h3>Admin Login</h3>
+            <p class="text-muted small">Enter your credentials to access the dashboard</p>
         </div>
+
+        <form method="POST" action="{{ url_for('admin_login') }}">
+            <div class="mb-3">
+                <label for="username" class="form-label fw-medium">
+                    <i class="fas fa-user me-2 text-muted"></i>Username
+                </label>
+                <input type="text" class="form-control form-control-lg"
+                       id="username" name="username" required placeholder="Enter username">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label fw-medium">
+                    <i class="fas fa-lock me-2 text-muted"></i>Password
+                </label>
+                <input type="password" class="form-control form-control-lg"
+                       id="password" name="password" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-xl fw-semibold">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('home') }}" class="text-muted small text-decoration-none">
+                <i class="fas fa-arrow-left me-1"></i>Back to Store
+            </a>
+        </div>
+
     </div>
-</section>
-{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -3,88 +3,87 @@
 {% block title %}Your Cart | Computer Aid MW{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
+<section class="cart-section py-4 py-lg-5">
+    <div class="container">
 
-    <h2 class="mb-4">
-        <i class="fas fa-shopping-cart me-2"></i>Your Cart
-    </h2>
+        {% if cart and cart|length > 0 %}
 
-    {% if cart and cart|length > 0 %}
-
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th class="text-end">Price</th>
-                        <th class="text-end">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% for product_id, item in cart.items() %}
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img
-                                    src="{{ item.image }}"
-                                    alt="{{ item.name }}"
-                                    width="70"
-                                    height="70"
-                                    class="me-3 rounded"
-                                    style="object-fit: cover;"
-                                >
-                                <strong>{{ item.name }}</strong>
-                            </div>
-                        </td>
-
-                        <td class="text-end">
-                            MWK {{ "{:,.0f}".format(item.price) }}
-                        </td>
-
-                        <td class="text-end">
-                            <!-- ❌ REMOVE FROM CART -->
-                            <form method="POST"
-                                  action="{{ url_for('remove_from_cart', product_id=product_id) }}">
-                                <button type="submit"
-                                        class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash me-1"></i>
-                                    Remove
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-
-                </tbody>
-            </table>
+        <!-- Page title -->
+        <div class="mb-4">
+            <h1 class="cart-page-title">
+                <i class="fas fa-shopping-cart"></i>Your Cart
+            </h1>
+            <p class="text-muted">{{ cart|length }} {{ 'item' if cart|length == 1 else 'items' }} in your cart</p>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-            <h4 class="mb-0">
-                Total:
-                <strong>MWK {{ "{:,.0f}".format(total) }}</strong>
-            </h4>
+        <div class="row g-4 align-items-start">
 
-            <a href="{{ url_for('checkout') }}"
-               class="btn btn-success btn-lg">
-                <i class="fab fa-whatsapp me-2"></i>
-                Checkout via WhatsApp
+            <!-- ── Cart items ── -->
+            <div class="col-lg-8">
+                {% for product_id, item in cart.items() %}
+                <div class="cart-item-card">
+                    <img src="{{ item.image }}"
+                         alt="{{ item.name }}"
+                         class="cart-item-img"
+                         onerror="this.src='https://via.placeholder.com/90x90/f5f5f5/aaa?text=?'">
+                    <div class="flex-grow-1 min-w-0">
+                        <a href="{{ url_for('product_detail', id=product_id) }}" class="cart-item-name">
+                            {{ item.name }}
+                        </a>
+                        <div class="cart-item-price">MWK {{ "{:,.0f}".format(item.price) }}</div>
+                    </div>
+                    <form method="POST" action="{{ url_for('remove_from_cart', product_id=product_id) }}">
+                        <button type="submit" class="btn-remove-cart" title="Remove">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- ── Order summary ── -->
+            <div class="col-lg-4">
+                <div class="order-summary-card">
+                    <h2>Order Summary</h2>
+
+                    <div class="summary-row">
+                        <span>Subtotal ({{ cart|length }} {{ 'item' if cart|length == 1 else 'items' }})</span>
+                        <span>MWK {{ "{:,.0f}".format(total) }}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span class="amount">MWK {{ "{:,.0f}".format(total) }}</span>
+                    </div>
+
+                    <div class="mt-4 d-grid gap-2">
+                        <a href="{{ url_for('checkout') }}"
+                           class="btn btn-success btn-lg rounded-xl fw-semibold">
+                            <i class="fab fa-whatsapp me-2"></i>Checkout via WhatsApp
+                        </a>
+                        <a href="{{ url_for('home') }}"
+                           class="btn btn-outline-secondary fw-semibold">
+                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <!-- Empty cart -->
+        <div class="cart-empty-wrap">
+            <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
+            <h2 class="fw-bold mb-3" style="color:var(--secondary)">Your cart is empty</h2>
+            <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg rounded-pill px-5">
+                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
             </a>
         </div>
 
-    {% else %}
+        {% endif %}
 
-        <div class="alert alert-info">
-            Your cart is currently empty.
-        </div>
-
-        <a href="{{ url_for('home') }}" class="btn btn-primary">
-            <i class="fas fa-arrow-left me-2"></i>
-            Continue Shopping
-        </a>
-
-    {% endif %}
-
-</div>
+    </div>
+</section>
 {% endblock %}

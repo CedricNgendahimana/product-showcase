@@ -3,17 +3,17 @@
 {% block title %}Computer Aid MW - Quality Computer Products{% endblock %}
 
 {% block content %}
+
+<!-- ═══════ HERO ═══════ -->
 <section class="hero-section">
     <div class="container">
         <div class="hero-content text-center">
-            <h1 class="hero-title animate-fade-in">
-                Welcome to <span class="text-accent">Computer Aid MW</span>
+            <h1 class="hero-title">
+                Welcome to <span class="accent">Computer Aid MW</span>
             </h1>
-            <p class="hero-subtitle animate-fade-in-delay">
-                Your trusted source for premium computer products and accessories
-            </p>
-            <a href="#categories" class="btn btn-primary btn-lg hero-btn animate-fade-in-delay-2">
-                <i class="fas fa-shopping-bag me-2"></i>Browse Categories
+            <p class="hero-subtitle">Your trusted source for premium computer products and accessories</p>
+            <a href="#categories" class="hero-btn">
+                <i class="fas fa-shopping-bag"></i>Browse Categories
             </a>
         </div>
     </div>
@@ -24,9 +24,10 @@
     </div>
 </section>
 
+<!-- ═══════ CATEGORIES ═══════ -->
 <section id="categories" class="categories-section py-5">
     <div class="container">
-        <div class="section-header text-center mb-5">
+        <div class="section-header text-center">
             <h2 class="section-title">Shop by Category</h2>
             <p class="section-subtitle">Browse our carefully curated collections</p>
         </div>
@@ -36,7 +37,7 @@
             <div class="col-sm-6 col-lg-3">
                 <a href="{{ url_for('category_page', category=key) }}" class="category-card-link">
                     <div class="category-card fade-in-up">
-                        <div class="category-icon">
+                        <div class="category-icon-box">
                             <i class="{{ category.icon }}"></i>
                         </div>
                         <h5 class="category-name">{{ category.name }}</h5>
@@ -48,9 +49,10 @@
     </div>
 </section>
 
+<!-- ═══════ LATEST PRODUCTS ═══════ -->
 <section class="featured-section py-5">
     <div class="container">
-        <div class="section-header text-center mb-5">
+        <div class="section-header text-center">
             <h2 class="section-title">Latest Products</h2>
             <p class="section-subtitle">Check out our newest arrivals</p>
         </div>
@@ -59,69 +61,57 @@
         <div class="row g-4">
             {% for product in products[:8] %}
             <div class="col-sm-6 col-lg-4 col-xl-3">
-                <a href="{{ url_for('product_detail', id=product.id) }}"
-                   class="product-card-link text-decoration-none">
-
-                    <div class="product-card fade-in-up h-100">
+                <a href="{{ url_for('product_detail', id=product.id) }}" class="product-card-link">
+                    <div class="product-card fade-in-up">
                         <div class="product-image-wrapper">
-                            <!-- ✅ CLOUDINARY IMAGE -->
                             <img src="{{ product.image_url }}"
                                  alt="{{ product.name }}"
                                  class="product-image"
                                  loading="lazy"
-                                 onerror="this.src='https://via.placeholder.com/300x200/f5f5f5/666?text=No+Image'">
-
+                                 onerror="this.src='https://via.placeholder.com/400x300/f5f5f5/aaa?text=No+Image'">
                             <div class="product-overlay">
                                 <div class="product-overlay-text">
-                                    <i class="fas fa-arrow-right mb-2"></i><br>
-                                    View Product
+                                    <i class="fas fa-arrow-right mb-1 d-block"></i>View Product
                                 </div>
                             </div>
-
                             <span class="product-category-badge">
                                 {{ categories[product.category].name }}
                             </span>
                         </div>
-
                         <div class="product-info">
                             <h5 class="product-name">{{ product.name }}</h5>
                             <p class="product-description">
-                                {{ product.description[:80] }}
-                                {% if product.description|length > 80 %}...{% endif %}
+                                {{ product.description[:90] }}{% if product.description|length > 90 %}…{% endif %}
                             </p>
-                            <div class="product-footer">
-                                <span class="product-price">
-                                    MWK {{ "{:,.0f}".format(product.price) }}
-                                </span>
-                            </div>
+                            <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
                         </div>
                     </div>
-
                 </a>
             </div>
             {% endfor %}
         </div>
         {% else %}
         <div class="text-center py-5">
-            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
-            <h4>No products available yet</h4>
+            <i class="fas fa-box-open fa-4x text-muted mb-4 d-block"></i>
+            <h4 class="fw-semibold">No products available yet</h4>
             <p class="text-muted">Check back soon for new products!</p>
         </div>
         {% endif %}
     </div>
 </section>
 
+<!-- ═══════ WHATSAPP CTA ═══════ -->
 <section class="cta-section py-5">
     <div class="container">
-        <div class="cta-card text-center">
-            <h3>
-                <i class="fab fa-whatsapp me-2"></i>Need Help Choosing?
-            </h3>
+        <div class="cta-card">
+            <h3><i class="fab fa-whatsapp me-2"></i>Need Help Choosing?</h3>
             <p>Contact us on WhatsApp for personalized recommendations and support</p>
-            <a href="https://wa.me/265888302771" target="_blank" class="btn btn-success btn-lg">
+            <a href="https://wa.me/265888302771" target="_blank" rel="noopener noreferrer"
+               class="btn btn-success btn-lg rounded-pill px-5">
                 <i class="fab fa-whatsapp me-2"></i>Chat with Us
             </a>
         </div>
     </div>
 </section>
+
 {% endblock %}
