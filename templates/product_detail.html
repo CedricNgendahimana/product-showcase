@@ -75,7 +75,10 @@
                 </a>
                 {% endif %}
 
-                <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+                <form class="add-to-cart-form"
+                      data-product-id="{{ product.id }}"
+                      data-product-name="{{ product.name }}"
+                      data-product-img="{{ images[0] if images else '' }}">
                     <button type="submit" class="btn-add-cart">
                         <i class="fas fa-cart-plus"></i>Add to Cart
                     </button>

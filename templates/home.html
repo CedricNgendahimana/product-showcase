@@ -61,32 +61,42 @@
         <div class="row g-4">
             {% for product in products[:8] %}
             <div class="col-sm-6 col-lg-4 col-xl-3">
-                <a href="{{ url_for('product_detail', id=product.id) }}" class="product-card-link">
-                    <div class="product-card fade-in-up">
-                        <div class="product-image-wrapper">
-                            <img src="{{ product.image_url }}"
-                                 alt="{{ product.name }}"
-                                 class="product-image"
-                                 loading="lazy"
-                                 onerror="this.src='https://via.placeholder.com/400x300/f5f5f5/aaa?text=No+Image'">
-                            <div class="product-overlay">
-                                <div class="product-overlay-text">
-                                    <i class="fas fa-arrow-right mb-1 d-block"></i>View Product
+                <div class="product-card-wrap">
+                    <a href="{{ url_for('product_detail', id=product.id) }}" class="product-card-link">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
+                                <img src="{{ product.image_url }}"
+                                     alt="{{ product.name }}"
+                                     class="product-image"
+                                     loading="lazy"
+                                     onerror="this.src='https://via.placeholder.com/400x300/f5f5f5/aaa?text=No+Image'">
+                                <div class="product-overlay">
+                                    <div class="product-overlay-text">
+                                        <i class="fas fa-arrow-right mb-1 d-block"></i>View Product
+                                    </div>
                                 </div>
+                                <span class="product-category-badge">
+                                    {{ categories[product.category].name }}
+                                </span>
                             </div>
-                            <span class="product-category-badge">
-                                {{ categories[product.category].name }}
-                            </span>
+                            <div class="product-info">
+                                <h5 class="product-name">{{ product.name }}</h5>
+                                <p class="product-description">
+                                    {{ product.description[:90] }}{% if product.description|length > 90 %}…{% endif %}
+                                </p>
+                                <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
+                            </div>
                         </div>
-                        <div class="product-info">
-                            <h5 class="product-name">{{ product.name }}</h5>
-                            <p class="product-description">
-                                {{ product.description[:90] }}{% if product.description|length > 90 %}…{% endif %}
-                            </p>
-                            <span class="product-price">MWK {{ "{:,.0f}".format(product.price) }}</span>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                    <form class="add-to-cart-form card-cart-form"
+                          data-product-id="{{ product.id }}"
+                          data-product-name="{{ product.name }}"
+                          data-product-img="{{ product.image_url }}">
+                        <button type="submit" class="btn-card-cart">
+                            <i class="fas fa-cart-plus"></i>Add to Cart
+                        </button>
+                    </form>
+                </div>
             </div>
             {% endfor %}
         </div>
